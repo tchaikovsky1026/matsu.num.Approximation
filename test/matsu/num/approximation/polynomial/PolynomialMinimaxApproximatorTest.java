@@ -1,16 +1,15 @@
-/*
- * 2021.6.16
- */
 package matsu.num.approximation.polynomial;
 
 import java.util.function.DoubleUnaryOperator;
 
-import matsu.num.approximation.FiniteRange;
+import org.junit.Ignore;
+
+import matsu.num.approximation.component.DoubleFiniteClosedInterval;
 
 /**
  *
- * @author Matsuura Y.
  */
+@Ignore
 public class PolynomialMinimaxApproximatorTest {
 
     public static void main(String[] args) {
@@ -29,7 +28,7 @@ public class PolynomialMinimaxApproximatorTest {
 
         double minX = 0;
         double maxX = 0.4;
-        FiniteRange fr = FiniteRange.create(minX, maxX);
+        DoubleFiniteClosedInterval fr = DoubleFiniteClosedInterval.from(minX, maxX);
         double deltaX = 0.015625 * (maxX - minX);
         int repeat = 1000;
 

@@ -1,12 +1,18 @@
-/**
- * 2022.5.5
- * ver6.0: Major update, 設計の見直し.
+/*
+ * Copyright (c) 2024 Matsuura Y.
+ * 
+ * This software is released under the MIT License.
+ * http://opensource.org/licenses/mit-license.php
+ */
+/*
+ * 2024.6.20
  */
 package matsu.num.approximation.polynomial;
 
 import java.util.Arrays;
 import java.util.Random;
-import matsu.num.approximation.FiniteRange;
+
+import matsu.num.approximation.component.DoubleFiniteClosedInterval;
 import matsu.num.commons.Trigonometry;
 
 /**
@@ -18,7 +24,7 @@ import matsu.num.commons.Trigonometry;
  * <i>g</i>(<i>x</i>): scaling value.
  *
  * @author Matsuura, Y.
- * @version 6.0.1
+ * @version 17.0
  */
 public final class PolynomialMinimaxApproximator {
 
@@ -36,7 +42,7 @@ public final class PolynomialMinimaxApproximator {
      * @param numberOfIteration number of iteration
      * @throws IllegalArgumentException degree of polynomial function
      */
-    public PolynomialMinimaxApproximator(FunctionScaleSupplier supplier, FiniteRange range,
+    public PolynomialMinimaxApproximator(FunctionScaleSupplier supplier, DoubleFiniteClosedInterval range,
             int polynominalDegree, int numberOfIteration) {
         if (polynominalDegree < 0) {
             throw new IllegalArgumentException("polynomial degree < 0");
@@ -52,7 +58,7 @@ public final class PolynomialMinimaxApproximator {
      * @param range approximating range
      * @param repeat repeat
      */
-    private void approximate(FiniteRange range, int repeat) {
+    private void approximate(DoubleFiniteClosedInterval range, int repeat) {
         double minX = range.lower();
         double maxX = range.upper();
         int numNode = polynominalDegree + 2;

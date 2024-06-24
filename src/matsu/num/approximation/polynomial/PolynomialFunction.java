@@ -1,7 +1,11 @@
-/**
- * 2022.5.3
- * ver6.0: Major update.
- *
+/*
+ * Copyright (c) 2024 Matsuura Y.
+ * 
+ * This software is released under the MIT License.
+ * http://opensource.org/licenses/mit-license.php
+ */
+/*
+ * 2024.6.20
  */
 package matsu.num.approximation.polynomial;
 
@@ -9,7 +13,7 @@ package matsu.num.approximation.polynomial;
  * Polynomial function interface.
  *
  * @author Matsuura Y.
- * @version 6.0.0
+ * @version 17.0
  */
 public interface PolynomialFunction {
 

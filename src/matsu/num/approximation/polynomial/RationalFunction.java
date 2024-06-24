@@ -1,7 +1,11 @@
-/**
- * 2021.12.12
- * ver4.6: 実装.
- *
+/*
+ * Copyright (c) 2024 Matsuura Y.
+ * 
+ * This software is released under the MIT License.
+ * http://opensource.org/licenses/mit-license.php
+ */
+/*
+ * 2024.6.20
  */
 package matsu.num.approximation.polynomial;
 
@@ -9,8 +13,7 @@ package matsu.num.approximation.polynomial;
  * Rational function interface.
  *
  * @author Matsuura Y.
- * @version 4.6
- * @since version 4.6
+ * @version 17.0
  */
 public interface RationalFunction {
 

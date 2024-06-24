@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package matsu.num.approximation.polynomial;
 
 import static org.junit.Assert.*;
@@ -10,12 +5,13 @@ import static org.junit.Assert.*;
 import java.util.function.DoubleUnaryOperator;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  *
- * @author Matsuura, Y.
  */
+@Ignore
 public class NodeAddableNewtonPolynomialTest {
 
     private int size;

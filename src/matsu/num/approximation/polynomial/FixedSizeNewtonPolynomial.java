@@ -1,6 +1,11 @@
-/**
- * 2022.5.4
- * ver6.0: Major update, 設計の見直し.
+/*
+ * Copyright (c) 2024 Matsuura Y.
+ * 
+ * This software is released under the MIT License.
+ * http://opensource.org/licenses/mit-license.php
+ */
+/*
+ * 2024.6.20
  */
 package matsu.num.approximation.polynomial;
 
@@ -10,7 +15,7 @@ import java.io.Serializable;
  * Newton polynomial interpolation of which the number of nodes is fixed.
  *
  * @author Matsuura Y.
- * @version 6.0.1
+ * @version 17.0
  */
 public final class FixedSizeNewtonPolynomial implements NewtonPolynomial, Cloneable, Serializable {
 

@@ -1,18 +1,26 @@
-/**
+/*
+ * Copyright (c) 2024 Matsuura Y.
+ * 
+ * This software is released under the MIT License.
+ * http://opensource.org/licenses/mit-license.php
+ */
+/*
  * 2024.6.20
  */
 package matsu.num.approximation.polynomial;
 
 import java.util.Arrays;
 
-import matsu.num.approximation.FiniteRange;
+import matsu.num.approximation.component.DoubleFiniteClosedInterval;
 import matsu.num.commons.Trigonometry;
+import matsu.num.matrix.base.EntryReadableMatrix;
 import matsu.num.matrix.base.GeneralMatrix;
 import matsu.num.matrix.base.Matrix;
 import matsu.num.matrix.base.MatrixDimension;
 import matsu.num.matrix.base.Vector;
 import matsu.num.matrix.base.VectorDimension;
 import matsu.num.matrix.base.nlsf.LUPivotingExecutor;
+import matsu.num.matrix.base.validation.MatrixStructureAcceptance;
 
 /**
  * Minimax-approximator by rational function. <br>
@@ -23,7 +31,7 @@ import matsu.num.matrix.base.nlsf.LUPivotingExecutor;
  * Require that <i>g</i>(<i>x</i>) is strictly positive.
  *
  * @author Matsuura Y.
- * @version 16.1
+ * @version 17.0
  */
 public final class RationalMinimaxApproximator {
 
@@ -41,12 +49,12 @@ public final class RationalMinimaxApproximator {
      * @param numeratorDegree
      * @param denominatorDegree
      */
-    private RationalMinimaxApproximator(FunctionScaleSupplier supplier, FiniteRange range,
+    private RationalMinimaxApproximator(FunctionScaleSupplier supplier, DoubleFiniteClosedInterval range,
             int numeratorDegree, int denominatorDegree, int numberOfIterate) {
         this.supplier = supplier;
         this.numeratorDegree = numeratorDegree;
         this.denominatorDegree = denominatorDegree;
-        
+
         //ここで例外がスローされるかもしれない.
         approximate(range, numberOfIterate);
     }
@@ -57,7 +65,7 @@ public final class RationalMinimaxApproximator {
      * @param range approximating range
      * @param repeat repeat
      */
-    private void approximate(FiniteRange range, int repeat) {
+    private void approximate(DoubleFiniteClosedInterval range, int repeat) {
         double minX = range.lower();
         double maxX = range.upper();
 
@@ -127,7 +135,7 @@ public final class RationalMinimaxApproximator {
      * @throws IllegalArgumentException degree of numerator/denominator, &ensp;
      * @throws IllegalArgumentException too large degree of denominator
      */
-    public static RationalMinimaxApproximator create(FunctionScaleSupplier supplier, FiniteRange range,
+    public static RationalMinimaxApproximator create(FunctionScaleSupplier supplier, DoubleFiniteClosedInterval range,
             int numeratorDegree, int denominatorDegree, int numberOfIteration) {
         if (numeratorDegree < 0 || denominatorDegree < 0) {
             throw new IllegalArgumentException("degree < 0");
@@ -215,9 +223,15 @@ public final class RationalMinimaxApproximator {
                     mxCoeffBuilder.setValue(i, j, mxCoeffEntry[i][j]);
                 }
             }
+            EntryReadableMatrix mxCoeff = mxCoeffBuilder.build();
 
-            Matrix lupf = LUPivotingExecutor.instance()
-                    .apply(mxCoeffBuilder.build(), 1E-10)
+            LUPivotingExecutor lupExecutor = LUPivotingExecutor.instance();
+            MatrixStructureAcceptance acceptance = lupExecutor.accepts(mxCoeff);
+            acceptance.getException(mxCoeff).ifPresent(e -> {
+                throw new IllegalArgumentException("too large degree.");
+            });
+            Matrix lupf = lupExecutor
+                    .apply(mxCoeff, 1E-10)
                     .orElseThrow(() -> new IllegalArgumentException("too large degree of denominator."))
                     .inverse();
             Vector.Builder rvBuilder = Vector.Builder.zeroBuilder(VectorDimension.valueOf(fi.length));

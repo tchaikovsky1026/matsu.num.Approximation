@@ -21,7 +21,8 @@
         	sourcepath="src" 
 
         	additionalparam="--module-path '../dist-num'" 
-        	packagenames="matsu.num.approximation,matsu.num.approximation.polynomial"
+        	packagenames="matsu.num.approximation,
+        	matsu.num.approximation.polynomial"
         />
         
         <!-- 
