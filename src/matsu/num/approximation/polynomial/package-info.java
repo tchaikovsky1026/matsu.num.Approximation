@@ -1,4 +1,4 @@
 /**
- * Polynomial functions and its approximators.
+ * 多項式関数による近似を扱うパッケージ.
  */
 package matsu.num.approximation.polynomial;

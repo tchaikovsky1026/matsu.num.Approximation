@@ -7,17 +7,18 @@
 /*
  * 2024.6.20
  */
-package matsu.num.approximation.component;
+package matsu.num.approximation;
 
 /**
  * <p>
- * {@code double} 値に関する有限閉区間を扱う.
+ * {@code double} 値に関する有限閉区間を扱う. <br>
+ * 区間の境界値に基づくequaltyを提供する.
  * </p>
  * 
  * <p>
  * サポートされているのは, 次を満たす閉区間 [<i>a</i>, <i>b</i>] である. <br>
  * |<i>a</i>| &lt; &infin;, |<i>b</i>| &lt; &infin;,
- * |<i>b</i> - <i>a</i>| &ge; max(<i>e</i><sub>a</sub>,
+ * (<i>b</i> - <i>a</i>) &ge; max(<i>e</i><sub>a</sub>,
  * <i>e</i><sub>r</sub>|<i>a</i>|,
  * <i>e</i><sub>r</sub>|<i>b</i>|) <br>
  * ただし,
@@ -26,7 +27,7 @@ package matsu.num.approximation.component;
  * </p>
  *
  * @author Matsuura, Y.
- * @version 17.0
+ * @version 18.0
  */
 public final class DoubleFiniteClosedInterval {
 
@@ -43,13 +44,17 @@ public final class DoubleFiniteClosedInterval {
     private final double min;
     private final double max;
 
+    private final int immutableHashCode;
+
     private DoubleFiniteClosedInterval(double min, double max) {
         this.min = min;
         this.max = max;
+
+        this.immutableHashCode = this.calcHashCode();
     }
 
     /**
-     * 下側境界値を返す.
+     * 下側境界値 (<i>a</i>) を返す.
      * 
      * @return 下側境界値
      */
@@ -58,7 +63,7 @@ public final class DoubleFiniteClosedInterval {
     }
 
     /**
-     * 上側境界値を返す.
+     * 上側境界値 (<i>b</i>) を返す.
      * 
      * @return 上側境界値
      */
@@ -66,6 +71,25 @@ public final class DoubleFiniteClosedInterval {
         return this.max;
     }
 
+    /**
+     * <i>x</i> が閉区間に含まれるか:
+     * <i>x</i> &in; [<i>a</i>, <i>b</i>]
+     * を判定する.
+     * 
+     * @param x <i>x</i>, 引数
+     * @return 閉区間に含まれる場合はtrue
+     */
+    public boolean accepts(double x) {
+        return x >= this.lower() &&
+                x <= this.upper();
+    }
+
+    /**
+     * 与えられたインスタンスと自身との等価性を判定する.
+     * 
+     * @param obj 比較対象
+     * @return 等価の場合はtrue
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -78,11 +102,46 @@ public final class DoubleFiniteClosedInterval {
                 Double.compare(this.max, target.max) == 0;
     }
 
+    /**
+     * 自身のハッシュコードを返す.
+     * 
+     * @return ハッシュコード
+     */
     @Override
     public int hashCode() {
+        return this.immutableHashCode;
+    }
+
+    /**
+     * ハッシュコードを計算する.
+     * 不変クラスであるので, ライフサイクル全体でハッシュコードは不変である.
+     * 
+     * @return ハッシュコード
+     */
+    private int calcHashCode() {
         int result = Double.hashCode(this.min);
         result = 31 * result + Double.hashCode(this.max);
         return result;
+    }
+
+    /**
+     * <p>
+     * 自身の文字列表現を返す.
+     * </p>
+     * 
+     * <p>
+     * 文字列表現はバージョン間の互換性は担保されない. <br>
+     * おそらく次のような形式だろう. <br>
+     * {@code ClosedInterval[lower, apper]}
+     * </p>
+     * 
+     * @return 文字列表現
+     */
+    @Override
+    public String toString() {
+        return String.format(
+                "ClosedInterval[%s, %s]",
+                this.min, this.max);
     }
 
     /**

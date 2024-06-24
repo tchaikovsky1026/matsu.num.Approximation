@@ -1,15 +1,16 @@
-package matsu.num.approximation.polynomial;
+package matsu.num.approximation.rational;
 
 import java.util.function.DoubleUnaryOperator;
 
 import org.junit.Ignore;
 
-import matsu.num.approximation.component.DoubleFiniteClosedInterval;
+import matsu.num.approximation.DoubleFiniteClosedInterval;
 import matsu.num.commons.Exponentiation;
 
 /**
  *
  */
+@SuppressWarnings("deprecation")
 @Ignore
 public class RationalMinimaxApproximatorTest {
 

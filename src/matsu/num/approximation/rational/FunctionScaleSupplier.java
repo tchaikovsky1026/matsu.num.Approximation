@@ -7,7 +7,7 @@
 /*
  * 2024.6.20
  */
-package matsu.num.approximation.polynomial;
+package matsu.num.approximation.rational;
 
 import java.util.Objects;
 import java.util.function.DoubleUnaryOperator;
@@ -17,8 +17,10 @@ import java.util.function.DoubleUnaryOperator;
  *
  * @author Matsuura, Y.
  * @version 17.0
+ * @deprecated 一時的に非推奨に
  */
-public final class FunctionScaleSupplier{
+@Deprecated
+public final class FunctionScaleSupplier {
 
     /**
      * Minimum value of scaling value. <br>

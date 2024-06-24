@@ -7,14 +7,16 @@
 /*
  * 2024.6.20
  */
-package matsu.num.approximation.polynomial;
+package matsu.num.approximation.rational;
 
 /**
  * Rational function interface.
  *
  * @author Matsuura Y.
  * @version 17.0
+ * @deprecated 一時的に非推奨に
  */
+@Deprecated
 public interface RationalFunction {
 
     /**
@@ -66,7 +68,8 @@ public interface RationalFunction {
     public static double[] getNumeratorCombinedPolynomial(double[] polynomialCoefficient, RationalFunction rational) {
         double[] coeffNumerator = rational.getNumeratorCoefficient();
         double[] coeffDenominator = rational.getDenominatorCoefficient();
-        int numOfNewNumerator = Math.max(coeffNumerator.length, polynomialCoefficient.length + coeffDenominator.length - 1);
+        int numOfNewNumerator =
+                Math.max(coeffNumerator.length, polynomialCoefficient.length + coeffDenominator.length - 1);
         double[] out = new double[numOfNewNumerator];
         System.arraycopy(coeffNumerator, 0, out, 0, coeffNumerator.length);
         for (int i = 0; i < coeffDenominator.length; i++) {

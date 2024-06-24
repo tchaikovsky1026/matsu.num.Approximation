@@ -1,4 +1,4 @@
 /**
- * Component for function approximation.
+ * 関数の近似を扱う基本となるパッケージ.
  */
 package matsu.num.approximation;

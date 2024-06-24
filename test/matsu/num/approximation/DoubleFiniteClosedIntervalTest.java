@@ -1,8 +1,10 @@
-package matsu.num.approximation.component;
+package matsu.num.approximation;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
 
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.experimental.theories.DataPoints;
 import org.junit.experimental.theories.Theories;
@@ -81,6 +83,87 @@ final class DoubleFiniteClosedIntervalTest {
             } catch (IllegalArgumentException ignore) {
                 throw new AssertionError("ここに到達してはいけない");
             }
+        }
+    }
+
+    @RunWith(Theories.class)
+    public static class 等価性に関するテスト_等価なパターン {
+
+        private static DoubleFiniteClosedInterval reference =
+                DoubleFiniteClosedInterval.from(1d, 2d);
+
+        @DataPoints
+        public static DoubleFiniteClosedInterval[] data;
+
+        @BeforeClass
+        public static void before_データの準備() {
+            data = new DoubleFiniteClosedInterval[] {
+                    DoubleFiniteClosedInterval.from(1d, 2d),
+                    DoubleFiniteClosedInterval.from(2d, 1d)
+            };
+        }
+
+        @Theory
+        public void test_equalsとhashCode(DoubleFiniteClosedInterval obj) {
+            assertThat(obj, is(reference));
+            assertThat(obj.hashCode(), is(reference.hashCode()));
+        }
+    }
+
+    @RunWith(Theories.class)
+    public static class 等価性に関するテスト_等価でないパターン {
+
+        private static DoubleFiniteClosedInterval reference =
+                DoubleFiniteClosedInterval.from(1d, 2d);
+
+        @DataPoints
+        public static DoubleFiniteClosedInterval[] data;
+
+        @BeforeClass
+        public static void before_データの準備() {
+            data = new DoubleFiniteClosedInterval[] {
+                    DoubleFiniteClosedInterval.from(1d, 3d),
+                    DoubleFiniteClosedInterval.from(3d, 1d),
+                    DoubleFiniteClosedInterval.from(0d, 2d),
+                    DoubleFiniteClosedInterval.from(2d, 0d)
+            };
+        }
+
+        @Theory
+        public void test_equals(DoubleFiniteClosedInterval obj) {
+            assertThat(obj, is(not(reference)));
+        }
+    }
+
+    public static class 区間内判定に関する {
+
+        private static DoubleFiniteClosedInterval reference =
+                DoubleFiniteClosedInterval.from(2d, 1d);
+
+        @Test
+        public void test_下側境界は含む() {
+            assertThat(reference.accepts(1d), is(true));
+        }
+
+        @Test
+        public void test_上側境界は含む() {
+            assertThat(reference.accepts(2d), is(true));
+        }
+
+        @Test
+        public void test_内部は含む() {
+            assertThat(reference.accepts(1.5d), is(true));
+        }
+
+        @Test
+        public void test_外部は含まない() {
+            assertThat(reference.accepts(0d), is(false));
+            assertThat(reference.accepts(3d), is(false));
+        }
+
+        @Test
+        public void test_NaNは含まない() {
+            assertThat(reference.accepts(Double.NaN), is(false));
         }
     }
 }

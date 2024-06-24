@@ -7,11 +7,11 @@
 /*
  * 2024.6.20
  */
-package matsu.num.approximation.polynomial;
+package matsu.num.approximation.rational;
 
 import java.util.Arrays;
 
-import matsu.num.approximation.component.DoubleFiniteClosedInterval;
+import matsu.num.approximation.DoubleFiniteClosedInterval;
 import matsu.num.commons.Trigonometry;
 import matsu.num.matrix.base.EntryReadableMatrix;
 import matsu.num.matrix.base.GeneralMatrix;
@@ -32,7 +32,9 @@ import matsu.num.matrix.base.validation.MatrixStructureAcceptance;
  *
  * @author Matsuura Y.
  * @version 17.0
+ * @deprecated 一時的に非推奨に
  */
+@Deprecated
 public final class RationalMinimaxApproximator {
 
     private final FunctionScaleSupplier supplier;
