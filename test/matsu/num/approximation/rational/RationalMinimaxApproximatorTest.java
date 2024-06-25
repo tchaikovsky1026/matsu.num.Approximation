@@ -5,7 +5,6 @@ import java.util.function.DoubleUnaryOperator;
 import org.junit.Ignore;
 
 import matsu.num.approximation.DoubleFiniteClosedInterval;
-import matsu.num.commons.Exponentiation;
 
 /**
  *
@@ -23,7 +22,7 @@ public class RationalMinimaxApproximatorTest {
         DoubleUnaryOperator scaleFactor;
         //        function = (double t) -> MinimaxPolynomializerTest.sinSqrtX_perSqrtX(t);
         //        scaleFactor = (double t) -> MinimaxPolynomializerTest.sinSqrtX_perSqrtX(t);
-        function = (double t) -> 1 + Exponentiation.log1p(t);
+        function = (double t) -> 1 + Math.log1p(t);
         scaleFactor = (double t) -> 1;
 
         FunctionScaleSupplier fss = FunctionScaleSupplier.createScalable(function, scaleFactor);

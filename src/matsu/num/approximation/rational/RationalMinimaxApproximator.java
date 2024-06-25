@@ -5,22 +5,13 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.6.20
+ * 2024.6.25
  */
 package matsu.num.approximation.rational;
 
 import java.util.Arrays;
 
 import matsu.num.approximation.DoubleFiniteClosedInterval;
-import matsu.num.commons.Trigonometry;
-import matsu.num.matrix.base.EntryReadableMatrix;
-import matsu.num.matrix.base.GeneralMatrix;
-import matsu.num.matrix.base.Matrix;
-import matsu.num.matrix.base.MatrixDimension;
-import matsu.num.matrix.base.Vector;
-import matsu.num.matrix.base.VectorDimension;
-import matsu.num.matrix.base.nlsf.LUPivotingExecutor;
-import matsu.num.matrix.base.validation.MatrixStructureAcceptance;
 
 /**
  * Minimax-approximator by rational function. <br>
@@ -32,7 +23,7 @@ import matsu.num.matrix.base.validation.MatrixStructureAcceptance;
  *
  * @author Matsuura Y.
  * @version 17.0
- * @deprecated 一時的に非推奨に
+ * @deprecated 依存先の機能が不完全である
  */
 @Deprecated
 public final class RationalMinimaxApproximator {
@@ -82,11 +73,11 @@ public final class RationalMinimaxApproximator {
             double scaleX = (maxX - minX) / 2;
             double shiftX = minX + scaleX;
             for (int i = 0, len = numZeroNode; i < len; i++) {
-                double c = Trigonometry.cospi((double) (2 * i + 1) / (2 * numZeroNode));
+                double c = Math.cos(Math.PI * (2 * i + 1) / (2 * numZeroNode));
                 nodeZero[i] = c * scaleX + shiftX;
             }
             for (int i = 0, len = numExtremeNode; i < len; i++) {
-                double c = Trigonometry.cospi((double) i / (numExtremeNode - 1));
+                double c = Math.cos(Math.PI * i / (numExtremeNode - 1));
                 nodeExtreme[i] = c * scaleX + shiftX;
             }
             Arrays.sort(nodeZero);
@@ -218,29 +209,7 @@ public final class RationalMinimaxApproximator {
                 }
             }
 
-            GeneralMatrix.Builder mxCoeffBuilder = GeneralMatrix.Builder
-                    .zero(MatrixDimension.square(numNodeZero));
-            for (int i = 0; i < numNodeZero; i++) {
-                for (int j = 0; j < numNodeZero; j++) {
-                    mxCoeffBuilder.setValue(i, j, mxCoeffEntry[i][j]);
-                }
-            }
-            EntryReadableMatrix mxCoeff = mxCoeffBuilder.build();
-
-            LUPivotingExecutor lupExecutor = LUPivotingExecutor.instance();
-            MatrixStructureAcceptance acceptance = lupExecutor.accepts(mxCoeff);
-            acceptance.getException(mxCoeff).ifPresent(e -> {
-                throw new IllegalArgumentException("too large degree.");
-            });
-            Matrix lupf = lupExecutor
-                    .apply(mxCoeff, 1E-10)
-                    .orElseThrow(() -> new IllegalArgumentException("too large degree of denominator."))
-                    .inverse();
-            Vector.Builder rvBuilder = Vector.Builder.zeroBuilder(VectorDimension.valueOf(fi.length));
-            rvBuilder.setEntryValue(fi);
-            Vector rightVec = rvBuilder.build();
-            Vector sol = lupf.operate(rightVec);
-            double[] root = sol.entryAsArray();
+            double[] root = LinearEquationSolver.execute(mxCoeffEntry, fi);
             System.arraycopy(root, 0, coeffNumerator, 0, coeffNumerator.length);
             coeffDenominator[0] = 1;
             System.arraycopy(root, coeffNumerator.length, coeffDenominator, 1, coeffDenominator.length - 1);

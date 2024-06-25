@@ -4,18 +4,13 @@
  * </p>
  * 
  * <p>
- * <i>必須モジュール:</i> <br>
- * {@code matsu.num.Commons} <br>
- * {@code matsu.num.matrix.Base}
- * 
+ * <i>必須モジュール:</i>
  * </p>
  * 
  * @author Matsuura Y.
  * @version 18.0
  */
 module matsu.num.Approximation {
-    requires matsu.num.Commons;
-    requires matsu.num.matrix.Base;
 
     exports matsu.num.approximation;
     exports matsu.num.approximation.polynomial;
