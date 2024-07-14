@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.6.24
+ * 2024.7.14
  */
 package matsu.num.approximation.polynomial;
 
@@ -22,7 +22,7 @@ import matsu.num.approximation.component.NodeCreation;
  * スレッドセーフでないので, 単一スレッド内でインスタンスが共有されるようにしなければならない.
  * 
  * @author Matsuura Y.
- * @version 18.0
+ * @version 18.1
  */
 final class MinimaxPolynomialApproxCalculation {
 
@@ -50,7 +50,7 @@ final class MinimaxPolynomialApproxCalculation {
         RemezIterator remezIterator =
                 new RemezIterator(NodeCreation.execute(this.order + 2, target.interval()));
 
-        int iteration = 100;
+        int iteration = 1000;
         double[] relativeDeltas = { 0.1, 0.03, 0.01, 0.003, 0.001, 3E-4, 1E-4 };
         for (double rd : relativeDeltas) {
             for (int c = 0; c < iteration; c++) {
@@ -120,16 +120,23 @@ final class MinimaxPolynomialApproxCalculation {
 
             //端を除くノードをわずかに動かす処理
             double[] nextNodes = this.node.clone();
-            for (int i = 1; i < node.length - 1; i++) {
+            for (int i = 0; i < node.length; i++) {
                 //偶数番目のノードはそのまま, 奇数番目のノードは反転させる
                 boolean node_sign = err_sign_is_positive ^ ((i & 1) == 1);
 
-                double x_prev = node[i - 1];
+                double x_prev = i == 0
+                        ? target.interval().lower()
+                        : node[i - 1];
                 double x_mid = node[i];
-                double x_next = node[i + 1];
+                double x_next = i == node.length - 1
+                        ? target.interval().upper()
+                        : node[i + 1];
 
-                double x_l = x_mid + (x_prev - x_mid) * relativeDelta;
-                double x_u = x_mid + (x_next - x_mid) * relativeDelta;
+                double gap_l = x_mid - x_prev;
+                double gap_u = x_next - x_mid;
+
+                double x_l = x_mid - gap_l * relativeDelta;
+                double x_u = x_mid + gap_u * relativeDelta;
 
                 double e_l = error.value(x_l);
                 double e_mid = error.value(x_mid);

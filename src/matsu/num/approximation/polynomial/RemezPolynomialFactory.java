@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.6.24
+ * 2024.7.14
  */
 package matsu.num.approximation.polynomial;
 
@@ -19,7 +19,6 @@ import matsu.num.approximation.PolynomialFunction;
 import matsu.num.approximation.TargetFunction;
 import matsu.num.approximation.component.ApproximationFailedException;
 import matsu.num.approximation.component.NewtonPolynomial;
-import matsu.num.approximation.component.SimplePolynomial;
 
 /**
  * <p>
@@ -32,7 +31,7 @@ import matsu.num.approximation.component.SimplePolynomial;
  * </p>
  * 
  * @author Matsuura Y.
- * @version 18.0
+ * @version 18.1
  */
 final class RemezPolynomialFactory {
 
@@ -74,7 +73,20 @@ final class RemezPolynomialFactory {
         }
 
         double[] thinnedNode = Arrays.copyOf(node, node.length - 1);
-        PolynomialFunction p1 = NewtonPolynomial.from(thinnedNode, funcValue);
+
+        /*
+         * p1は, p(x_i) = f(x_i)を満たすような多項式.
+         * i = 0, ... , n
+         */
+        double[] f = new double[thinnedNode.length];
+        for (int i = 0; i < f.length; i++) {
+            double v = funcValue.applyAsDouble(thinnedNode[i]);
+            if (!Double.isFinite(v)) {
+                throw new ApproximationFailedException("valueに非有限数が混入");
+            }
+            f[i] = v;
+        }
+        PolynomialFunction p1 = NewtonPolynomial.from(thinnedNode, f);
 
         /*
          * p2は, p(x_i) = (-1)^i * scale(x_i)を満たすような多項式.
@@ -99,13 +111,11 @@ final class RemezPolynomialFactory {
             throw new ApproximationFailedException("誤差の値が不正");
         }
 
-        double[] coeffP = p1.coefficient();
         {
-            double[] coeffP2 = p2.coefficient();
-            for (int i = 0; i < coeffP.length; i++) {
-                coeffP[i] -= coeffP2[i] * e;
+            for (int i = 0; i < f.length; i++) {
+                f[i] -= alternateError[i] * e;
             }
         }
-        return SimplePolynomial.of(coeffP);
+        return NewtonPolynomial.from(thinnedNode, f);
     }
 }

@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.6.20
+ * 2024.7.14
  */
 package matsu.num.approximation;
 
@@ -27,7 +27,7 @@ package matsu.num.approximation;
  * </p>
  *
  * @author Matsuura, Y.
- * @version 18.0
+ * @version 18.1
  */
 public final class DoubleFiniteClosedInterval {
 
@@ -44,11 +44,15 @@ public final class DoubleFiniteClosedInterval {
     private final double min;
     private final double max;
 
+    private final double gap;
+
     private final int immutableHashCode;
 
     private DoubleFiniteClosedInterval(double min, double max) {
         this.min = min;
         this.max = max;
+
+        this.gap = this.max - this.min;
 
         this.immutableHashCode = this.calcHashCode();
     }
@@ -69,6 +73,15 @@ public final class DoubleFiniteClosedInterval {
      */
     public double upper() {
         return this.max;
+    }
+
+    /**
+     * この区間の幅 (upper - lower) を返す.
+     * 
+     * @return 区間幅
+     */
+    public double gap() {
+        return this.gap;
     }
 
     /**
