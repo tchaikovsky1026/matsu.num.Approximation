@@ -1,4 +1,4 @@
-package matsu.num.approximation.behavior;
+package matsu.num.approximation.behavior.polynomial;
 
 import org.junit.Ignore;
 

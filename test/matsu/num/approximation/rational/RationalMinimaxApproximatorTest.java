@@ -64,6 +64,7 @@ public class RationalMinimaxApproximatorTest {
         System.out.println("");
     }
 
+    @SuppressWarnings("unused")
     private static double sinSqrtX_perSqrtX(double x) {
 
         double value = 0;

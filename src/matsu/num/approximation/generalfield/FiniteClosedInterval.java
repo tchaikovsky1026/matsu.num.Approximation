@@ -5,19 +5,18 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.7.14
+ * 2024.9.5
  */
-package matsu.num.approximation;
+package matsu.num.approximation.generalfield;
 
 /**
  * <p>
- * {@code double} 値に関する有限閉区間を扱う. <br>
+ * {@link PseudoRealNumber} のサブタイプ {@code T} に関する有限閉区間を扱う. <br>
  * 区間の境界値に基づくequalityを提供する.
  * </p>
  * 
  * <p>
  * サポートされているのは, 次を満たす閉区間 [<i>a</i>, <i>b</i>] である. <br>
- * |<i>a</i>| &lt; &infin;, |<i>b</i>| &lt; &infin;,
  * (<i>b</i> - <i>a</i>) &ge; max(<i>e</i><sub>a</sub>,
  * <i>e</i><sub>r</sub>|<i>a</i>|,
  * <i>e</i><sub>r</sub>|<i>b</i>|) <br>
@@ -27,9 +26,10 @@ package matsu.num.approximation;
  * </p>
  *
  * @author Matsuura, Y.
- * @version 18.1
+ * @version 18.2
+ * @param <T> 体の元を表現する型パラメータ
  */
-public final class DoubleFiniteClosedInterval {
+public final class FiniteClosedInterval<T extends PseudoRealNumber<T>> {
 
     /**
      * 区間の絶対最小幅を表す定数 (<i>e</i><sub>a</sub>).
@@ -41,18 +41,24 @@ public final class DoubleFiniteClosedInterval {
      */
     public static final double LOWER_LIMIT_OF_RELATIVE_WIDTH = 1E-10;
 
-    private final double min;
-    private final double max;
+    private final T min;
+    private final T max;
 
-    private final double gap;
+    private final T gap;
 
     private final int immutableHashCode;
 
-    private DoubleFiniteClosedInterval(double min, double max) {
+    /**
+     * 唯一の公開しないコンストラクタ.
+     * {@literal min <= max} を要求する.
+     */
+    private FiniteClosedInterval(T min, T max) {
+        assert min.compareTo(max) <= 0;
+
         this.min = min;
         this.max = max;
 
-        this.gap = this.max - this.min;
+        this.gap = this.max.minus(this.min);
 
         this.immutableHashCode = this.calcHashCode();
     }
@@ -62,7 +68,7 @@ public final class DoubleFiniteClosedInterval {
      * 
      * @return 下側境界値
      */
-    public double lower() {
+    public T lower() {
         return this.min;
     }
 
@@ -71,7 +77,7 @@ public final class DoubleFiniteClosedInterval {
      * 
      * @return 上側境界値
      */
-    public double upper() {
+    public T upper() {
         return this.max;
     }
 
@@ -80,7 +86,7 @@ public final class DoubleFiniteClosedInterval {
      * 
      * @return 区間幅
      */
-    public double gap() {
+    public T gap() {
         return this.gap;
     }
 
@@ -91,10 +97,11 @@ public final class DoubleFiniteClosedInterval {
      * 
      * @param x <i>x</i>, 引数
      * @return 閉区間に含まれる場合はtrue
+     * @throws NullPointerException 引数がnullの場合
      */
-    public boolean accepts(double x) {
-        return x >= this.lower() &&
-                x <= this.upper();
+    public boolean accepts(T x) {
+        return x.compareTo(this.lower()) >= 0 &&
+                x.compareTo(this.upper()) <= 0;
     }
 
     /**
@@ -108,11 +115,11 @@ public final class DoubleFiniteClosedInterval {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof DoubleFiniteClosedInterval target)) {
+        if (!(obj instanceof FiniteClosedInterval<?> target)) {
             return false;
         }
-        return Double.compare(this.min, target.min) == 0 &&
-                Double.compare(this.max, target.max) == 0;
+        return this.min.equals(target.min) &&
+                this.max.equals(target.max);
     }
 
     /**
@@ -132,8 +139,8 @@ public final class DoubleFiniteClosedInterval {
      * @return ハッシュコード
      */
     private int calcHashCode() {
-        int result = Double.hashCode(this.min);
-        result = 31 * result + Double.hashCode(this.max);
+        int result = this.min.hashCode();
+        result = 31 * result + this.max.hashCode();
         return result;
     }
 
@@ -169,14 +176,11 @@ public final class DoubleFiniteClosedInterval {
      * @param x2 <i>x</i><sub>2</sub>, 引数
      * @return 適合する場合はtrue
      */
-    public static boolean acceptsBoundaryValues(double x1, double x2) {
-        if (!Double.isFinite(x1) || !Double.isFinite(x2)) {
-            return false;
-        }
-        double width = Math.abs(x1 - x2);
-        return width >= LOWER_LIMIT_OF_ABSOLUTE_WIDTH &&
-                width >= Math.abs(x1) * LOWER_LIMIT_OF_RELATIVE_WIDTH &&
-                width >= Math.abs(x2) * LOWER_LIMIT_OF_RELATIVE_WIDTH;
+    public static <T extends PseudoRealNumber<T>> boolean acceptsBoundaryValues(T x1, T x2) {
+        T width = x1.minus(x2).abs();
+        return width.asDouble() >= LOWER_LIMIT_OF_ABSOLUTE_WIDTH &&
+                width.compareTo(x1.abs().times(LOWER_LIMIT_OF_RELATIVE_WIDTH)) >= 0 &&
+                width.compareTo(x2.abs().times(LOWER_LIMIT_OF_RELATIVE_WIDTH)) >= 0;
     }
 
     /**
@@ -188,7 +192,8 @@ public final class DoubleFiniteClosedInterval {
      * </p>
      * 
      * <p>
-     * 値の正当性の判定には {@link #acceptsBoundaryValues(double, double)} が用いられ,
+     * 値の正当性の判定には
+     * {@link #acceptsBoundaryValues(PseudoRealNumber, PseudoRealNumber)} が用いられ,
      * 不適の場合は例外がスローされる.
      * </p>
      *
@@ -197,21 +202,21 @@ public final class DoubleFiniteClosedInterval {
      * @return 有限閉区間
      * @throws IllegalArgumentException 値が適合しない場合
      */
-    public static DoubleFiniteClosedInterval from(double x1, double x2) {
+    public static <T extends PseudoRealNumber<T>> FiniteClosedInterval<T> from(T x1, T x2) {
         if (!acceptsBoundaryValues(x1, x2)) {
             throw new IllegalArgumentException(
                     String.format("値が不適である: x1 = %s, x2 = %s", x1, x2));
         }
 
-        double min;
-        double max;
-        if (x1 > x2) {
+        final T min;
+        final T max;
+        if (x1.compareTo(x2) > 0) {
             min = x2;
             max = x1;
         } else {
             min = x1;
             max = x2;
         }
-        return new DoubleFiniteClosedInterval(min, max);
+        return new FiniteClosedInterval<>(min, max);
     }
 }
