@@ -5,13 +5,13 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.5
+ * 2024.9.17
  */
 package matsu.num.approximation.generalfield;
 
 /**
  * <p>
- * 近似されるターゲット関数を扱うインターフェース. <br>
+ * 近似されるターゲット関数を扱う. <br>
  * 有限閉区間で定義された1変数関数 <i>f</i>:
  * [<i>a</i>, <i>b</i>] &rarr; &#x211D;
  * を表す.
@@ -28,7 +28,8 @@ package matsu.num.approximation.generalfield;
  * <p>
  * 実数は {@link PseudoRealNumber} のサブタイプ {@code T} として表現される. <br>
  * 区間内において, <i>f</i>は有限の値を返し,
- * <i>s</i><sub><i>f</i></sub>は有限かつ正の値を返すことが保証されている.
+ * <i>s</i><sub><i>f</i></sub>は有限かつ正の値を返す. <br>
+ * 値が返せない場合は {@link ArithmeticException} をスローことになるが, 近似には失敗するだろう.
  * </p>
  * 
  * <p>
@@ -37,49 +38,106 @@ package matsu.num.approximation.generalfield;
  * </p>
  * 
  * @author Matsuura Y.
- * @version 18.2
+ * @version 19.0
  * @param <T> 体の元を表現する型パラメータ
  */
-public interface ApproxTarget<T extends PseudoRealNumber<T>> {
+public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
+
+    /**
+     * 唯一のコンストラクタ.
+     */
+    protected ApproxTarget() {
+        super();
+    }
 
     /**
      * 与えられた <i>x</i> に対し, <i>f</i>(<i>x</i>) の値 (有限値) を返す. <br>
      * <i>x</i> が区間外の場合は {@link IllegalArgumentException} がスローされる. <br>
-     * 
-     * <p>
-     * <i>
-     * 実装規約: <br>
-     * <i>x</i> が区間内であれば, 必ず値を返さなければならない. <br>
-     * <i>x</i> が区間内であるにもかかわらず値を返せないような {@link ApproxTarget} インスタンスは存在してはならない.
-     * </i>
-     * </p>
+     * オーバーフローなどで値が計算できなかった場合, {@link ArithmeticException} がスローされる.
      * 
      * @param x <i>x</i>, 引数
      * @return <i>f</i>(<i>x</i>)
      * @throws IllegalArgumentException 引数が区間外の場合
+     * @throws ArithmeticException 値が計算できなかった場合
      * @throws NullPointerException 引数がnullの場合
      */
-    public abstract T value(T x);
+    public final T value(T x) {
+        if (!this.accepts(x)) {
+            throw new IllegalArgumentException("範囲外");
+        }
+
+        return this.calcValue(x);
+    }
+
+    /**
+     * {@link #value(PseudoRealNumber)} で返す値の計算を行うための抽象メソッド.
+     * 
+     * <p>
+     * このメソッドは {@link #value(PseudoRealNumber)} の内部で呼ばれることを想定しており,
+     * 外部から呼ぶことは許されず, アクセス修飾子を緩めてはいけない. <br>
+     * 内部から呼ばれる場合, 引数 <i>x</i> は必ず区間内である
+     * (したがって, {@code null} でない).
+     * </p>
+     * 
+     * <p>
+     * <i>
+     * 実装規約:
+     * 値が計算できない場合, {@link ArithmeticException} をスローしてよい.
+     * </i>
+     * </p>
+     * 
+     * @param x <i>x</i>, 引数
+     * @throws ArithmeticException 値が計算できなかった場合
+     * @return <i>f</i>(<i>x</i>)
+     */
+    protected abstract T calcValue(T x);
 
     /**
      * 与えられた <i>x</i> に対し,
      * <i>s</i><sub><i>f</i></sub>(<i>x</i>) の値 (有限の正の値) を返す. <br>
      * <i>x</i> が区間外の場合は {@link IllegalArgumentException} がスローされる. <br>
-     * 
-     * <p>
-     * <i>
-     * 実装規約: <br>
-     * <i>x</i> が区間内であれば, 必ず値を返さなければならない. <br>
-     * <i>x</i> が区間内であるにもかかわらず値を返せないような {@link ApproxTarget} インスタンスは存在してはならない.
-     * </i>
-     * </p>
+     * 値が正でなかった場合 (一種のバグ) やオーバーフローなどで値が計算できなかった場合, {@link ArithmeticException} がスローされる.
      * 
      * @param x <i>x</i>, 引数
      * @return <i>s</i><sub><i>f</i></sub>(<i>x</i>)
      * @throws IllegalArgumentException 引数が区間外の場合
+     * @throws ArithmeticException 値が計算できなかった場合, スケールの値が正でない場合
      * @throws NullPointerException 引数がnullの場合
      */
-    public abstract T scale(T x);
+    public final T scale(T x) {
+        if (!this.accepts(x)) {
+            throw new IllegalArgumentException("範囲外");
+        }
+
+        T out = this.calcScale(x);
+        if (out.compareTo(this.elementProvider().zero()) <= 0) {
+            throw new ArithmeticException("スケールの値が正でない");
+        }
+        return out;
+    }
+
+    /**
+     * {@link #scale(PseudoRealNumber)} で返す値の計算を行うための抽象メソッド.
+     * 
+     * <p>
+     * このメソッドは {@link #scale(PseudoRealNumber)} の内部で呼ばれることを想定しており,
+     * 外部から呼ぶことは許されず, アクセス修飾子を緩めてはいけない. <br>
+     * 内部から呼ばれる場合, 引数 <i>x</i> は必ず区間内である
+     * (したがって, {@code null} でない).
+     * </p>
+     * 
+     * <p>
+     * <i>
+     * 実装規約:
+     * 値が計算できない場合, {@link ArithmeticException} をスローしてよい.
+     * </i>
+     * </p>
+     * 
+     * @param x <i>x</i>, 引数
+     * @throws ArithmeticException 値が計算できなかった場合
+     * @return <i>f</i>(<i>x</i>)
+     */
+    protected abstract T calcScale(T x);
 
     /**
      * <p>
@@ -90,21 +148,11 @@ public interface ApproxTarget<T extends PseudoRealNumber<T>> {
      * において {@link IllegalArgumentException} はスローされない.
      * </p>
      * 
-     * <p>
-     * <i>
-     * 実装規約: <br>
-     * {@code this.accepts(x) == this.interval().accepts(x)} <br>
-     * を要請する
-     * (例外をスローするかどうかも一致する). <br>
-     * デフォルト実装はこれを満たしている.
-     * </i>
-     * </p>
-     * 
      * @param x 引数
      * @return 引数が受け入れられる場合はtrue
      * @throws NullPointerException 引数がnullの場合
      */
-    public default boolean accepts(T x) {
+    public final boolean accepts(T x) {
         return this.interval().accepts(x);
     }
 

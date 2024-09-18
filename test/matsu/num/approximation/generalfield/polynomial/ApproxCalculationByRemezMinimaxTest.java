@@ -46,12 +46,12 @@ final class ApproxCalculationByRemezMinimaxTest {
                                 PROVIDER.fromDoubleValue(1d), PROVIDER.fromDoubleValue(3d));
 
                 @Override
-                public DoubleLike value(DoubleLike x) {
+                protected DoubleLike calcValue(DoubleLike x) {
                     return value;
                 }
 
                 @Override
-                public DoubleLike scale(DoubleLike x) {
+                protected DoubleLike calcScale(DoubleLike x) {
                     return scale;
                 }
 
@@ -136,12 +136,12 @@ final class ApproxCalculationByRemezMinimaxTest {
                                 PROVIDER.fromDoubleValue(1d), PROVIDER.fromDoubleValue(3d));
 
                 @Override
-                public DoubleLike value(DoubleLike x) {
+                protected DoubleLike calcValue(DoubleLike x) {
                     return x;
                 }
 
                 @Override
-                public DoubleLike scale(DoubleLike x) {
+                protected DoubleLike calcScale(DoubleLike x) {
                     return x;
                 }
 

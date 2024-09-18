@@ -8,10 +8,12 @@
  * </p>
  * 
  * @author Matsuura Y.
- * @version 18.2
+ * @version 19.0
  */
 module matsu.num.Approximation {
 
     exports matsu.num.approximation;
     exports matsu.num.approximation.polynomial;
+    exports matsu.num.approximation.generalfield;
+    exports matsu.num.approximation.generalfield.polynomial;
 }

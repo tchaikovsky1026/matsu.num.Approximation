@@ -1,4 +1,4 @@
-package matsu.num.approximation.component;
+package matsu.num.approximation.polynomial;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
@@ -8,13 +8,13 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
 import matsu.num.approximation.DoubleRelativeAssertion;
-import matsu.num.approximation.PolynomialFunction;
 
 /**
  * {@link SimplePolynomial} クラスのテスト.
  * 
  * @author Matsuura Y.
  */
+@SuppressWarnings("removal")
 @RunWith(Enclosed.class)
 final class SimplePolynomialTest {
 
@@ -30,7 +30,7 @@ final class SimplePolynomialTest {
              * p(x) = 2
              */
             double[] coeff = { 2d };
-            PolynomialFunction function = SimplePolynomial.of(coeff);
+            DoublePolynomial function = SimplePolynomial.of(coeff);
 
             assertThat(function.degree(), is(0));
             DOUBLE_RELATIVE_ASSERTION.compareAndAssert(2d, function.value(1d));
@@ -43,7 +43,7 @@ final class SimplePolynomialTest {
              * p(x) = 4 + 3x
              */
             double[] coeff = { 4d, 3d };
-            PolynomialFunction function = SimplePolynomial.of(coeff);
+            DoublePolynomial function = SimplePolynomial.of(coeff);
 
             assertThat(function.degree(), is(1));
             DOUBLE_RELATIVE_ASSERTION.compareAndAssert(7d, function.value(1d));
@@ -56,7 +56,7 @@ final class SimplePolynomialTest {
              * p(x) = 4 + 3x + 5x^2
              */
             double[] coeff = { 4d, 3d, 5d };
-            PolynomialFunction function = SimplePolynomial.of(coeff);
+            DoublePolynomial function = SimplePolynomial.of(coeff);
 
             assertThat(function.degree(), is(2));
             DOUBLE_RELATIVE_ASSERTION.compareAndAssert(12d, function.value(1d));

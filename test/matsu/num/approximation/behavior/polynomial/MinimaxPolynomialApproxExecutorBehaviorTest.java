@@ -2,10 +2,10 @@ package matsu.num.approximation.behavior.polynomial;
 
 import org.junit.Ignore;
 
-import matsu.num.approximation.Approximation;
+import matsu.num.approximation.ApproxResult;
+import matsu.num.approximation.DoubleApproxTarget;
 import matsu.num.approximation.DoubleFiniteClosedInterval;
-import matsu.num.approximation.PolynomialFunction;
-import matsu.num.approximation.TargetFunction;
+import matsu.num.approximation.polynomial.DoublePolynomial;
 import matsu.num.approximation.polynomial.MinimaxPolynomialApproxExecutor;
 
 /**
@@ -20,7 +20,7 @@ import matsu.num.approximation.polynomial.MinimaxPolynomialApproxExecutor;
 @Ignore
 final class MinimaxPolynomialApproxExecutorBehaviorTest {
 
-    private final TargetFunction target;
+    private final DoubleApproxTarget target;
 
     public static void main(String[] args) {
         new MinimaxPolynomialApproxExecutorBehaviorTest().execute();
@@ -33,7 +33,7 @@ final class MinimaxPolynomialApproxExecutorBehaviorTest {
     void execute() {
 
         int degree = 9;
-        Approximation<PolynomialFunction> result =
+        ApproxResult<DoublePolynomial> result =
                 MinimaxPolynomialApproxExecutor.of(degree).apply(target);
 
         double x_min = target.interval().lower();
@@ -62,17 +62,17 @@ final class MinimaxPolynomialApproxExecutorBehaviorTest {
     /**
      * ターゲット関数: exp(x) [0d, 1d]
      */
-    static TargetFunction exp() {
+    static DoubleApproxTarget exp() {
         final DoubleFiniteClosedInterval interval = DoubleFiniteClosedInterval.from(0d, 1d);
-        return new TargetFunction() {
+        return new DoubleApproxTarget() {
 
             @Override
-            public double value(double x) {
+            protected double calcValue(double x) {
                 return Math.exp(x);
             }
 
             @Override
-            public double scale(double x) {
+            protected double calcScale(double x) {
                 return Math.exp(x);
             }
 

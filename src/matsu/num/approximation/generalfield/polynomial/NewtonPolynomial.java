@@ -5,11 +5,10 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.3
+ * 2024.9.17
  */
 package matsu.num.approximation.generalfield.polynomial;
 
-import java.util.Objects;
 import java.util.function.UnaryOperator;
 
 import matsu.num.approximation.generalfield.PseudoRealNumber;
@@ -41,14 +40,15 @@ import matsu.num.approximation.generalfield.PseudoRealNumber.Provider;
  * </p>
  * 
  * <p>
- * このクラスにおいては最低限の機能を持つイミュータブルなオブジェクトとして実装されている. <br>
  * Newton 補間は逐次的にノードを追加するのに向いた方法であるが,
- * このクラスはそのような柔軟な利用は想定されていない. <br>
- * したがって, 外部に公開されるべきではない.
+ * このクラスはそのような柔軟な利用は想定されておらず,
+ * 内部的に利用するための, 最低限の機能を持つイミュータブルなオブジェクトとして実装されている. <br>
+ * そのため, パッケージプライベートメソッドについては, 例外のスローでなくアサーションにより対応している. <br>
+ * 言うまでもなく, 外部に公開されるべきではない.
  * </p>
  *
  * @author Matsuura, Y.
- * @version 18.2
+ * @version 19.0
  */
 final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements Polynomial<T> {
 
@@ -62,10 +62,6 @@ final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements Polynomia
 
     /**
      * 内部でバリデーションされていない.
-     * 
-     * @param node
-     * @param newtonCoeff
-     * @param elementProvider
      */
     private NewtonPolynomial(T[] node, T[] newtonCoeff,
             PseudoRealNumber.Provider<T> elementProvider) {
@@ -134,18 +130,19 @@ final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements Polynomia
     /**
      * 与えられたノードと値を実現するような, Newton 補間多項式を返す. <br>
      * ノードが接近しすぎる, 値が極端である, といった場合は多項式が適切に生成できないため,
-     * {@link ArithmeticException} がスローされる.
+     * {@link ArithmeticException} がスローされる. <br>
+     * ノードと値のサイズは, 1以上かつ同じでなければならない.
+     * 
      * 
      * @param <T> 体の元を表す型パラメータ
      * @param node ノード
      * @param value ノードに対応する値
      * @param elementProvider 体の元に関するプロバイダ
      * @return Newton 補間多項式
-     * @throws IllegalArgumentException サイズが整合しない場合, サイズが0の場合
      * @throws ArithmeticException 多項式が適切に生成できない場合
-     * @throws NullPointerException nullが含まれる場合
+     * @throws NullPointerException null
      */
-    public static <T extends PseudoRealNumber<T>> NewtonPolynomial<T> from(
+    static <T extends PseudoRealNumber<T>> NewtonPolynomial<T> from(
             T[] node, T[] value, PseudoRealNumber.Provider<T> elementProvider) {
         return construct(node.clone(), value.clone(), elementProvider);
     }
@@ -153,7 +150,8 @@ final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements Polynomia
     /**
      * 与えられた関数をノードの位置で評価し, Newton 補間多項式を返す. <br>
      * ノードが接近しすぎる, 値が極端である, といった場合は多項式が適切に生成できないため,
-     * {@link ArithmeticException} がスローされる.
+     * {@link ArithmeticException} がスローされる. <br>
+     * ノードと値のサイズは, 1以上かつ同じでなければならない.
      * 
      * <p>
      * 関数 (function) は, {@code null} でない {@code T}
@@ -165,11 +163,10 @@ final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements Polynomia
      * @param function 関数
      * @param elementProvider 体の元に関するプロバイダ
      * @return Newton 補間多項式
-     * @throws IllegalArgumentException ノードのサイズが0の場合
      * @throws ArithmeticException 多項式が適切に生成できない場合
      * @throws NullPointerException nullが含まれる場合, 関数がnullを返した場合
      */
-    public static <T extends PseudoRealNumber<T>> NewtonPolynomial<T> from(
+    static <T extends PseudoRealNumber<T>> NewtonPolynomial<T> from(
             T[] node, UnaryOperator<T> function, PseudoRealNumber.Provider<T> elementProvider) {
         T[] nodeClone = node.clone();
         T[] value = elementProvider.createArray(nodeClone.length);
@@ -183,16 +180,16 @@ final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements Polynomia
      * Newton 補間多項式を構築する内部実装.
      * 引数にはcloneを渡すこと.
      * 
-     * @throws IllegalArgumentException サイズが整合しない場合,
-     *             サイズが0の場合
      * @throws ArithmeticException 多項式が適切に生成できない場合
      * @throws NullPointerException null
      */
     private static <T extends PseudoRealNumber<T>> NewtonPolynomial<T> construct(
             T[] node, T[] value, PseudoRealNumber.Provider<T> elementProvider) {
-        //ここで例外発生の可能性がある
-        NewtonCoefficientCalc<T> calc = new NewtonCoefficientCalc<>(node, value, elementProvider);
 
+        assert node.length == value.length : "サイズが整合しない";
+        assert node.length > 0 : "サイズ0";
+
+        NewtonCoefficientCalc<T> calc = new NewtonCoefficientCalc<>(node, value, elementProvider);
         return new NewtonPolynomial<>(node, calc.calcAndGet(), elementProvider);
     }
 
@@ -202,23 +199,11 @@ final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements Polynomia
         private final T[] value;
         private final PseudoRealNumber.Provider<T> elementProvider;
 
-        /**
-         * @throws IllegalArgumentException サイズが整合しない場合,
-         *             サイズが0の場合
-         * @throws NullPointerException null
-         */
         NewtonCoefficientCalc(T[] node, T[] value, PseudoRealNumber.Provider<T> elementProvider) {
             super();
             this.node = node;
             this.value = value;
-            this.elementProvider = Objects.requireNonNull(elementProvider);
-
-            if (node.length != value.length) {
-                throw new IllegalArgumentException("サイズが整合しない");
-            }
-            if (node.length == 0) {
-                throw new IllegalArgumentException("サイズ0");
-            }
+            this.elementProvider = elementProvider;
         }
 
         /**

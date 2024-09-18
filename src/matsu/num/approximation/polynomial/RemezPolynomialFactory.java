@@ -5,20 +5,14 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.7.14
+ * 2024.9.18
  */
 package matsu.num.approximation.polynomial;
 
 import java.util.Arrays;
-import java.util.Objects;
-import java.util.function.DoublePredicate;
-import java.util.function.DoubleUnaryOperator;
 
-import matsu.num.approximation.DoubleFiniteClosedInterval;
-import matsu.num.approximation.PolynomialFunction;
-import matsu.num.approximation.TargetFunction;
+import matsu.num.approximation.DoubleApproxTarget;
 import matsu.num.approximation.component.ApproximationFailedException;
-import matsu.num.approximation.component.NewtonPolynomial;
 
 /**
  * <p>
@@ -30,47 +24,38 @@ import matsu.num.approximation.component.NewtonPolynomial;
  * (<i>n</i> + 2)個のノード
  * </p>
  * 
+ * <p>
+ * 各メソッドの引数に対する契約は, プログラミングエラーによるものについてはアサーションで対応している. <br>
+ * したがって, このクラスは外部に公開されてはいけない.
+ * </p>
+ * 
  * @author Matsuura Y.
- * @version 18.1
+ * @version 19.0
  */
 final class RemezPolynomialFactory {
 
-    private final TargetFunction target;
+    private final DoubleApproxTarget target;
 
-    private final DoubleUnaryOperator funcValue;
-    private final DoubleUnaryOperator funcScale;
-    private final DoubleFiniteClosedInterval interval;
-    private final DoublePredicate acceptsNode;
-
-    RemezPolynomialFactory(TargetFunction target) {
-        this.target = Objects.requireNonNull(target);
-
-        this.funcValue = this.target::value;
-        this.funcScale = this.target::scale;
-        this.interval = this.target.interval();
-        this.acceptsNode = this.interval::accepts;
+    RemezPolynomialFactory(DoubleApproxTarget target) {
+        this.target = target;
     }
 
     /**
      * Remez 多項式を構成する.
      * 
-     * @param node ノード
+     * @param node ノード, 2以上でなければならない
      * @return Remez多項式
      * @throws ApproximationFailedException 多項式の構成に破綻した場合
-     *             (ノード数が2未満を含む)
-     * @throws NullPointerException nullを含む
+     * @throws NullPointerException null
      */
-    public PolynomialFunction create(double[] node) throws ApproximationFailedException {
-        if (node.length < 2) {
-            throw new ApproximationFailedException("ノード数が2未満");
-        }
+    DoublePolynomial create(double[] node) throws ApproximationFailedException {
+        assert node.length >= 2 : "ノード数が2未満";
 
         //ノードを検証し,ソートする
         node = node.clone();
         Arrays.sort(node);
-        if (!Arrays.stream(node).allMatch(this.acceptsNode)) {
-            throw new ApproximationFailedException("ノードが定義域内でない");
-        }
+
+        assert Arrays.stream(node).allMatch(this.target::accepts) : "ノードが定義域内でない";
 
         double[] thinnedNode = Arrays.copyOf(node, node.length - 1);
 
@@ -80,13 +65,13 @@ final class RemezPolynomialFactory {
          */
         double[] f = new double[thinnedNode.length];
         for (int i = 0; i < f.length; i++) {
-            double v = funcValue.applyAsDouble(thinnedNode[i]);
+            double v = this.target.value(thinnedNode[i]);
             if (!Double.isFinite(v)) {
-                throw new ApproximationFailedException("valueに非有限数が混入");
+                throw new ApproximationFailedException("valueが不正");
             }
             f[i] = v;
         }
-        PolynomialFunction p1 = NewtonPolynomial.from(thinnedNode, f);
+        DoublePolynomial p1 = DoubleNewtonPolynomial.from(thinnedNode, f);
 
         /*
          * p2は, p(x_i) = (-1)^i * scale(x_i)を満たすような多項式.
@@ -94,28 +79,28 @@ final class RemezPolynomialFactory {
          */
         double[] alternateError = new double[thinnedNode.length];
         for (int i = 0; i < alternateError.length; i++) {
-            double scale = funcScale.applyAsDouble(thinnedNode[i]);
-            if (!(Double.isFinite(scale) && scale > 0d)) {
-                throw new ApproximationFailedException("scaleに負数あるいは非有限数が混入");
+            double scale = this.target.scale(thinnedNode[i]);
+            if (!(Double.isFinite(scale))) {
+                throw new ApproximationFailedException("scaleが不正");
             }
             alternateError[i] = (i & 1) == 1 ? -scale : scale;
         }
-        PolynomialFunction p2 = NewtonPolynomial.from(thinnedNode, alternateError);
+        DoublePolynomial p2 = DoubleNewtonPolynomial.from(thinnedNode, alternateError);
 
         //x_{n+1}からEを求める
         double x_last = node[node.length - 1];
-        double sign = (node.length - 1 & 1) == 1 ? -1d : 1d;
-        double e = (p1.value(x_last) - funcValue.applyAsDouble(x_last)) /
-                (p2.value(x_last) - sign * funcScale.applyAsDouble(x_last));
+        double sign_scale = (node.length - 1 & 1) == 1
+                ? -this.target.scale(x_last)
+                : this.target.scale(x_last);
+        double e = (p1.value(x_last) - this.target.value(x_last)) /
+                (p2.value(x_last) - sign_scale);
         if (!(Double.isFinite(e))) {
             throw new ApproximationFailedException("誤差の値が不正");
         }
 
-        {
-            for (int i = 0; i < f.length; i++) {
-                f[i] -= alternateError[i] * e;
-            }
+        for (int i = 0; i < f.length; i++) {
+            f[i] -= alternateError[i] * e;
         }
-        return NewtonPolynomial.from(thinnedNode, f);
+        return DoubleNewtonPolynomial.from(thinnedNode, f);
     }
 }

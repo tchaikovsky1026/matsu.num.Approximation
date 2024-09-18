@@ -5,9 +5,9 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.6.20
+ * 2024.9.17
  */
-package matsu.num.approximation;
+package matsu.num.approximation.polynomial;
 
 /**
  * <p>
@@ -30,9 +30,9 @@ package matsu.num.approximation;
  * </p>
  *
  * @author Matsuura Y.
- * @version 18.0
+ * @version 19.0
  */
-public interface PolynomialFunction {
+public interface DoublePolynomial {
 
     /**
      * 多項式の次数 <i>n</i> を返す.

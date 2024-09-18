@@ -5,17 +5,14 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.6.23
+ * 2024.9.18
  */
 package matsu.num.approximation.polynomial;
 
 import java.util.Objects;
 
-import matsu.num.approximation.ApproxExecutor;
-import matsu.num.approximation.Approximation;
-import matsu.num.approximation.PolynomialFunction;
-import matsu.num.approximation.TargetFunction;
-import matsu.num.approximation.component.ApproximationFactory;
+import matsu.num.approximation.ApproxResult;
+import matsu.num.approximation.DoubleApproxTarget;
 import matsu.num.approximation.component.ApproximationFailedException;
 
 /**
@@ -29,9 +26,9 @@ import matsu.num.approximation.component.ApproximationFailedException;
  * </p>
  * 
  * @author Matsuura Y.
- * @version 18.0
+ * @version 19.0
  */
-public final class MinimaxPolynomialApproxExecutor implements ApproxExecutor<PolynomialFunction> {
+public final class MinimaxPolynomialApproxExecutor {
 
     /**
      * 扱うことができる次数の下限.
@@ -68,26 +65,27 @@ public final class MinimaxPolynomialApproxExecutor implements ApproxExecutor<Pol
     }
 
     /**
-     * {@inheritDoc}
-     * 
      * <p>
-     * {@link MinimaxPolynomialApproxExecutor} では, あらかじめ定めておいた次数
-     * ({@link #order()})
-     * の多項式で近似する.
+     * 与えられたターゲット関数を近似する.
      * </p>
      * 
-     * @throws NullPointerException {@inheritDoc }
+     * <p>
+     * 近似の計算中に不具合が出た場合は, 空の {@link ApproxResult} が返る.
+     * </p>
+     * 
+     * @param target ターゲット関数
+     * @return 近似結果, 計算に失敗した場合は空
+     * @throws NullPointerException 引数がnullの場合
      */
-    @Override
-    public Approximation<PolynomialFunction> apply(TargetFunction target) {
+    public ApproxResult<DoublePolynomial> apply(DoubleApproxTarget target) {
         try {
             MinimaxPolynomialApproxCalculation calc = new MinimaxPolynomialApproxCalculation(
                     Objects.requireNonNull(target), this.order);
             //ここで例外が発生する可能性がある.
             calc.calculate();
-            return ApproximationFactory.of(calc.getResult());
+            return ApproxResult.of(calc.getResult());
         } catch (ApproximationFailedException afe) {
-            return ApproximationFactory.failed(afe.failuerMessage());
+            return ApproxResult.failed(afe.failuerMessage());
         }
     }
 

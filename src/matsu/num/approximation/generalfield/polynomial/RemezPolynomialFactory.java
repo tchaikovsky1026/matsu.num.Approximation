@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.15
+ * 2024.9.17
  */
 package matsu.num.approximation.generalfield.polynomial;
 
@@ -25,7 +25,7 @@ import matsu.num.approximation.generalfield.PseudoRealNumber;
  * </p>
  * 
  * @author Matsuura Y.
- * @version 18.2
+ * @version 19.0
  * @param <T> 体を表す型パラメータ
  */
 final class RemezPolynomialFactory<T extends PseudoRealNumber<T>> {
@@ -39,25 +39,21 @@ final class RemezPolynomialFactory<T extends PseudoRealNumber<T>> {
     }
 
     /**
-     * Remez 多項式を構成する.
+     * Remez 多項式を構成する. <br>
+     * ノード数は2個以上で, 区間内でなければならない.
      * 
      * @param node ノード
      * @return Remez多項式
-     * @throws IllegalArgumentException ノード数が2未満の場合, ノードが不正の場合
-     * @throws ArithmeticException 計算が破綻する場合
-     * @throws NullPointerException null
+     * @throws ArithmeticException 計算が破綻して多項式の生成に失敗する場合 (ノードが接近しすぎる場合を含む)
      */
-    public Polynomial<T> create(T[] node) {
-        if (node.length < 2) {
-            throw new IllegalArgumentException("ノード数が2未満");
-        }
+    Polynomial<T> create(T[] node) {
+        assert node.length >= 2 : "ノード数が2未満";
 
         //ノードを検証し,ソートする
         node = node.clone();
         Arrays.sort(node);
-        if (!Arrays.stream(node).allMatch(this.target::accepts)) {
-            throw new IllegalArgumentException("ノードが定義域内でない");
-        }
+
+        assert Arrays.stream(node).allMatch(this.target::accepts) : "ノードが定義域内でない";
 
         T[] thinnedNode = Arrays.copyOf(node, node.length - 1);
 
@@ -67,7 +63,7 @@ final class RemezPolynomialFactory<T extends PseudoRealNumber<T>> {
          */
         T[] f = provider.createArray(thinnedNode.length);
         for (int i = 0; i < f.length; i++) {
-            //Targetの規約上, 例外は発生しない
+            //ArithmeticExが発生する可能性
             f[i] = this.target.value(thinnedNode[i]);
         }
         Polynomial<T> p1 = NewtonPolynomial.from(thinnedNode, f, provider);
@@ -78,7 +74,7 @@ final class RemezPolynomialFactory<T extends PseudoRealNumber<T>> {
          */
         T[] alternateError = provider.createArray(thinnedNode.length);
         for (int i = 0; i < alternateError.length; i++) {
-            //Targetの規約上, 例外は発生しない
+            //ArithmeticExが発生する可能性
             T scale = this.target.scale(thinnedNode[i]);
             alternateError[i] = (i & 1) == 1 ? scale.negated() : scale;
         }

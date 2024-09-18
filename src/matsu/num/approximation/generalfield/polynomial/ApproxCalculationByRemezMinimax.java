@@ -64,10 +64,9 @@ final class ApproxCalculationByRemezMinimax<T extends PseudoRealNumber<T>> {
 
     /**
      * 近似結果を返す. <br>
-     * 呼び出すタイミングに注意が必要.
+     * calculateが実行され成功していなければならない.
      * 
      * @return 近似結果
-     * @throws IllegalStateException calculateが未実行の場合, 失敗した場合
      */
     Polynomial<T> getResult() {
         assert Objects.nonNull(this.result);
@@ -215,10 +214,9 @@ final class ApproxCalculationByRemezMinimax<T extends PseudoRealNumber<T>> {
          * ターゲット関数とテスト関数を与えて, 近似誤差評価を構築する.
          * 
          * @param approxFunction テスト関数
-         * @throws NullPointerException 引数にnullが含まれる場合
          */
         ApproximationError(UnaryOperator<T> approxFunction) {
-            this.approxFunction = Objects.requireNonNull(approxFunction);
+            this.approxFunction = approxFunction;
         }
 
         /**

@@ -172,6 +172,7 @@ public final class FiniteClosedInterval<T extends PseudoRealNumber<T>> {
      * [<i>x</i><sub>2</sub>, <i>x</i><sub>1</sub>]
      * </p>
      * 
+     * @param <T> 体の元を表現する型パラメータ
      * @param x1 <i>x</i><sub>1</sub>, 引数
      * @param x2 <i>x</i><sub>2</sub>, 引数
      * @return 適合する場合はtrue
@@ -197,6 +198,7 @@ public final class FiniteClosedInterval<T extends PseudoRealNumber<T>> {
      * 不適の場合は例外がスローされる.
      * </p>
      *
+     * @param <T> 体の元を表現する型パラメータ
      * @param x1 <i>x</i><sub>1</sub>, 引数
      * @param x2 <i>x</i><sub>2</sub>, 引数
      * @return 有限閉区間

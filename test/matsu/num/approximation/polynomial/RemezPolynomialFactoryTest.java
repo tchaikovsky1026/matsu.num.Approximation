@@ -8,10 +8,9 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
+import matsu.num.approximation.DoubleApproxTarget;
 import matsu.num.approximation.DoubleFiniteClosedInterval;
 import matsu.num.approximation.DoubleRelativeAssertion;
-import matsu.num.approximation.PolynomialFunction;
-import matsu.num.approximation.TargetFunction;
 
 /**
  * {@link RemezPolynomialFactory} クラスのテスト.
@@ -33,15 +32,15 @@ final class RemezPolynomialFactoryTest {
         @Before
         public void before_remezを作成() {
             //定数関数
-            TargetFunction targetFunction = new TargetFunction() {
+            DoubleApproxTarget targetFunction = new DoubleApproxTarget() {
 
                 @Override
-                public double value(double x) {
+                protected double calcValue(double x) {
                     return 2d;
                 }
 
                 @Override
-                public double scale(double x) {
+                protected double calcScale(double x) {
                     return 2d;
                 }
 
@@ -55,7 +54,7 @@ final class RemezPolynomialFactoryTest {
 
         @Test
         public void test_定数関数() throws Exception {
-            PolynomialFunction poly = remezFactory.create(new double[] { 1, 3 });
+            DoublePolynomial poly = remezFactory.create(new double[] { 1, 3 });
 
             assertThat(poly.degree(), is(0));
             DOUBLE_RELATIVE_ASSERTION.compareAndAssert(2d, poly.value(1d));
@@ -64,7 +63,7 @@ final class RemezPolynomialFactoryTest {
 
         @Test
         public void test_1次関数() throws Exception {
-            PolynomialFunction poly = remezFactory.create(new double[] { 1, 2, 3 });
+            DoublePolynomial poly = remezFactory.create(new double[] { 1, 2, 3 });
 
             assertThat(poly.degree(), is(1));
             DOUBLE_RELATIVE_ASSERTION.compareAndAssert(2d, poly.value(1d));
@@ -79,15 +78,15 @@ final class RemezPolynomialFactoryTest {
 
         @Before
         public void before_remezを作成() {
-            TargetFunction targetFunction = new TargetFunction() {
+            DoubleApproxTarget targetFunction = new DoubleApproxTarget() {
 
                 @Override
-                public double value(double x) {
+                protected double calcValue(double x) {
                     return x;
                 }
 
                 @Override
-                public double scale(double x) {
+                protected double calcScale(double x) {
                     return 2d;
                 }
 
@@ -101,7 +100,7 @@ final class RemezPolynomialFactoryTest {
 
         @Test
         public void test_定数関数() throws Exception {
-            PolynomialFunction poly = remezFactory.create(new double[] { 1, 3 });
+            DoublePolynomial poly = remezFactory.create(new double[] { 1, 3 });
 
             assertThat(poly.degree(), is(0));
             DOUBLE_RELATIVE_ASSERTION.compareAndAssert(2d, poly.value(1d));
@@ -110,7 +109,7 @@ final class RemezPolynomialFactoryTest {
 
         @Test
         public void test_1次関数() throws Exception {
-            PolynomialFunction poly = remezFactory.create(new double[] { 1, 2, 3 });
+            DoublePolynomial poly = remezFactory.create(new double[] { 1, 2, 3 });
 
             assertThat(poly.degree(), is(1));
             DOUBLE_RELATIVE_ASSERTION.compareAndAssert(1d, poly.value(1d));
@@ -125,15 +124,15 @@ final class RemezPolynomialFactoryTest {
 
         @Before
         public void before_remezを作成() {
-            TargetFunction targetFunction = new TargetFunction() {
+            DoubleApproxTarget targetFunction = new DoubleApproxTarget() {
 
                 @Override
-                public double value(double x) {
+                protected double calcValue(double x) {
                     return x;
                 }
 
                 @Override
-                public double scale(double x) {
+                protected double calcScale(double x) {
                     return Math.abs(x);
                 }
 
@@ -147,7 +146,7 @@ final class RemezPolynomialFactoryTest {
 
         @Test
         public void test_定数関数() throws Exception {
-            PolynomialFunction poly = remezFactory.create(new double[] { 1, 3 });
+            DoublePolynomial poly = remezFactory.create(new double[] { 1, 3 });
 
             assertThat(poly.degree(), is(0));
             DOUBLE_RELATIVE_ASSERTION.compareAndAssert(1.5d, poly.value(1d));
@@ -156,7 +155,7 @@ final class RemezPolynomialFactoryTest {
 
         @Test
         public void test_1次関数() throws Exception {
-            PolynomialFunction poly = remezFactory.create(new double[] { 1, 2, 3 });
+            DoublePolynomial poly = remezFactory.create(new double[] { 1, 2, 3 });
 
             assertThat(poly.degree(), is(1));
             DOUBLE_RELATIVE_ASSERTION.compareAndAssert(1d, poly.value(1d));

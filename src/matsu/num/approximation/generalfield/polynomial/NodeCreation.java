@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.15
+ * 2024.9.17
  */
 package matsu.num.approximation.generalfield.polynomial;
 
@@ -16,9 +16,9 @@ import matsu.num.approximation.generalfield.PseudoRealNumber;
  * ノードを作成するユーティリティクラス.
  * 
  * @author Matsuura Y.
- * @version 18.2
+ * @version 19.0
  */
-public final class NodeCreation {
+final class NodeCreation {
 
     private NodeCreation() {
         //インスタンス化不可
@@ -35,14 +35,11 @@ public final class NodeCreation {
      * @param interval ノードを配置する区間
      * @param provider 体の元に関するプロバイダ
      * @return ノード, 昇順に並んでいる
-     * @throws IllegalArgumentException sizeが不正の場合
-     * @throws NullPointerException nullを含む場合
+     * @throws NullPointerException null
      */
-    public static <T extends PseudoRealNumber<T>> T[] execute(
+    static <T extends PseudoRealNumber<T>> T[] execute(
             int size, FiniteClosedInterval<T> interval, PseudoRealNumber.Provider<T> provider) {
-        if (size < 2) {
-            throw new IllegalArgumentException("sizeが不正");
-        }
+        assert size >= 2 : "sizeが不正";
 
         T[] out = provider.createArray(size);
 

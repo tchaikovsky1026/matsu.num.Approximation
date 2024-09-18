@@ -5,12 +5,11 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.2
+ * 2024.9.17
  */
 package matsu.num.approximation.generalfield.polynomial;
 
 import matsu.num.approximation.ApproxResult;
-import matsu.num.approximation.Approximation;
 import matsu.num.approximation.generalfield.ApproxTarget;
 import matsu.num.approximation.generalfield.PseudoRealNumber;
 
@@ -25,7 +24,7 @@ import matsu.num.approximation.generalfield.PseudoRealNumber;
  * </p>
  * 
  * @author Matsuura Y.
- * @version 18.2
+ * @version 19.0
  */
 public final class MinimaxPolynomialApproxExecutor {
 
@@ -69,7 +68,7 @@ public final class MinimaxPolynomialApproxExecutor {
      * </p>
      * 
      * <p>
-     * 近似の計算中に不具合が出た場合は, 空の {@link Approximation} が返る.
+     * 近似の計算中に不具合が出た場合は, 空の {@link ApproxResult} が返る.
      * </p>
      * 
      * @param <T> 体の元を表現する型パラメータ
@@ -86,7 +85,7 @@ public final class MinimaxPolynomialApproxExecutor {
             calc.calculate();
             return ApproxResult.of(calc.getResult());
         } catch (ArithmeticException ae) {
-            return ApproxResult.failed("計算が破綻した");
+            return ApproxResult.failed("計算が破綻: おそらくターゲットが極端な値をとる");
         }
     }
 

@@ -74,12 +74,12 @@ final class MinimaxPolynomialApproxExecutorBehaviorTest {
         return new ApproxTarget<DoubleLike>() {
 
             @Override
-            public DoubleLike value(DoubleLike x) {
+            protected DoubleLike calcValue(DoubleLike x) {
                 return PROVIDER.fromDoubleValue(Math.exp(x.asDouble()));
             }
 
             @Override
-            public DoubleLike scale(DoubleLike x) {
+            protected DoubleLike calcScale(DoubleLike x) {
                 return PROVIDER.fromDoubleValue(Math.exp(x.asDouble()));
             }
 

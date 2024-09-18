@@ -1,4 +1,4 @@
-package matsu.num.approximation.component;
+package matsu.num.approximation.polynomial;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
@@ -17,14 +17,15 @@ import matsu.num.approximation.DoubleFiniteClosedInterval;
 import matsu.num.approximation.DoubleRelativeAssertion;
 
 /**
- * {@link NodeCreation} クラスのテスト.
+ * {@link DoubleNodeCreation} クラスのテスト.
  * 
  * @author Matsuura Y.
  */
 @RunWith(Enclosed.class)
-final class NodeCreationTest {
+@SuppressWarnings("exports")
+final class DoubleNodeCreationTest {
 
-    public static final Class<?> TEST_CLASS = NodeCreation.class;
+    public static final Class<?> TEST_CLASS = DoubleNodeCreation.class;
 
     private static final DoubleRelativeAssertion DOUBLE_RELATIVE_ASSERTION =
             new DoubleRelativeAssertion(1E-12);
@@ -51,7 +52,7 @@ final class NodeCreationTest {
         @Theory
         public void test_ノードのサイズと値をテスト(DataSet dataSet) {
             double[] expected = dataSet.node;
-            double[] result = NodeCreation.execute(dataSet.size, INTERVAL);
+            double[] result = DoubleNodeCreation.execute(dataSet.size, INTERVAL);
 
             assertThat(result.length, is(expected.length));
             for (int i = 0; i < result.length; i++) {

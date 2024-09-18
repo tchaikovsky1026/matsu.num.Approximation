@@ -5,40 +5,38 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.7.14
+ * 2024.9.18
  */
 package matsu.num.approximation.polynomial;
 
 import java.util.Objects;
 
-import matsu.num.approximation.PolynomialFunction;
-import matsu.num.approximation.TargetFunction;
+import matsu.num.approximation.DoubleApproxTarget;
 import matsu.num.approximation.component.ApproximationError;
 import matsu.num.approximation.component.ApproximationFailedException;
-import matsu.num.approximation.component.NodeCreation;
 
 /**
  * 多項式関数による近似の計算処理を扱う. <br>
  * スレッドセーフでないので, 単一スレッド内でインスタンスが共有されるようにしなければならない.
  * 
  * @author Matsuura Y.
- * @version 18.1
+ * @version 19.0
  */
 final class MinimaxPolynomialApproxCalculation {
 
-    private final TargetFunction target;
+    private final DoubleApproxTarget target;
     private final int order;
 
     private final RemezPolynomialFactory remezPolynomialFactory;
 
-    private PolynomialFunction result;
+    private DoublePolynomial result;
 
     /**
      * 
      * @param target ターゲット関数, nullであってはいけない
      * @param order 多項式の次数, 0以上の適切な値でなければならない
      */
-    MinimaxPolynomialApproxCalculation(TargetFunction target, int order) {
+    MinimaxPolynomialApproxCalculation(DoubleApproxTarget target, int order) {
         super();
         this.target = target;
         this.order = order;
@@ -48,7 +46,7 @@ final class MinimaxPolynomialApproxCalculation {
 
     void calculate() throws ApproximationFailedException {
         RemezIterator remezIterator =
-                new RemezIterator(NodeCreation.execute(this.order + 2, target.interval()));
+                new RemezIterator(DoubleNodeCreation.execute(this.order + 2, target.interval()));
 
         int iteration = 1000;
         double[] relativeDeltas = { 0.1, 0.03, 0.01, 0.003, 0.001, 3E-4, 1E-4 };
@@ -62,15 +60,13 @@ final class MinimaxPolynomialApproxCalculation {
 
     /**
      * 近似結果を返す. <br>
-     * 呼び出すタイミングに注意が必要.
+     * calculateが実行され成功していなければならない.
      * 
      * @return 近似結果
-     * @throws IllegalStateException calculateが未実行の場合, 失敗した場合
      */
-    PolynomialFunction getResult() {
-        if (Objects.isNull(this.result)) {
-            throw new IllegalStateException("Bug: 今このメソッドを呼んではいけない");
-        }
+    DoublePolynomial getResult() {
+        assert Objects.nonNull(this.result);
+
         return this.result;
     }
 
@@ -107,12 +103,11 @@ final class MinimaxPolynomialApproxCalculation {
          * @throws ApproximationFailedException
          */
         void iteration(double relativeDelta) throws ApproximationFailedException {
-            if (!(1E-4 <= relativeDelta && relativeDelta <= 0.1)) {
-                throw new AssertionError("Bug: relativeDelta");
-            }
+            assert 1E-4 <= relativeDelta;
+            assert relativeDelta <= 0.1;
 
             //ノードからRemez多項式を構築する
-            PolynomialFunction remezPolynomial = remezPolynomialFactory.create(node);
+            DoublePolynomial remezPolynomial = remezPolynomialFactory.create(node);
             ApproximationError error = new ApproximationError(target, remezPolynomial::value);
 
             //近似誤差の分布を表す
@@ -190,7 +185,7 @@ final class MinimaxPolynomialApproxCalculation {
          * @return 最適化された多項式関数
          * @throws ApproximationFailedException
          */
-        PolynomialFunction calcResult() throws ApproximationFailedException {
+        DoublePolynomial calcResult() throws ApproximationFailedException {
             return remezPolynomialFactory.create(node);
         }
     }

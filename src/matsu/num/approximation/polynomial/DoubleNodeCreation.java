@@ -5,9 +5,9 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.6.23
+ * 2024.9.18
  */
-package matsu.num.approximation.component;
+package matsu.num.approximation.polynomial;
 
 import matsu.num.approximation.DoubleFiniteClosedInterval;
 
@@ -15,11 +15,11 @@ import matsu.num.approximation.DoubleFiniteClosedInterval;
  * ノードを作成するユーティリティクラス.
  * 
  * @author Matsuura Y.
- * @version 18.0
+ * @version 19.0
  */
-public final class NodeCreation {
+final class DoubleNodeCreation {
 
-    private NodeCreation() {
+    private DoubleNodeCreation() {
         //インスタンス化不可
         throw new AssertionError();
     }
@@ -32,13 +32,10 @@ public final class NodeCreation {
      * @param size ノードの数, 2以上でなければならない
      * @param interval ノードを配置する区間
      * @return ノード, 昇順に並んでいる
-     * @throws IllegalArgumentException sizeが不正の場合
-     * @throws NullPointerException nullを含む場合
+     * @throws NullPointerException null
      */
     public static double[] execute(int size, DoubleFiniteClosedInterval interval) {
-        if (size < 2) {
-            throw new IllegalArgumentException("sizeが不正");
-        }
+        assert size >= 2 : "sizeが不正";
 
         double[] out = new double[size];
         for (int i = 1; i < size - 1; i++) {

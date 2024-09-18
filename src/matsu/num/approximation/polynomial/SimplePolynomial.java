@@ -7,11 +7,9 @@
 /*
  * 2024.6.23
  */
-package matsu.num.approximation.component;
+package matsu.num.approximation.polynomial;
 
 import java.util.Arrays;
-
-import matsu.num.approximation.PolynomialFunction;
 
 /**
  * <p>
@@ -32,8 +30,10 @@ import matsu.num.approximation.PolynomialFunction;
  * 
  * @author Matsuura Y.
  * @version 18.0
+ * @deprecated このクラスは使われていない. おそらく今後も必要ないだろう.
  */
-public final class SimplePolynomial implements PolynomialFunction {
+@Deprecated(forRemoval = true)
+final class SimplePolynomial implements DoublePolynomial {
 
     //多項式の係数
     private final double[] coeff;

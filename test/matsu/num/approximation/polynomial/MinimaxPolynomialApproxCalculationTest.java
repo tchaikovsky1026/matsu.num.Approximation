@@ -8,10 +8,9 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
+import matsu.num.approximation.DoubleApproxTarget;
 import matsu.num.approximation.DoubleFiniteClosedInterval;
 import matsu.num.approximation.DoubleRelativeAssertion;
-import matsu.num.approximation.PolynomialFunction;
-import matsu.num.approximation.TargetFunction;
 
 /**
  * {@link MinimaxPolynomialApproxCalculation} クラスのテスト.
@@ -28,20 +27,20 @@ final class MinimaxPolynomialApproxCalculationTest {
 
     public static class 構築のテスト_定数関数の近似 {
 
-        private TargetFunction target;
+        private DoubleApproxTarget target;
 
         @Before
         public void before_ターゲットを作成() {
             //定数関数
-            target = new TargetFunction() {
+            target = new DoubleApproxTarget() {
 
                 @Override
-                public double value(double x) {
+                protected double calcValue(double x) {
                     return 2d;
                 }
 
                 @Override
-                public double scale(double x) {
+                protected double calcScale(double x) {
                     return 2d;
                 }
 
@@ -56,7 +55,7 @@ final class MinimaxPolynomialApproxCalculationTest {
         public void test_定数関数で近似() throws Exception {
             MinimaxPolynomialApproxCalculation calc = new MinimaxPolynomialApproxCalculation(target, 0);
             calc.calculate();
-            PolynomialFunction poly = calc.getResult();
+            DoublePolynomial poly = calc.getResult();
 
             assertThat(poly.degree(), is(0));
             DOUBLE_RELATIVE_ASSERTION.compareAndAssert(2d, poly.value(1d));
@@ -67,7 +66,7 @@ final class MinimaxPolynomialApproxCalculationTest {
         public void test_1次関数で近似() throws Exception {
             MinimaxPolynomialApproxCalculation calc = new MinimaxPolynomialApproxCalculation(target, 1);
             calc.calculate();
-            PolynomialFunction poly = calc.getResult();
+            DoublePolynomial poly = calc.getResult();
 
             assertThat(poly.degree(), is(1));
             DOUBLE_RELATIVE_ASSERTION.compareAndAssert(2d, poly.value(1d));
@@ -79,7 +78,7 @@ final class MinimaxPolynomialApproxCalculationTest {
         public void test_2次関数で近似() throws Exception {
             MinimaxPolynomialApproxCalculation calc = new MinimaxPolynomialApproxCalculation(target, 2);
             calc.calculate();
-            PolynomialFunction poly = calc.getResult();
+            DoublePolynomial poly = calc.getResult();
 
             assertThat(poly.degree(), is(2));
             DOUBLE_RELATIVE_ASSERTION.compareAndAssert(2d, poly.value(1d));
@@ -90,20 +89,20 @@ final class MinimaxPolynomialApproxCalculationTest {
 
     public static class 構築のテスト_1次関数の近似 {
 
-        private TargetFunction target;
+        private DoubleApproxTarget target;
 
         @Before
         public void before_ターゲットを作成() {
             //定数関数
-            target = new TargetFunction() {
+            target = new DoubleApproxTarget() {
 
                 @Override
-                public double value(double x) {
+                protected double calcValue(double x) {
                     return x;
                 }
 
                 @Override
-                public double scale(double x) {
+                protected double calcScale(double x) {
                     return x;
                 }
 
@@ -118,7 +117,7 @@ final class MinimaxPolynomialApproxCalculationTest {
         public void test_定数関数で近似() throws Exception {
             MinimaxPolynomialApproxCalculation calc = new MinimaxPolynomialApproxCalculation(target, 0);
             calc.calculate();
-            PolynomialFunction poly = calc.getResult();
+            DoublePolynomial poly = calc.getResult();
 
             assertThat(poly.degree(), is(0));
             DOUBLE_RELATIVE_ASSERTION.compareAndAssert(1.5d, poly.value(1d));
@@ -129,7 +128,7 @@ final class MinimaxPolynomialApproxCalculationTest {
         public void test_1次関数で近似() throws Exception {
             MinimaxPolynomialApproxCalculation calc = new MinimaxPolynomialApproxCalculation(target, 1);
             calc.calculate();
-            PolynomialFunction poly = calc.getResult();
+            DoublePolynomial poly = calc.getResult();
 
             assertThat(poly.degree(), is(1));
             DOUBLE_RELATIVE_ASSERTION.compareAndAssert(1d, poly.value(1d));
@@ -141,7 +140,7 @@ final class MinimaxPolynomialApproxCalculationTest {
         public void test_2次関数で近似() throws Exception {
             MinimaxPolynomialApproxCalculation calc = new MinimaxPolynomialApproxCalculation(target, 2);
             calc.calculate();
-            PolynomialFunction poly = calc.getResult();
+            DoublePolynomial poly = calc.getResult();
 
             assertThat(poly.degree(), is(2));
             DOUBLE_RELATIVE_ASSERTION.compareAndAssert(1d, poly.value(1d));

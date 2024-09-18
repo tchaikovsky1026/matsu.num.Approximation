@@ -59,12 +59,12 @@ final class RemezPolynomialFactoryTest {
             target = new ApproxTarget<DoubleLike>() {
 
                 @Override
-                public DoubleLike value(DoubleLike x) {
+                protected DoubleLike calcValue(DoubleLike x) {
                     return func.apply(x);
                 }
 
                 @Override
-                public DoubleLike scale(DoubleLike x) {
+                protected DoubleLike calcScale(DoubleLike x) {
                     return scale.apply(x);
                 }
 
