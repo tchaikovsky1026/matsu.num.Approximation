@@ -52,7 +52,7 @@ final class ApproxCalculationByRemezMinimax<T extends PseudoRealNumber<T>> {
         RemezIterator remezIterator =
                 new RemezIterator(NodeCreation.execute(this.order + 2, target.interval(), target.elementProvider()));
 
-        int iteration = 1000;
+        int iteration = 100;
         double[] relativeDeltas = { 0.1, 0.03, 0.01, 0.003, 0.001, 3E-4, 1E-4 };
         for (double rd : relativeDeltas) {
             for (int c = 0; c < iteration; c++) {
