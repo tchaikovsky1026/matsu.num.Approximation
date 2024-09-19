@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.18
+ * 2024.9.19
  */
 package matsu.num.approximation.polynomial;
 
@@ -17,7 +17,8 @@ import matsu.num.approximation.component.ApproximationFailedException;
 
 /**
  * <p>
- * ミニマックス法 (Chebyshev ノルム最小化) による多項式関数による近似の実行を扱う.
+ * スケーリング付きミニマックス法 (重みづけ Chebyshev ノルム最小化) による,
+ * {@code double} 型で表現された実数体に関する多項式関数による近似の実行を扱う.
  * </p>
  * 
  * <p>
@@ -26,7 +27,7 @@ import matsu.num.approximation.component.ApproximationFailedException;
  * </p>
  * 
  * @author Matsuura Y.
- * @version 19.0
+ * @version 19.1
  */
 public final class MinimaxPolynomialApproxExecutor {
 

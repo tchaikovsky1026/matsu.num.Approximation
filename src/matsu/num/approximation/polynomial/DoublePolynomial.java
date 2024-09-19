@@ -11,7 +11,7 @@ package matsu.num.approximation.polynomial;
 
 /**
  * <p>
- * 多項式関数を表現するインターフェース. <br>
+ * {@code double} 型で表現された実数体に関する多項式関数を表現するインターフェース. <br>
  * <i>p</i>: &#x211D; &rarr; &#x211D; <br>
  * <i>p</i>(<i>x</i>) =
  * <i>a</i><sub>0</sub> +
@@ -42,7 +42,10 @@ public interface DoublePolynomial {
     public abstract int degree();
 
     /**
-     * 与えられた <i>x</i> に対し, <i>p</i>(<i>x</i>) の値を返す.
+     * 与えられた <i>x</i> に対し, <i>p</i>(<i>x</i>) の値を返す. <br>
+     * {@link Double#POSITIVE_INFINITY},
+     * {@link Double#NEGATIVE_INFINITY} あるいは
+     * {@link Double#NaN} が返る場合もあり得る.
      * 
      * @param x <i>x</i>, 引数
      * @return <i>p</i>(<i>x</i>)

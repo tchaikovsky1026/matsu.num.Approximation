@@ -5,13 +5,13 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.17
+ * 2024.9.19
  */
 package matsu.num.approximation;
 
 /**
  * <p>
- * 近似されるターゲット関数を扱う. <br>
+ * {@code double} 型で表現された, 近似されるターゲット関数を扱う. <br>
  * 有限閉区間で定義された1変数関数 <i>f</i>:
  * [<i>a</i>, <i>b</i>] &rarr; &#x211D;
  * を表す.
@@ -38,7 +38,7 @@ package matsu.num.approximation;
  * </p>
  * 
  * @author Matsuura Y.
- * @version 19.0
+ * @version 19.1
  */
 public abstract class DoubleApproxTarget {
 
@@ -71,8 +71,8 @@ public abstract class DoubleApproxTarget {
      * {@link #value(double)} で返す値の計算を行うための抽象メソッド.
      * 
      * <p>
-     * このメソッドは {@link #value(double)} の内部で呼ばれることを想定しており,
-     * 外部から呼ぶことは許されず, アクセス修飾子を緩めてはいけない. <br>
+     * このメソッドは {@link #value(double)} の内部で呼ばれるために用意されており,
+     * 外部から呼ぶことは許されず, 継承先でアクセス修飾子を緩めてはいけない. <br>
      * 内部から呼ばれる場合, 引数 <i>x</i> は必ず区間内である.
      * </p>
      * 
@@ -83,7 +83,7 @@ public abstract class DoubleApproxTarget {
      * </p>
      * 
      * @param x <i>x</i>, 引数
-     * @return <i>f</i>(<i>x</i>)
+     * @return <i>f</i>(<i>x</i>) の候補値
      */
     protected abstract double calcValue(double x);
 
@@ -111,8 +111,8 @@ public abstract class DoubleApproxTarget {
      * {@link #scale(double)} で返す値の計算を行うための抽象メソッド.
      * 
      * <p>
-     * このメソッドは {@link #scale(double)} の内部で呼ばれることを想定しており,
-     * 外部から呼ぶことは許されず, アクセス修飾子を緩めてはいけない. <br>
+     * このメソッドは {@link #scale(double)} の内部で呼ばれるために用意されており,
+     * 外部から呼ぶことは許されず, 継承先でアクセス修飾子を緩めてはいけない. <br>
      * 内部から呼ばれる場合, 引数 <i>x</i> は必ず区間内である.
      * </p>
      * 
@@ -124,7 +124,7 @@ public abstract class DoubleApproxTarget {
      * </p>
      * 
      * @param x <i>x</i>, 引数
-     * @return <i>f</i>(<i>x</i>)
+     * @return <i>s</i><sub><i>f</i></sub>(<i>x</i>) の候補値
      */
     protected abstract double calcScale(double x);
 

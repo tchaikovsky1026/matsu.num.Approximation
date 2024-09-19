@@ -152,7 +152,7 @@ public final class FiniteClosedInterval<T extends PseudoRealNumber<T>> {
      * <p>
      * 文字列表現はバージョン間の互換性は担保されない. <br>
      * おそらく次のような形式だろう. <br>
-     * {@code ClosedInterval[lower, apper]}
+     * {@code ClosedInterval[lower, upper]}
      * </p>
      * 
      * @return 文字列表現

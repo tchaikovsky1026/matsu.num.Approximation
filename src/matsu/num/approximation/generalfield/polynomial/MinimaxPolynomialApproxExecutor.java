@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.17
+ * 2024.9.19
  */
 package matsu.num.approximation.generalfield.polynomial;
 
@@ -15,7 +15,8 @@ import matsu.num.approximation.generalfield.PseudoRealNumber;
 
 /**
  * <p>
- * スケーリング付きミニマックス法 (重みづけ Chebyshev ノルム最小化) による多項式関数による近似の実行を扱う.
+ * スケーリング付きミニマックス法 (重みづけ Chebyshev ノルム最小化) による,
+ * 独自クラスによる実数体に関する多項式関数による近似の実行を扱う.
  * </p>
  * 
  * <p>
@@ -24,7 +25,7 @@ import matsu.num.approximation.generalfield.PseudoRealNumber;
  * </p>
  * 
  * @author Matsuura Y.
- * @version 19.0
+ * @version 19.1
  */
 public final class MinimaxPolynomialApproxExecutor {
 

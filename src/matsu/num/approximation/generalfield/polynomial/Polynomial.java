@@ -13,7 +13,7 @@ import matsu.num.approximation.generalfield.PseudoRealNumber;
 
 /**
  * <p>
- * 多項式関数を表現するインターフェース. <br>
+ * 独自クラスによる実数体に関する多項式関数を表現するインターフェース. <br>
  * <i>p</i>: &#x211D; &rarr; &#x211D; <br>
  * <i>p</i>(<i>x</i>) =
  * <i>a</i><sub>0</sub> +

@@ -11,7 +11,7 @@ package matsu.num.approximation.generalfield;
 
 /**
  * <p>
- * 近似されるターゲット関数を扱う. <br>
+ * 独自クラスによる実数体で表現された, 近似されるターゲット関数を扱う. <br>
  * 有限閉区間で定義された1変数関数 <i>f</i>:
  * [<i>a</i>, <i>b</i>] &rarr; &#x211D;
  * を表す.
@@ -73,22 +73,19 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
      * {@link #value(PseudoRealNumber)} で返す値の計算を行うための抽象メソッド.
      * 
      * <p>
-     * このメソッドは {@link #value(PseudoRealNumber)} の内部で呼ばれることを想定しており,
-     * 外部から呼ぶことは許されず, アクセス修飾子を緩めてはいけない. <br>
+     * このメソッドは {@link #value(PseudoRealNumber)} の内部で呼ばれるために用意されており,
+     * 外部から呼ぶことは許されず, 継承先でアクセス修飾子を緩めてはいけない. <br>
      * 内部から呼ばれる場合, 引数 <i>x</i> は必ず区間内である
      * (したがって, {@code null} でない).
      * </p>
      * 
      * <p>
-     * <i>
-     * 実装規約:
      * 値が計算できない場合, {@link ArithmeticException} をスローしてよい.
-     * </i>
      * </p>
      * 
      * @param x <i>x</i>, 引数
+     * @return <i>f</i>(<i>x</i>) の候補値
      * @throws ArithmeticException 値が計算できなかった場合
-     * @return <i>f</i>(<i>x</i>)
      */
     protected abstract T calcValue(T x);
 
@@ -96,7 +93,8 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
      * 与えられた <i>x</i> に対し,
      * <i>s</i><sub><i>f</i></sub>(<i>x</i>) の値 (有限の正の値) を返す. <br>
      * <i>x</i> が区間外の場合は {@link IllegalArgumentException} がスローされる. <br>
-     * 値が正でなかった場合 (一種のバグ) やオーバーフローなどで値が計算できなかった場合, {@link ArithmeticException} がスローされる.
+     * 値が正でなかった場合 (一種のバグ) やオーバーフローなどで値が計算できなかった場合, {@link ArithmeticException}
+     * がスローされる.
      * 
      * @param x <i>x</i>, 引数
      * @return <i>s</i><sub><i>f</i></sub>(<i>x</i>)
@@ -120,22 +118,20 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
      * {@link #scale(PseudoRealNumber)} で返す値の計算を行うための抽象メソッド.
      * 
      * <p>
-     * このメソッドは {@link #scale(PseudoRealNumber)} の内部で呼ばれることを想定しており,
-     * 外部から呼ぶことは許されず, アクセス修飾子を緩めてはいけない. <br>
+     * このメソッドは {@link #scale(PseudoRealNumber)} の内部で呼ばれるために用意されており,
+     * 外部から呼ぶことは許されず, 継承先でアクセス修飾子を緩めてはいけない. <br>
      * 内部から呼ばれる場合, 引数 <i>x</i> は必ず区間内である
      * (したがって, {@code null} でない).
      * </p>
      * 
      * <p>
-     * <i>
-     * 実装規約:
-     * 値が計算できない場合, {@link ArithmeticException} をスローしてよい.
-     * </i>
+     * 0以下の数を返しても良い. <br>
+     * また, 値が計算できない場合, {@link ArithmeticException} をスローしてよい.
      * </p>
      * 
      * @param x <i>x</i>, 引数
+     * @return <i>s</i><sub><i>f</i></sub>(<i>x</i>) の候補値
      * @throws ArithmeticException 値が計算できなかった場合
-     * @return <i>f</i>(<i>x</i>)
      */
     protected abstract T calcScale(T x);
 
