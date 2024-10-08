@@ -299,14 +299,14 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
     }
 
     /**
-     * 加法逆元を返す.
+     * 自身の加法逆元 (-1倍) を返す.
      * 
      * @return 加法逆元
      */
     public abstract T negated();
 
     /**
-     * 絶対値を返す.
+     * 自身の絶対値を返す.
      * 
      * @return 絶対値
      */
@@ -361,7 +361,7 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
      * 体に対する値のプロバイダ.
      * 
      * @author Matsuura Y.
-     * @version 18.2
+     * @version 19.2
      * @param <T> 体の元を表す型
      */
     public static interface Provider<T extends PseudoRealNumber<T>> {
@@ -394,12 +394,12 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
         public abstract T one();
 
         /**
-         * 指定した長さのT型の配列を返す. <br>
+         * 指定した長さの {@code T} 型の配列を返す. <br>
          * 配列は {@code null} 埋めされている. <br>
          * 長さは0以上でなければならない.
          * 
          * @param length 配列の長さ
-         * @return 長さ {@code length} のT型の配列
+         * @return 長さ {@code length} の {@code T} 型の配列
          * @throws IllegalArgumentException lengthが0以上でないの場合
          */
         public abstract T[] createArray(int length);

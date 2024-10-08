@@ -91,9 +91,9 @@ public final class FiniteClosedInterval<T extends PseudoRealNumber<T>> {
     }
 
     /**
-     * <i>x</i> が閉区間に含まれるか:
-     * <i>x</i> &in; [<i>a</i>, <i>b</i>]
-     * を判定する.
+     * <i>x</i> が閉区間に含まれる
+     * (<i>x</i> &in; [<i>a</i>, <i>b</i>])
+     * かどうかを判定する.
      * 
      * @param x <i>x</i>, 引数
      * @return 閉区間に含まれる場合はtrue
