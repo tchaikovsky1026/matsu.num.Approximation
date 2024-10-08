@@ -37,9 +37,12 @@ final class Decimal128ApproximationBehaviorTest {
 
     void execute() {
 
-        int degree = 15;
+        long startTimeMills = System.currentTimeMillis();
+        int degree = 9;
         ApproxResult<Polynomial<Decimal128>> result =
                 MinimaxPolynomialApproxExecutor.of(degree).apply(target);
+        long endTimeMills = System.currentTimeMillis();
+        System.out.println((endTimeMills - startTimeMills) + "ms");
 
         Decimal128 x_min = target.interval().lower();
         Decimal128 x_max = target.interval().upper();

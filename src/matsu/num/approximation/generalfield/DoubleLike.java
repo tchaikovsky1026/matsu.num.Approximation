@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.5
+ * 2024.10.8
  */
 package matsu.num.approximation.generalfield;
 
@@ -15,7 +15,7 @@ package matsu.num.approximation.generalfield;
  * {@code 0d} と {@code -0d} は等価である.)
  * 
  * @author Matsuura Y.
- * @version 18.2
+ * @version 19.2
  */
 public final class DoubleLike extends PseudoRealNumber<DoubleLike> {
 
@@ -28,12 +28,12 @@ public final class DoubleLike extends PseudoRealNumber<DoubleLike> {
     /**
      * 0を表す.
      */
-    private static final DoubleLike ZERO = DoubleLike.of(0d);
+    private static final DoubleLike ZERO = new DoubleLike(0d);
 
     /**
      * 1を表す.
      */
-    private static final DoubleLike ONE = DoubleLike.of(1d);
+    private static final DoubleLike ONE = new DoubleLike(1d);
 
     private final double value;
 
@@ -41,12 +41,20 @@ public final class DoubleLike extends PseudoRealNumber<DoubleLike> {
      * 唯一のコンストラクタ
      * 
      * @param value value
+     * @throws IllegalArgumentException 引数が扱えない場合
      */
     private DoubleLike(double value) {
         super();
 
-        //-0dを回避するための+0dである
-        this.value = value + 0d;
+        if (!Double.isFinite(value)) {
+            throw new IllegalArgumentException(
+                    String.format("扱えない値: value = %s", value));
+        }
+        //-0dを回避する
+        if (value == 0d) {
+            value = 0d;
+        }
+        this.value = value;
     }
 
     /**
@@ -113,10 +121,11 @@ public final class DoubleLike extends PseudoRealNumber<DoubleLike> {
      * @throws ArithmeticException 不正値
      */
     private static DoubleLike createOrThrowArithmeticException(double value) {
-        if (Double.isFinite(value)) {
+        try {
             return new DoubleLike(value);
+        } catch (IllegalArgumentException iae) {
+            throw new ArithmeticException(String.format("扱えない値: value = %s", value));
         }
-        throw new ArithmeticException(String.format("扱えない値: value = %s", value));
     }
 
     @Override
@@ -179,30 +188,6 @@ public final class DoubleLike extends PseudoRealNumber<DoubleLike> {
         return PROVIDER;
     }
 
-    /**
-     * <p>
-     * このメソッドは非公開である. <br>
-     * 外部からの {@link DoubleLike} インスタンスの生成は, プロバイダ経由で行う.
-     * </p>
-     * 
-     * <p>
-     * 与えた {@code double} 値に対応する {@link DoubleLike} を返す. <br>
-     * {@link PseudoRealNumber.Provider}{@code <}{@link DoubleLike}{@code >}
-     * から呼ばれることを想定されている.
-     * </p>
-     * 
-     * @param value 値
-     * @return value に相当するインスタンス
-     * @throws IllegalArgumentException 引数が扱えない値の場合
-     */
-    private static DoubleLike of(double value) {
-        if (!Double.isFinite(value)) {
-            throw new IllegalArgumentException(
-                    String.format("扱えない値: value = %s", value));
-        }
-        return new DoubleLike(value);
-    }
-
     private static final class Provider
             implements PseudoRealNumber.Provider<DoubleLike> {
 
@@ -225,7 +210,7 @@ public final class DoubleLike extends PseudoRealNumber<DoubleLike> {
 
         @Override
         public DoubleLike fromDoubleValue(double value) {
-            return DoubleLike.of(value);
+            return new DoubleLike(value);
         }
 
         @Override

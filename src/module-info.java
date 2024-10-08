@@ -8,7 +8,7 @@
  * </p>
  * 
  * @author Matsuura Y.
- * @version 19.1
+ * @version 19.2
  */
 module matsu.num.Approximation {
 

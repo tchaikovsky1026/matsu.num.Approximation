@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.5
+ * 2024.10.8
  */
 package matsu.num.approximation.generalfield;
 
@@ -14,20 +14,172 @@ package matsu.num.approximation.generalfield;
  * 実数に類似した体 (四則演算が定義された代数系) の元を表現する. <br>
  * 実質的にイミュータブルである. <br>
  * 値に基づく equality, comparability を提供する. <br>
- * equality と compatibility は整合しなければならない.
+ * comparability は数の自然順序と同等であり,
+ * equality は compatibility と整合しなければならない.
  * </p>
  * 
  * <p>
  * このクラスは無限大, NaNを除いた {@code double} の拡張になっており,
  * 有限である任意の {@code double} に対し, それに相当するインスタンスが存在する. <br>
+ * ただし, 正の0と負の0を区別せず, ともに0として扱う. <br>
  * 逆に, 無限大, NaNを表現するインスタンスは存在してはならず,
- * 演算結果がそのようになる場合は例外がスローされる. <br>
- * equality と comparability が整合するという制約より,
- * {@code 0d} と {@code -0d} は等価でなければならない.
+ * 演算結果がそのようになる場合は例外がスローされる.
  * </p>
  * 
+ * <p>
+ * {@code double} からこのクラスのインスタンスへのマッピングについて規定する. <br>
+ * {@code 0d} と {@code -0d} は等価であり,
+ * それ以外の異なる {@code double}
+ * 値は異なる値にマッピングされなければならない. <br>
+ * すなわち, {@code d1}, {@code d2} を共に有限の {@code double} 値とし,
+ * 少なくとも片方は0でないとしたとき,
+ * 次の規約を満たさなければならない. <br>
+ * 規約: {@code double} 値からこのクラスのインスタンスへのマッピングを {@code f} とすると,
+ * 次が成立する:
+ * </p>
+ * <blockquote>
+ * 
+ * <pre>
+ * Double.compare(d1, d2) == f(d1).compareTo(f(d2))
+ * f(0d).compareTo(f(-0d)) == 0
+ * (ただし, 「==」は Integer.signum の文脈である. すなわち符号だけに注目する.)
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * 
+ * <hr>
+ * 
+ * 
+ * <p>
+ * IEEE 754型の浮動小数点数をこのクラスにラップするためには, 次の注意が必要である.
+ * </p>
+ * 
+ * <ul>
+ * <li>無限大, NaNを排除する.</li>
+ * <li>正の0と負の0を同一視する.</li>
+ * </ul>
+ * 
+ * <p>
+ * これらを実現する実装例について, 以下で説明する.
+ * </p>
+ * 
+ * <p>
+ * {@link PseudoRealNumber} 型を {@code T}, ラップされる要素の型を {@code E} とする. <br>
+ * ただし, ここからの文脈では, {@code T}, {@code E} は仮型パラメータでなく実型パラメータである. <br>
+ * また, {@code E} は comparability が定義されており,
+ * equality と整合するとする. <br>
+ * {@code E} には四則演算等の基本演算に加え,
+ * 次のメソッド, フィールドがあらかじめ準備されているとする. <br>
+ * </p>
+ * 
+ * <ul>
+ * <li>
+ * {@code E} が0であるかを判定するインスタンスメソッド,
+ * {@code isZero(): boolean}
+ * </li>
+ * <li>
+ * {@code E} が有限であるかを判定するインスタンスメソッド,
+ * {@code isFinite(): boolean}
+ * </li>
+ * <li>
+ * 正の0を表現する {@code E} 型の {@code static final} 定数,
+ * <u>{@code POSITIVE_0}</u>{@code : E}
+ * </li>
+ * </ul>
+ * 
+ * <h2>フィールド, コンストラクタ</h2>
+ * 
+ * <p>
+ * {@code T} は {@code final} フィールド {@code e:E} を持ち,
+ * {@code e} は {@code T} のコンストラクタで初期化する. <br>
+ * このとき, コンストラクタの引数で与えられる {@code e} が有限であるか, 0であるかを判定し,
+ * 必要ならば例外スロー, 値の置き換えを行う. <br>
+ * 例えば, コンストラクタは次のコードになる.
+ * </p>
+ * 
+ * <blockquote>
+ * 
+ * <pre>
+ * // 唯一のコンストラクタ
+ * T(E e) {
+ *     if (!e.isFinite()) {
+ *         throw new IllegalArgumentException("有限でない");
+ *     }
+ *     if (e.isZero()) {
+ *         e = E.POSITIVE_0;
+ *     }
+ *     this.e = e;
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * <p>
+ * 上記コンストラクタにより, {@code T} のインスタンスのフィールド {@code e}
+ * は有限かつ負の0でない状態が実現する. <br>
+ * この状態を「正規化されている」と呼ぶ.
+ * </p>
+ * 
+ * <h2>comparability, equaltity, 単項演算</h2>
+ * 
+ * <p>
+ * 存在し得る存在し得る {@code T} 型インスタンスは正規化されているので, <br>
+ * {@code T} 型の comparability は {@code E} 型の comparability に整合し, <br>
+ * {@code equals} メソッド, {@code hashCode} メソッド, {@code compareTo} メソッドは
+ * {@code E} 型のそれらを用いて実現できる.
+ * </p>
+ * 
+ * <p>
+ * 単項演算である {@code abs} メソッド, {@code negated} メソッドは,
+ * {@code E} 型のそれらを用いて実行すればよい. <br>
+ * IEEE 754型である場合, 有限の {@code e: E} について {@code -e (厳密な表記でない)} は有限であるので,
+ * {@code T} のフィールドとして適切になる. <br>
+ * {@code -e} により負の0が生成されるが, {@code T} のコンストラクタで正の0に置き換えられる.
+ * </p>
+ * 
+ * <h2>四則演算</h2>
+ * 
+ * <p>
+ * 四則演算の実装は, 内部的には {@code E} 型で行い,
+ * 結果が有限でない場合は {@link ArithmeticException} をスローする. <br>
+ * 例えば, 次のコードになる.
+ * </p>
+ * 
+ * <blockquote>
+ * 
+ * <pre>
+ * T plus(T augend) {
+ *     E result = this.e.plus(augend.e);
+ *     if(!result.isFinite(){
+ *         throw new ArithmeticException("演算結果が有限でない");
+ *     }
+ *     return new T(result);
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * <p>
+ * もしくは, 前述のコンストラクタを採用している場合, 次の例外翻訳でもよい.
+ * </p>
+ * 
+ * <blockquote>
+ * 
+ * <pre>
+ * T plus(T augend) {
+ *     try {
+ *         return new T(this.e.plus(augend.e));
+ *     } catch (IllegalArgumentException iae) {
+ *         throw new ArithmeticException("演算結果が有限でない");
+ *     }
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
  * @author Matsuura Y.
- * @version 18.2
+ * @version 19.2
  * @param <T> このクラスと二項演算が可能な体構造の元を表す型.
  *            体の定義より, 自身に一致する.
  */
@@ -191,7 +343,7 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
      * equality と整合する.
      * 
      * @param o 比較相手
-     * @return 比較結果, {@code double} に準拠する
+     * @return 比較結果
      * @throws NullPointerException 引数がnullの場合
      */
     @Override

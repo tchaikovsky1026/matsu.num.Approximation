@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.19
+ * 2024.10.8
  */
 package matsu.num.approximation.generalfield;
 
@@ -17,14 +17,14 @@ import java.math.MathContext;
  * 
  * 
  * @author Matsuura Y.
- * @version 19.1
+ * @version 19.2
  */
 public final class Decimal128 extends PseudoRealNumber<Decimal128> {
 
     private static final PseudoRealNumber.Provider<Decimal128> PROVIDER =
             new Decimal128.Provider();
-    private static final Decimal128 ZERO = Decimal128.of(0d);
-    private static final Decimal128 ONE = Decimal128.of(1d);
+    private static final Decimal128 ZERO = new Decimal128(0d);
+    private static final Decimal128 ONE = new Decimal128(1d);
 
     private final BigDecimal value;
 
@@ -34,14 +34,39 @@ public final class Decimal128 extends PseudoRealNumber<Decimal128> {
     private final int immutableHashCode;
 
     /**
-     * 唯一のコンストラクタ.
+     * {@link BigDecimal} から生成するコンストラクタ.
      * 
-     * @throws NullPointerException null
+     * @throws NullPointerException 引数がnullの場合
      */
     private Decimal128(BigDecimal value) {
         this.value = value;
 
+        //ここでNullPointerExceptionが発生する可能性がある
         this.immutableHashCode = this.calcHashCode();
+    }
+
+    /**
+     * {@code double} から生成するコンストラクタ.
+     * 
+     * @throws IllegalArgumentException 引数が有限でない場合
+     */
+    private Decimal128(double value) {
+        this(toBigDecimal128(value));
+    }
+
+    /**
+     * {@code double} を {@link BigDecimal} に変換する.
+     * 
+     * @throws IllegalArgumentException 引数が有限でない場合
+     */
+    private static BigDecimal toBigDecimal128(double value) {
+        if (!Double.isFinite(value)) {
+            throw new IllegalArgumentException(
+                    String.format("扱えない値: value = %s", value));
+        }
+
+        //BigDecimalは正の0と負の0を区別しないので, これでよい.
+        return new BigDecimal(value, MathContext.DECIMAL128);
     }
 
     /**
@@ -153,7 +178,13 @@ public final class Decimal128 extends PseudoRealNumber<Decimal128> {
      */
     private int calcHashCode() {
 
-        //BigDecimal内では0dと-0dは既に同一値になっているので, このハッシュコードはequalsに整合する.
+        /*
+         * BigDecimalはequalityとcomparabilityが整合しないので, BigDecimal.equalsは使えない.
+         * そこで, doubleに直すことでcomparabilityに整合させる.
+         * 
+         * BigDecimal内では0dと-0dは既に同一値になっているので, このハッシュコードはequalsに整合する.
+         * doubleに直すことで, 元は異なる値でも同一のハッシュコード値になる場合がある.
+         */
         return Double.hashCode(this.value.doubleValue());
     }
 
@@ -183,31 +214,6 @@ public final class Decimal128 extends PseudoRealNumber<Decimal128> {
         return PROVIDER;
     }
 
-    /**
-     * <p>
-     * このメソッドは非公開である. <br>
-     * 外部からの {@link Decimal128} インスタンスの生成は, プロバイダ経由で行う.
-     * </p>
-     * 
-     * <p>
-     * 与えた {@code double} 値に対応する {@link Decimal128} を返す. <br>
-     * {@link PseudoRealNumber.Provider}{@code <}{@link Decimal128}{@code >}
-     * から呼ばれることを想定されている.
-     * </p>
-     * 
-     * @param value 値
-     * @return value に相当するインスタンス
-     * @throws IllegalArgumentException 引数が扱えない値の場合
-     */
-    private static Decimal128 of(double value) {
-        if (!Double.isFinite(value)) {
-            throw new IllegalArgumentException(
-                    String.format("扱えない値: value = %s", value));
-        }
-
-        return new Decimal128(new BigDecimal(value, MathContext.DECIMAL128));
-    }
-
     private static final class Provider
             implements PseudoRealNumber.Provider<Decimal128> {
 
@@ -220,7 +226,7 @@ public final class Decimal128 extends PseudoRealNumber<Decimal128> {
 
         @Override
         public Decimal128 fromDoubleValue(double value) {
-            return Decimal128.of(value);
+            return new Decimal128(value);
         }
 
         @Override
