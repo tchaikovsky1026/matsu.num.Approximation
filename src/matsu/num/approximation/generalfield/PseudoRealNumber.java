@@ -101,7 +101,6 @@ package matsu.num.approximation.generalfield;
  * <blockquote>
  * 
  * <pre>
- * // 唯一のコンストラクタ
  * T(E e) {
  *     if (!e.isFinite()) {
  *         throw new IllegalArgumentException("有限でない");
