@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.10.8
+ * 2024.10.9
  */
 package matsu.num.approximation.generalfield;
 
@@ -15,7 +15,7 @@ package matsu.num.approximation.generalfield;
  * 実質的にイミュータブルである. <br>
  * 値に基づく equality, comparability を提供する. <br>
  * comparability は数の自然順序と同等であり,
- * equality は compatibility と整合しなければならない.
+ * equality は compatibility と整合するように実装される.
  * </p>
  * 
  * <p>
@@ -30,10 +30,10 @@ package matsu.num.approximation.generalfield;
  * {@code double} からこのクラスのインスタンスへのマッピングについて規定する. <br>
  * {@code 0d} と {@code -0d} は等価であり,
  * それ以外の異なる {@code double}
- * 値は異なる値にマッピングされなければならない. <br>
+ * 値は異なる値にマッピングされるように実装される. <br>
  * すなわち, {@code d1}, {@code d2} を共に有限の {@code double} 値とし,
  * 少なくとも片方は0でないとしたとき,
- * 次の規約を満たさなければならない. <br>
+ * 次の規約を満たす. <br>
  * 規約: {@code double} 値からこのクラスのインスタンスへのマッピングを {@code f} とすると,
  * 次が成立する:
  * </p>
@@ -50,6 +50,7 @@ package matsu.num.approximation.generalfield;
  * 
  * <hr>
  * 
+ * <h2>IEEE 754型の浮動小数点数の利用</h2>
  * 
  * <p>
  * IEEE 754型の浮動小数点数をこのクラスにラップするためには, 次の注意が必要である.
@@ -88,7 +89,7 @@ package matsu.num.approximation.generalfield;
  * </li>
  * </ul>
  * 
- * <h2>フィールド, コンストラクタ</h2>
+ * <h3>フィールド, コンストラクタ</h3>
  * 
  * <p>
  * {@code T} は {@code final} フィールド {@code e:E} を持ち,
@@ -120,7 +121,7 @@ package matsu.num.approximation.generalfield;
  * この状態を「正規化されている」と呼ぶ.
  * </p>
  * 
- * <h2>comparability, equaltity, 単項演算</h2>
+ * <h3>comparability, equaltity, 単項演算</h3>
  * 
  * <p>
  * 存在し得る存在し得る {@code T} 型インスタンスは正規化されているので, <br>
@@ -137,7 +138,7 @@ package matsu.num.approximation.generalfield;
  * {@code -e} により負の0が生成されるが, {@code T} のコンストラクタで正の0に置き換えられる.
  * </p>
  * 
- * <h2>四則演算</h2>
+ * <h3>四則演算</h3>
  * 
  * <p>
  * 四則演算の実装は, 内部的には {@code E} 型で行い,

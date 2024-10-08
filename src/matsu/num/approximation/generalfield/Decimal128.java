@@ -125,7 +125,8 @@ public final class Decimal128 extends PseudoRealNumber<Decimal128> {
      * {@inheritDoc }
      * 
      * <p>
-     * スローされる例外はスーパータイプに準じる.
+     * {@link Decimal128} では0割りの場合のみ {@link ArithmeticException} がスローされる. <br>
+     * その他のスローされる例外はスーパータイプに準じる.
      * </p>
      */
     @Override

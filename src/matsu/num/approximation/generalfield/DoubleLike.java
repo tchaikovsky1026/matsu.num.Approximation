@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.10.8
+ * 2024.10.9
  */
 package matsu.num.approximation.generalfield;
 
@@ -138,6 +138,13 @@ public final class DoubleLike extends PseudoRealNumber<DoubleLike> {
         return new DoubleLike(Math.abs(this.value));
     }
 
+    /**
+     * {@inheritDoc }
+     * 
+     * <p>
+     * {@link DoubleLike} では無限大は返らない.
+     * </p>
+     */
     @Override
     public double asDouble() {
         return this.value;
