@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.19
+ * 2024.10.21
  */
 package matsu.num.approximation;
 
@@ -38,7 +38,7 @@ package matsu.num.approximation;
  * </p>
  * 
  * @author Matsuura Y.
- * @version 19.1
+ * @version 19.3
  */
 public abstract class DoubleApproxTarget {
 
@@ -71,15 +71,19 @@ public abstract class DoubleApproxTarget {
      * {@link #value(double)} で返す値の計算を行うための抽象メソッド.
      * 
      * <p>
+     * <i>
      * このメソッドは {@link #value(double)} の内部で呼ばれるために用意されており,
      * 外部から呼ぶことは許されず, 継承先でアクセス修飾子を緩めてはいけない. <br>
-     * 内部から呼ばれる場合, 引数 <i>x</i> は必ず区間内である.
+     * 内部から呼ばれる場合, 引数 x は必ず区間内である.
+     * </i>
      * </p>
      * 
      * <p>
+     * <i>
      * {@link Double#POSITIVE_INFINITY}, {@link Double#NEGATIVE_INFINITY},
      * {@link Double#NaN}
-     * を返しても良い.
+     * を返しても良い (呼び出し元で {@link Double#NaN} に修正される).
+     * </i>
      * </p>
      * 
      * @param x <i>x</i>, 引数
@@ -111,16 +115,20 @@ public abstract class DoubleApproxTarget {
      * {@link #scale(double)} で返す値の計算を行うための抽象メソッド.
      * 
      * <p>
+     * <i>
      * このメソッドは {@link #scale(double)} の内部で呼ばれるために用意されており,
      * 外部から呼ぶことは許されず, 継承先でアクセス修飾子を緩めてはいけない. <br>
-     * 内部から呼ばれる場合, 引数 <i>x</i> は必ず区間内である.
+     * 内部から呼ばれる場合, 引数 x は必ず区間内である.
+     * </i>
      * </p>
      * 
      * <p>
+     * <i>
      * 0以下の数や,
      * {@link Double#POSITIVE_INFINITY}, {@link Double#NEGATIVE_INFINITY},
      * {@link Double#NaN}
-     * を返しても良い.
+     * を返しても良い (呼び出し元で {@link Double#NaN} に修正される).
+     * </i>
      * </p>
      * 
      * @param x <i>x</i>, 引数
@@ -146,4 +154,24 @@ public abstract class DoubleApproxTarget {
      * @return 区間
      */
     public abstract DoubleFiniteClosedInterval interval();
+
+    /**
+     * このインスタンスの文字列表現を返す.
+     * 
+     * @return 文字列表現
+     */
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + ": anonymous";
+    }
+
+    /**
+     * clone不可.
+     * 
+     * @throws CloneNotSupportedException 常に
+     */
+    @Override
+    protected final Object clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException();
+    }
 }

@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.10.9
+ * 2024.10.21
  */
 package matsu.num.approximation.generalfield;
 
@@ -53,7 +53,7 @@ package matsu.num.approximation.generalfield;
  * <h2>IEEE 754型の浮動小数点数の利用</h2>
  * 
  * <p>
- * IEEE 754型の浮動小数点数をこのクラスにラップするためには, 次の注意が必要である.
+ * ({@code double} を含む) IEEE 754型の浮動小数点数をこのクラスにラップするためには, 次の注意が必要である.
  * </p>
  * 
  * <ul>
@@ -117,15 +117,15 @@ package matsu.num.approximation.generalfield;
  * 
  * <p>
  * 上記コンストラクタにより, {@code T} のインスタンスのフィールド {@code e}
- * は有限かつ負の0でない状態が実現する. <br>
+ * は有限であり, かつ負の0でない状態が実現する. <br>
  * この状態を「正規化されている」と呼ぶ.
  * </p>
  * 
- * <h3>comparability, equaltity, 単項演算</h3>
+ * <h3>comparability, equaltity, abs, negated</h3>
  * 
  * <p>
  * 存在し得る存在し得る {@code T} 型インスタンスは正規化されているので, <br>
- * {@code T} 型の comparability は {@code E} 型の comparability に整合し, <br>
+ * {@code T} 型に要求される comparability は {@code E} 型の comparability に整合し, <br>
  * {@code equals} メソッド, {@code hashCode} メソッド, {@code compareTo} メソッドは
  * {@code E} 型のそれらを用いて実現できる.
  * </p>
@@ -179,7 +179,7 @@ package matsu.num.approximation.generalfield;
  * </blockquote>
  * 
  * @author Matsuura Y.
- * @version 19.2
+ * @version 19.3
  * @param <T> このクラスと二項演算が可能な体構造の元を表す型.
  *            体の定義より, 自身に一致する.
  */
@@ -350,12 +350,14 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
     public abstract int compareTo(T o);
 
     /**
-     * このインスタンスの文字列表現を返す.
+     * clone不可.
      * 
-     * @return 文字列表現
+     * @throws CloneNotSupportedException 常に
      */
     @Override
-    public abstract String toString();
+    protected final Object clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException();
+    }
 
     /**
      * 体に対する値のプロバイダ.

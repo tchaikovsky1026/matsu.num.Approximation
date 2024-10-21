@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.17
+ * 2024.10.21
  */
 package matsu.num.approximation.generalfield;
 
@@ -38,7 +38,7 @@ package matsu.num.approximation.generalfield;
  * </p>
  * 
  * @author Matsuura Y.
- * @version 19.0
+ * @version 19.3
  * @param <T> 体の元を表現する型パラメータ
  */
 public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
@@ -73,14 +73,18 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
      * {@link #value(PseudoRealNumber)} で返す値の計算を行うための抽象メソッド.
      * 
      * <p>
+     * <i>
      * このメソッドは {@link #value(PseudoRealNumber)} の内部で呼ばれるために用意されており,
      * 外部から呼ぶことは許されず, 継承先でアクセス修飾子を緩めてはいけない. <br>
-     * 内部から呼ばれる場合, 引数 <i>x</i> は必ず区間内である
+     * 内部から呼ばれる場合, 引数 x は必ず区間内である
      * (したがって, {@code null} でない).
+     * </i>
      * </p>
      * 
      * <p>
-     * 値が計算できない場合, {@link ArithmeticException} をスローしてよい.
+     * <i>
+     * 値が計算できない場合, {@link ArithmeticException} をスローすること.
+     * </i>
      * </p>
      * 
      * @param x <i>x</i>, 引数
@@ -118,15 +122,20 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
      * {@link #scale(PseudoRealNumber)} で返す値の計算を行うための抽象メソッド.
      * 
      * <p>
+     * <i>
      * このメソッドは {@link #scale(PseudoRealNumber)} の内部で呼ばれるために用意されており,
      * 外部から呼ぶことは許されず, 継承先でアクセス修飾子を緩めてはいけない. <br>
-     * 内部から呼ばれる場合, 引数 <i>x</i> は必ず区間内である
+     * 内部から呼ばれる場合, 引数 x は必ず区間内である
      * (したがって, {@code null} でない).
+     * </i>
      * </p>
      * 
      * <p>
-     * 0以下の数を返しても良い. <br>
-     * また, 値が計算できない場合, {@link ArithmeticException} をスローしてよい.
+     * <i>
+     * 0以下の数を返しても良い
+     * （呼び出し元で例外スローに変換される）. <br>
+     * 値が計算できない場合, {@link ArithmeticException} をスローすること.
+     * </i>
      * </p>
      * 
      * @param x <i>x</i>, 引数
@@ -165,4 +174,24 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
      * @return 体の元に関するプロバイダ
      */
     public abstract PseudoRealNumber.Provider<T> elementProvider();
+
+    /**
+     * このインスタンスの文字列表現を返す.
+     * 
+     * @return 文字列表現
+     */
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + ": anonymous";
+    }
+
+    /**
+     * clone不可.
+     * 
+     * @throws CloneNotSupportedException 常に
+     */
+    @Override
+    protected final Object clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException();
+    }
 }

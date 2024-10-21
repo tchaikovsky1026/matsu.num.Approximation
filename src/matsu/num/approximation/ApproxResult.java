@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.2
+ * 2024.10.21
  */
 package matsu.num.approximation;
 
@@ -24,8 +24,19 @@ import java.util.function.Supplier;
  * 結果が存在しない場合はメッセージの取得が可能である.
  * </p>
  * 
+ * <p>
+ * このクラスは, 内部でサブタイプを用意するために {@code abstract} となっており,
+ * コンストラクタを隠ぺいすることにより外部で継承を禁止している. <br>
+ * 近似結果が存在することを表現したい場合,
+ * {@link #of(Object)} メソッドを呼び出すことで,
+ * 結果をラップした {@link ApproxResult} インスタンスを得る. <br>
+ * 近似結果が存在しない (近似に失敗した) ことを表現したい場合,
+ * {@link #failed(String)} メソッドを呼び出すことで,
+ * 結果が空である {@link ApproxResult} インスタンスを得る.
+ * </p>
+ * 
  * @author Matsuura Y.
- * @version 18.2
+ * @version 19.3
  * @param <T> 近似結果の内容の型パラメータ
  */
 public abstract class ApproxResult<T> {
@@ -52,7 +63,17 @@ public abstract class ApproxResult<T> {
 
     /**
      * {@link #isPresent()} が {@code true} の場合のみ内部から呼ばれる抽象メソッド. <br>
-     * 近似結果の内容を返すように実装する.
+     * 近似結果の内容を返すように実装する. <br>
+     * このクラス外部から呼び出してはいけない.
+     * 
+     * <p>
+     * <i>
+     * この抽象クラスの継承はネストクラスにのみ許可されているので,
+     * このクラス外でこのメソッドを実装することはない. <br>
+     * 意図としては {@code private} のアクセスレベルにしたいのであるが,
+     * それができないためにパッケージプライベートとしている.
+     * </i>
+     * </p>
      * 
      * @return 近似結果の内容
      */
@@ -124,8 +145,8 @@ public abstract class ApproxResult<T> {
 
     /**
      * <p>
-     * 内容が無いことを表すを保近似結果を返す. <br>
-     * メッセージを加える.
+     * 内容が無いことを表す近似結果を返す. <br>
+     * 必要であれば, メッセージを加えることができる.
      * </p>
      * 
      * <p>
