@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.17
+ * 2024.10.24
  */
 package matsu.num.approximation.polynomial;
 
@@ -28,11 +28,20 @@ package matsu.num.approximation.polynomial;
  * このインターフェースのサブタイプはイミュータブルであり,
  * かつすべてのメソッドはスレッドセーフであることが保証されている.
  * </p>
+ * 
+ * <p>
+ * <i>
+ * <u>
+ * このインターフェースは実装を隠ぺいして型を公開するためのものである. <br>
+ * 外部で実装することは不可.
+ * </u>
+ * </i>
+ * </p>
  *
  * @author Matsuura Y.
- * @version 19.0
+ * @version 20.0
  */
-public interface DoublePolynomial {
+public sealed interface DoublePolynomial permits DoublePolynomialSealed {
 
     /**
      * 多項式の次数 <i>n</i> を返す.

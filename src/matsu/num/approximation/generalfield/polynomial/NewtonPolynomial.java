@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.17
+ * 2024.10.24
  */
 package matsu.num.approximation.generalfield.polynomial;
 
@@ -48,9 +48,9 @@ import matsu.num.approximation.generalfield.PseudoRealNumber.Provider;
  * </p>
  *
  * @author Matsuura, Y.
- * @version 19.0
+ * @version 20.0
  */
-final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements Polynomial<T> {
+final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements PolynomialSealed<T> {
 
     private final T[] node;
     private final T[] newtonCoeff;

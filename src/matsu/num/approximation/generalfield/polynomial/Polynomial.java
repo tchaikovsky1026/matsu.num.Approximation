@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.6
+ * 2024.10.24
  */
 package matsu.num.approximation.generalfield.polynomial;
 
@@ -32,12 +32,22 @@ import matsu.num.approximation.generalfield.PseudoRealNumber;
  * このインターフェースのサブタイプはイミュータブルであり,
  * かつすべてのメソッドはスレッドセーフであることが保証されている.
  * </p>
+ * 
+ * <p>
+ * <i>
+ * <u>
+ * このインターフェースは実装を隠ぺいして型を公開するためのものである. <br>
+ * 外部で実装することは不可.
+ * </u>
+ * </i>
+ * </p>
  *
  * @author Matsuura Y.
- * @version 18.2
+ * @version 20.0
  * @param <T> 体の元を表現する型パラメータ
  */
-public interface Polynomial<T extends PseudoRealNumber<T>> {
+@SuppressWarnings("rawtypes")
+public sealed interface Polynomial<T extends PseudoRealNumber<T>> permits PolynomialSealed {
 
     /**
      * 多項式の次数 <i>n</i> を返す.

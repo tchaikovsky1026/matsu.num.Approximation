@@ -33,7 +33,7 @@ import java.util.Arrays;
  * @deprecated このクラスは使われていない. おそらく今後も必要ないだろう.
  */
 @Deprecated(forRemoval = true)
-final class SimplePolynomial implements DoublePolynomial {
+final class SimplePolynomial implements DoublePolynomialSealed {
 
     //多項式の係数
     private final double[] coeff;

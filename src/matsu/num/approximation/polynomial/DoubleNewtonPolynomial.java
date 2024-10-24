@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.18
+ * 2024.10.24
  */
 package matsu.num.approximation.polynomial;
 
@@ -39,9 +39,9 @@ import matsu.num.approximation.component.ApproximationFailedException;
  * </p>
  *
  * @author Matsuura, Y.
- * @version 19.0
+ * @version 20.0
  */
-final class DoubleNewtonPolynomial implements DoublePolynomial {
+final class DoubleNewtonPolynomial implements DoublePolynomialSealed {
 
     private final double[] node;
     private final double[] newtonCoeff;
