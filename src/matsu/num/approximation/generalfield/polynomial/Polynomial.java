@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.10.24
+ * 2024.12.3
  */
 package matsu.num.approximation.generalfield.polynomial;
 
@@ -46,7 +46,6 @@ import matsu.num.approximation.generalfield.PseudoRealNumber;
  * @version 20.0
  * @param <T> 体の元を表現する型パラメータ
  */
-@SuppressWarnings("rawtypes")
 public sealed interface Polynomial<T extends PseudoRealNumber<T>> permits PolynomialSealed {
 
     /**
