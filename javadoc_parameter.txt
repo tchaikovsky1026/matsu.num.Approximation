@@ -1,0 +1,5 @@
+(Antビルド: javadoc)
+packagenames="matsu.num.approximation,
+        	matsu.num.approximation.polynomial,
+        	matsu.num.approximation.generalfield,
+        	matsu.num.approximation.generalfield.polynomial"
