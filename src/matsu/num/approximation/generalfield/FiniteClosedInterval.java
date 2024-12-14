@@ -5,15 +5,13 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.5
+ * 2024.12.14
  */
 package matsu.num.approximation.generalfield;
 
 /**
- * <p>
- * {@link PseudoRealNumber} のサブタイプ {@code T} に関する有限閉区間を扱う. <br>
- * 区間の境界値に基づくequalityを提供する.
- * </p>
+ * {@link PseudoRealNumber} のサブタイプに関する有限閉区間を扱う. <br>
+ * 区間の境界値に基づく equality を提供する.
  * 
  * <p>
  * サポートされているのは, 次を満たす閉区間 [<i>a</i>, <i>b</i>] である. <br>
@@ -24,9 +22,18 @@ package matsu.num.approximation.generalfield;
  * <i>e</i><sub>a</sub>, <i>e</i><sub>r</sub>
  * は定数である.
  * </p>
+ * 
+ * <p>
+ * このクラスのインスタンスは,
+ * {@link #from(PseudoRealNumber, PseudoRealNumber)}
+ * メソッドにより取得する. <br>
+ * 引数が適切かどうかは,
+ * {@link #acceptsBoundaryValues(PseudoRealNumber, PseudoRealNumber)}
+ * により事前検証すべきである.
+ * </p>
  *
  * @author Matsuura, Y.
- * @version 18.2
+ * @version 21.0
  * @param <T> 体の元を表現する型パラメータ
  */
 public final class FiniteClosedInterval<T extends PseudoRealNumber<T>> {
@@ -100,8 +107,8 @@ public final class FiniteClosedInterval<T extends PseudoRealNumber<T>> {
      * @throws NullPointerException 引数がnullの場合
      */
     public boolean accepts(T x) {
-        return x.compareTo(this.lower()) >= 0 &&
-                x.compareTo(this.upper()) <= 0;
+        return x.compareTo(this.lower()) >= 0
+                && x.compareTo(this.upper()) <= 0;
     }
 
     /**
@@ -115,7 +122,7 @@ public final class FiniteClosedInterval<T extends PseudoRealNumber<T>> {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof FiniteClosedInterval<?> target)) {
+        if (!(obj instanceof FiniteClosedInterval target)) {
             return false;
         }
         return this.min.equals(target.min) &&
@@ -145,14 +152,12 @@ public final class FiniteClosedInterval<T extends PseudoRealNumber<T>> {
     }
 
     /**
-     * <p>
      * 自身の文字列表現を返す.
-     * </p>
      * 
      * <p>
      * 文字列表現はバージョン間の互換性は担保されない. <br>
      * おそらく次のような形式だろう. <br>
-     * {@code ClosedInterval[lower, upper]}
+     * {@code [%lower, %upper]}
      * </p>
      * 
      * @return 文字列表現
@@ -160,17 +165,15 @@ public final class FiniteClosedInterval<T extends PseudoRealNumber<T>> {
     @Override
     public String toString() {
         return String.format(
-                "ClosedInterval[%s, %s]",
+                "[%s, %s]",
                 this.min, this.max);
     }
 
     /**
-     * <p>
      * 指定した値が閉区間の境界に適合するかを判定する. <br>
      * <i>x</i><sub>1</sub>, <i>x</i><sub>2</sub> &rarr;
      * [<i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>] または
      * [<i>x</i><sub>2</sub>, <i>x</i><sub>1</sub>]
-     * </p>
      * 
      * @param <T> 体の元を表現する型パラメータ
      * @param x1 <i>x</i><sub>1</sub>, 引数
@@ -185,12 +188,10 @@ public final class FiniteClosedInterval<T extends PseudoRealNumber<T>> {
     }
 
     /**
-     * <p>
      * 指定した値を境界に持つ有限閉区間を返す. <br>
      * <i>x</i><sub>1</sub>, <i>x</i><sub>2</sub> &rarr;
      * [<i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>] または
      * [<i>x</i><sub>2</sub>, <i>x</i><sub>1</sub>]
-     * </p>
      * 
      * <p>
      * 値の正当性の判定には

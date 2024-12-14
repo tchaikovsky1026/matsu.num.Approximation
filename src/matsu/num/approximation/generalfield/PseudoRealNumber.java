@@ -5,46 +5,79 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.10.21
+ * 2024.12.14
  */
 package matsu.num.approximation.generalfield;
 
 /**
- * <p>
  * 実数に類似した体 (四則演算が定義された代数系) の元を表現する. <br>
  * 実質的にイミュータブルである. <br>
  * 値に基づく equality, comparability を提供する. <br>
  * comparability は数の自然順序と同等であり,
  * equality は compatibility と整合するように実装される.
- * </p>
  * 
  * <p>
  * このクラスは無限大, NaNを除いた {@code double} の拡張になっており,
  * 有限である任意の {@code double} に対し, それに相当するインスタンスが存在する. <br>
- * ただし, 正の0と負の0を区別せず, ともに0として扱う. <br>
- * 逆に, 無限大, NaNを表現するインスタンスは存在してはならず,
+ * ただし, 正の0と負の0の区別はなく, ともに0として扱う. <br>
+ * 逆に, 無限大, NaNを表現するインスタンスは存在せず,
  * 演算結果がそのようになる場合は例外がスローされる.
  * </p>
  * 
+ * 
+ * <hr>
+ * 
+ * <h2>実装規約</h2>
+ * 
+ * <h3>扱える値の範囲</h3>
+ * 
  * <p>
- * {@code double} からこのクラスのインスタンスへのマッピングについて規定する. <br>
+ * このクラスの (サブタイプの) インスタンス {@code e} について,
+ * 常に加法逆元 {@code -e} のインスタンスが生成できなければならない. <br>
+ * すなわち, {@code int} のような正負で非対称な範囲を扱ってはならない.
+ * </p>
+ * 
+ * 
+ * <h3>演算による equality の伝播</h3>
+ * 
+ * <p>
+ * {@code a1}, {@code a2}, {@code b1}, {@code b2}
+ * をこのクラスの (サブタイプの) インスタンスとする. <br>
+ * {@code a1.equals(a2)}, {@code b1.equals(b2)}
+ * がともに {@code true} ならば, <br>
+ * {@code c1 = a1.operate(b1)}, {@code c2 = a2.operate(b2)}
+ * について, 次が成立しなければならない. <br>
+ * ({@code operate} は任意の二項演算を表す.)
+ * </p>
+ * 
+ * <ul>
+ * <li>{@code a1.operate(b1)} が例外をスローするならば,
+ * {@code a2.operate(b2)} も同一の例外をスローする.</li>
+ * <li>{@code c1}, {@code c2} が存在するならば
+ * {@code c1.equals(c2)} は必ず {@code true} になる.</li>
+ * </ul>
+ * 
+ * <p>
+ * この規約により, 等価と判定される2個のインスタンスは内部表現も等価になるように実装されるべきである.
+ * </p>
+ * 
+ * 
+ * <h3>{@code double} 値からこのクラスのインスタンスへのマッピング</h3>
+ * 
+ * <p>
+ * クラス説明の通り,
  * {@code 0d} と {@code -0d} は等価であり,
  * それ以外の異なる {@code double}
  * 値は異なる値にマッピングされるように実装される. <br>
  * すなわち, {@code d1}, {@code d2} を共に有限の {@code double} 値とし,
- * 少なくとも片方は0でないとしたとき,
- * 次の規約を満たす. <br>
- * 規約: {@code double} 値からこのクラスのインスタンスへのマッピングを {@code f} とすると,
- * 次が成立する:
+ * 少なくとも片方は &pm;0 でないとしたとき,
+ * {@code double} 値からこのクラスのインスタンスへのマッピングを {@code f} とすると,
+ * 次が {@code true} にならなければならない.
  * </p>
  * <blockquote>
- * 
- * <pre>
- * Double.compare(d1, d2) == f(d1).compareTo(f(d2))
- * f(0d).compareTo(f(-0d)) == 0
- * (ただし, 「==」は Integer.signum の文脈である. すなわち符号だけに注目する.)
- * </pre>
- * 
+ * {@code sgn(Double.compare(d1, d2)) == sgn(f(d1).compareTo(f(d2)))} <br>
+ * {@code f(0d).compareTo(f(-0d)) == 0 } <br>
+ * (ただし, {@code sgn} は符号の意味である. {@code Integer.signum} と読み替えても良い.)
  * </blockquote>
  * 
  * 
@@ -127,15 +160,17 @@ package matsu.num.approximation.generalfield;
  * 存在し得る存在し得る {@code T} 型インスタンスは正規化されているので, <br>
  * {@code T} 型に要求される comparability は {@code E} 型の comparability に整合し, <br>
  * {@code equals} メソッド, {@code hashCode} メソッド, {@code compareTo} メソッドは
- * {@code E} 型のそれらを用いて実現できる.
+ * {@code E} 型のそれらを用いて実現できる. <br>
+ * また, 演算による equality の伝播に関する規約は, 正規化によって自動的に満たされる.
  * </p>
  * 
  * <p>
  * 単項演算である {@code abs} メソッド, {@code negated} メソッドは,
  * {@code E} 型のそれらを用いて実行すればよい. <br>
- * IEEE 754型である場合, 有限の {@code e: E} について {@code -e (厳密な表記でない)} は有限であるので,
+ * IEEE 754型である場合, 有限の {@code E} 型についてその加法逆元は有限であるので,
  * {@code T} のフィールドとして適切になる. <br>
- * {@code -e} により負の0が生成されるが, {@code T} のコンストラクタで正の0に置き換えられる.
+ * +0 を表す {@code E} 型の加法逆元は -0 となるが,
+ * {@code T} のコンストラクタで +0 に置き換えられる.
  * </p>
  * 
  * <h3>四則演算</h3>
@@ -143,7 +178,7 @@ package matsu.num.approximation.generalfield;
  * <p>
  * 四則演算の実装は, 内部的には {@code E} 型で行い,
  * 結果が有限でない場合は {@link ArithmeticException} をスローする. <br>
- * 例えば, 次のコードになる.
+ * 例えば, 加算の場合は次のコードになる.
  * </p>
  * 
  * <blockquote>
@@ -179,7 +214,7 @@ package matsu.num.approximation.generalfield;
  * </blockquote>
  * 
  * @author Matsuura Y.
- * @version 19.3
+ * @version 21.0
  * @param <T> このクラスと二項演算が可能な体構造の元を表す型.
  *            体の定義より, 自身に一致する.
  */
@@ -196,15 +231,20 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
      * このクラスが表現する元の生成を受け持つプロバイダを返す.
      * 
      * <p>
-     * <i>
-     * 実装規約: <br>
-     * この抽象メソッドは内部で利用されるために用意されており,
-     * 外部から呼ぶことは許されず,
-     * 継承先でアクセス修飾子を緩めてはいけない. <br>
-     * このメソッドの戻り値はキャッシュされたインスタンスを返さなければならない.
-     * (呼び出しの度に新しいインスタンスを生成してはならない.)
-     * </i>
+     * この抽象メソッドは内部で利用されるために用意されているので,
+     * 公開は禁止であり, サブクラスからもコールしてはならない.
      * </p>
+     * 
+     * @implSpec
+     *               アクセス修飾子を {@code public} にしてはいけない.
+     * 
+     *               <p>
+     *               このプロバイダにより返されるインスタンスは複数回の呼び出しで同一でなければならない. <br>
+     *               すなわち, 次が必ず {@code true} でなければならない.
+     *               </p>
+     *               <blockquote>
+     *               {@code this.provider() == this.provider()}
+     *               </blockquote>
      * 
      * @return プロバイダ
      */
@@ -350,6 +390,20 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
     public abstract int compareTo(T o);
 
     /**
+     * 自身の文字列表現を返す.
+     * 
+     * <p>
+     * 文字列表現はバージョン間の互換性は担保されない. <br>
+     * おそらく次のような形式だろう. <br>
+     * {@code %value}
+     * </p>
+     * 
+     * @return 文字列表現
+     */
+    @Override
+    public abstract String toString();
+
+    /**
      * clone不可.
      * 
      * @throws CloneNotSupportedException 常に
@@ -362,8 +416,6 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
     /**
      * 体に対する値のプロバイダ.
      * 
-     * @author Matsuura Y.
-     * @version 19.2
      * @param <T> 体の元を表す型
      */
     public static interface Provider<T extends PseudoRealNumber<T>> {
@@ -384,12 +436,30 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
         /**
          * 加法単位元 (0) を返す.
          * 
+         * @implSpec
+         *               <p>
+         *               戻り値は複数回の呼び出しで同一でなければならない. <br>
+         *               すなわち, 次が必ず {@code true} でなければならない.
+         *               </p>
+         *               <blockquote>
+         *               {@code this.zero() == this.zero()}
+         *               </blockquote>
+         * 
          * @return 加法単位元
          */
         public abstract T zero();
 
         /**
          * 乗法単位元 (1) を返す.
+         * 
+         * @implSpec
+         *               <p>
+         *               戻り値は複数回の呼び出しで同一でなければならない. <br>
+         *               すなわち, 次が必ず {@code true} でなければならない.
+         *               </p>
+         *               <blockquote>
+         *               {@code this.one() == this.one()}
+         *               </blockquote>
          * 
          * @return 乗法単位元
          */
@@ -400,9 +470,16 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
          * 配列は {@code null} 埋めされている. <br>
          * 長さは0以上でなければならない.
          * 
+         * @implSpec
+         *               おそらく, 次のような実装であろう
+         *               (ただし, {@code T} は具象型とする).
+         *               <blockquote>
+         *               {@code return new T[length];}
+         *               </blockquote>
+         * 
          * @param length 配列の長さ
          * @return 長さ {@code length} の {@code T} 型の配列
-         * @throws IllegalArgumentException lengthが0以上でないの場合
+         * @throws NegativeArraySizeException lengthが0以上でないの場合
          */
         public abstract T[] createArray(int length);
     }

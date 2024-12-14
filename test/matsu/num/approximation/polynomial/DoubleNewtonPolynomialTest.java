@@ -17,8 +17,6 @@ import matsu.num.approximation.component.ApproximationFailedException;
 
 /**
  * {@link DoubleNewtonPolynomial} クラスのテスト.
- * 
- * @author Matsuura Y.
  */
 @RunWith(Enclosed.class)
 final class DoubleNewtonPolynomialTest {

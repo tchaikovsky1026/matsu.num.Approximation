@@ -1,12 +1,3 @@
-/*
- * Copyright (c) 2024 Matsuura Y.
- * 
- * This software is released under the MIT License.
- * http://opensource.org/licenses/mit-license.php
- */
-/*
- * 2024.6.21
- */
 package matsu.num.approximation;
 
 import static org.hamcrest.MatcherAssert.*;
@@ -16,9 +7,6 @@ import org.junit.Ignore;
 
 /**
  * テストにおけるdouble値のアサーションを助けるユーティリティ.
- * 
- * @author Matsuura Y.
- * @version 18.0
  */
 @Ignore
 public final class DoubleRelativeAssertion {

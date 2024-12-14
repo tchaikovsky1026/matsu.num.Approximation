@@ -11,8 +11,6 @@ import matsu.num.approximation.generalfield.PseudoRealNumber;
 
 /**
  * {@link NodeCreation} クラスのテスト.
- * 
- * @author Matsuura Y.
  */
 @RunWith(Enclosed.class)
 final class NodeCreationTest {

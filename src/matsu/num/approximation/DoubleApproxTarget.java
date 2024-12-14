@@ -5,17 +5,15 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.10.21
+ * 2024.12.12
  */
 package matsu.num.approximation;
 
 /**
- * <p>
  * {@code double} 型で表現された, 近似されるターゲット関数を扱う. <br>
  * 有限閉区間で定義された1変数関数 <i>f</i>:
  * [<i>a</i>, <i>b</i>] &rarr; &#x211D;
  * を表す.
- * </p>
  * 
  * <p>
  * 近似において評価される誤差のスケール因子を <i>s</i><sub><i>f</i></sub> とする. <br>
@@ -38,7 +36,7 @@ package matsu.num.approximation;
  * </p>
  * 
  * @author Matsuura Y.
- * @version 19.3
+ * @version 21.0
  */
 public abstract class DoubleApproxTarget {
 
@@ -71,20 +69,18 @@ public abstract class DoubleApproxTarget {
      * {@link #value(double)} で返す値の計算を行うための抽象メソッド.
      * 
      * <p>
-     * <i>
      * このメソッドは {@link #value(double)} の内部で呼ばれるために用意されており,
-     * 外部から呼ぶことは許されず, 継承先でアクセス修飾子を緩めてはいけない. <br>
-     * 内部から呼ばれる場合, 引数 x は必ず区間内である.
-     * </i>
-     * </p>
-     * 
-     * <p>
-     * <i>
+     * 引数 <i>x</i> は必ず区間内である. <br>
+     * 公開は禁止され, サブクラスからもコールしてはならない. <br>
+     * 戻り値は,
      * {@link Double#POSITIVE_INFINITY}, {@link Double#NEGATIVE_INFINITY},
      * {@link Double#NaN}
-     * を返しても良い (呼び出し元で {@link Double#NaN} に修正される).
-     * </i>
+     * を返しても良い. <br>
+     * (呼び出し元 ({@link #value(double)}) で {@link Double#NaN} に修正される.)
      * </p>
+     * 
+     * 
+     * @implSpec アクセス修飾子を {@code public} にしてはいけない.
      * 
      * @param x <i>x</i>, 引数
      * @return <i>f</i>(<i>x</i>) の候補値
@@ -115,21 +111,17 @@ public abstract class DoubleApproxTarget {
      * {@link #scale(double)} で返す値の計算を行うための抽象メソッド.
      * 
      * <p>
-     * <i>
      * このメソッドは {@link #scale(double)} の内部で呼ばれるために用意されており,
-     * 外部から呼ぶことは許されず, 継承先でアクセス修飾子を緩めてはいけない. <br>
-     * 内部から呼ばれる場合, 引数 x は必ず区間内である.
-     * </i>
-     * </p>
-     * 
-     * <p>
-     * <i>
-     * 0以下の数や,
+     * 引数 <i>x</i> は必ず区間内である. <br>
+     * 公開は禁止され, サブクラスからもコールしてはならない. <br>
+     * 戻り値は, 0以下の数や,
      * {@link Double#POSITIVE_INFINITY}, {@link Double#NEGATIVE_INFINITY},
      * {@link Double#NaN}
-     * を返しても良い (呼び出し元で {@link Double#NaN} に修正される).
-     * </i>
+     * を返しても良い. <br>
+     * (呼び出し元 ({@link #scale(double)}) で {@link Double#NaN} に修正される.)
      * </p>
+     * 
+     * @implSpec アクセス修飾子を {@code public} にしてはいけない.
      * 
      * @param x <i>x</i>, 引数
      * @return <i>s</i><sub><i>f</i></sub>(<i>x</i>) の候補値
@@ -137,9 +129,7 @@ public abstract class DoubleApproxTarget {
     protected abstract double calcScale(double x);
 
     /**
-     * <p>
      * 引数が <i>f</i> に受け入れられるかどうかを判定する.
-     * </p>
      * 
      * @param x 引数
      * @return 引数が受け入れられる場合はtrue
@@ -166,12 +156,24 @@ public abstract class DoubleApproxTarget {
     }
 
     /**
-     * clone不可.
+     * -
      * 
+     * @return -
      * @throws CloneNotSupportedException 常に
+     * @deprecated Clone不可
      */
+    @Deprecated
     @Override
     protected final Object clone() throws CloneNotSupportedException {
         throw new CloneNotSupportedException();
+    }
+
+    /**
+     * オーバーライド不可.
+     */
+    @Override
+    @Deprecated
+    protected final void finalize() throws Throwable {
+        super.finalize();
     }
 }

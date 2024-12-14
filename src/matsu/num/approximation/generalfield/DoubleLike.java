@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.10.9
+ * 2024.12.12
  */
 package matsu.num.approximation.generalfield;
 
@@ -15,7 +15,7 @@ package matsu.num.approximation.generalfield;
  * {@code 0d} と {@code -0d} は等価である.)
  * 
  * @author Matsuura Y.
- * @version 19.2
+ * @version 21.0
  */
 public final class DoubleLike extends PseudoRealNumber<DoubleLike> {
 
@@ -222,9 +222,6 @@ public final class DoubleLike extends PseudoRealNumber<DoubleLike> {
 
         @Override
         public DoubleLike[] createArray(int length) {
-            if (length < 0) {
-                throw new IllegalArgumentException("サイズが負");
-            }
             return new DoubleLike[length];
         }
     }

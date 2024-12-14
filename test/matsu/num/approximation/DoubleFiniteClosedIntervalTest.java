@@ -13,8 +13,6 @@ import org.junit.runner.RunWith;
 
 /**
  * {@link DoubleFiniteClosedInterval} クラスのテスト.
- * 
- * @author Matsuura Y.
  */
 @RunWith(Enclosed.class)
 final class DoubleFiniteClosedIntervalTest {
@@ -164,6 +162,16 @@ final class DoubleFiniteClosedIntervalTest {
         @Test
         public void test_NaNは含まない() {
             assertThat(reference.accepts(Double.NaN), is(false));
+        }
+    }
+
+    public static class toString表示 {
+
+        @Test
+        public void test_toString() {
+            System.out.println(TEST_CLASS.getName());
+            System.out.println(DoubleFiniteClosedInterval.from(0d, 1d));
+            System.out.println();
         }
     }
 }

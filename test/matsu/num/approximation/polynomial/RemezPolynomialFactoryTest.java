@@ -14,8 +14,6 @@ import matsu.num.approximation.DoubleRelativeAssertion;
 
 /**
  * {@link RemezPolynomialFactory} クラスのテスト.
- * 
- * @author Matsuura Y.
  */
 @RunWith(Enclosed.class)
 final class RemezPolynomialFactoryTest {

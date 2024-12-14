@@ -18,8 +18,6 @@ import matsu.num.approximation.generalfield.PseudoRealNumber;
 
 /**
  * {@link NewtonPolynomial} クラスのテスト.
- * 
- * @author Matsuura Y.
  */
 @RunWith(Enclosed.class)
 final class NewtonPolynomialTest {

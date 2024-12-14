@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.10.8
+ * 2024.12.14
  */
 package matsu.num.approximation.generalfield;
 
@@ -15,9 +15,8 @@ import java.math.MathContext;
 /**
  * {@link MathContext#DECIMAL128} ルールに基づく {@link BigDecimal} と同等の実数体.
  * 
- * 
  * @author Matsuura Y.
- * @version 19.2
+ * @version 21.0
  */
 public final class Decimal128 extends PseudoRealNumber<Decimal128> {
 
@@ -83,7 +82,7 @@ public final class Decimal128 extends PseudoRealNumber<Decimal128> {
      * {@inheritDoc }
      * 
      * <p>
-     * {@link Decimal128} では{@link ArithmeticException} はスローされない. <br>
+     * {@link Decimal128} では {@link ArithmeticException} はスローされない. <br>
      * その他のスローされる例外はスーパータイプに準じる.
      * </p>
      */
@@ -97,7 +96,7 @@ public final class Decimal128 extends PseudoRealNumber<Decimal128> {
      * {@inheritDoc }
      * 
      * <p>
-     * {@link Decimal128} では{@link ArithmeticException} はスローされない. <br>
+     * {@link Decimal128} では {@link ArithmeticException} はスローされない. <br>
      * その他のスローされる例外はスーパータイプに準じる.
      * </p>
      */
@@ -111,7 +110,7 @@ public final class Decimal128 extends PseudoRealNumber<Decimal128> {
      * {@inheritDoc }
      * 
      * <p>
-     * {@link Decimal128} では{@link ArithmeticException} はスローされない. <br>
+     * {@link Decimal128} では {@link ArithmeticException} はスローされない. <br>
      * その他のスローされる例外はスーパータイプに準じる.
      * </p>
      */
@@ -164,6 +163,10 @@ public final class Decimal128 extends PseudoRealNumber<Decimal128> {
             return false;
         }
 
+        /*
+         * BigDecimalはequalityとcomparabilityが整合しないので,
+         * BigDecimal.equalsは使えない.
+         */
         return this.compareTo(target) == 0;
     }
 
@@ -180,11 +183,11 @@ public final class Decimal128 extends PseudoRealNumber<Decimal128> {
     private int calcHashCode() {
 
         /*
-         * BigDecimalはequalityとcomparabilityが整合しないので, BigDecimal.equalsは使えない.
-         * そこで, doubleに直すことでcomparabilityに整合させる.
+         * BigDecimalはequalityとcomparabilityが整合しないので, BigDecimal.hachCodeは使えない.
+         * そこで, doubleのハッシュコードを用いる.
+         * BigDecimal内で0dと-0dは既に同一値になっているので, このハッシュコードはequalsに整合する.
          * 
-         * BigDecimal内では0dと-0dは既に同一値になっているので, このハッシュコードはequalsに整合する.
-         * doubleに直すことで, 元は異なる値でも同一のハッシュコード値になる場合がある.
+         * doubleの表現力のため, 異なる値でも同一のハッシュコード値になる場合がある.
          */
         return Double.hashCode(this.value.doubleValue());
     }
@@ -242,12 +245,7 @@ public final class Decimal128 extends PseudoRealNumber<Decimal128> {
 
         @Override
         public Decimal128[] createArray(int length) {
-            if (length < 0) {
-                throw new IllegalArgumentException("サイズが負");
-            }
             return new Decimal128[length];
         }
-
     }
-
 }

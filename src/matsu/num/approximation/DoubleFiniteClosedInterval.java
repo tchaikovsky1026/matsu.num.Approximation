@@ -5,15 +5,13 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.7.14
+ * 2024.12.14
  */
 package matsu.num.approximation;
 
 /**
- * <p>
  * {@code double} 値に関する有限閉区間を扱う. <br>
- * 区間の境界値に基づくequalityを提供する.
- * </p>
+ * 区間の境界値に基づく equality を提供する.
  * 
  * <p>
  * サポートされているのは, 次を満たす閉区間 [<i>a</i>, <i>b</i>] である. <br>
@@ -25,9 +23,18 @@ package matsu.num.approximation;
  * <i>e</i><sub>a</sub>, <i>e</i><sub>r</sub>
  * は定数である.
  * </p>
+ * 
+ * <p>
+ * このクラスのインスタンスは,
+ * {@link #from(double, double)}
+ * メソッドにより取得する. <br>
+ * 引数が適切かどうかは,
+ * {@link #acceptsBoundaryValues(double, double)}
+ * により事前検証すべきである.
+ * </p>
  *
  * @author Matsuura, Y.
- * @version 18.1
+ * @version 21.0
  */
 public final class DoubleFiniteClosedInterval {
 
@@ -93,8 +100,8 @@ public final class DoubleFiniteClosedInterval {
      * @return 閉区間に含まれる場合はtrue
      */
     public boolean accepts(double x) {
-        return x >= this.lower() &&
-                x <= this.upper();
+        return x >= this.lower()
+                && x <= this.upper();
     }
 
     /**
@@ -111,8 +118,8 @@ public final class DoubleFiniteClosedInterval {
         if (!(obj instanceof DoubleFiniteClosedInterval target)) {
             return false;
         }
-        return Double.compare(this.min, target.min) == 0 &&
-                Double.compare(this.max, target.max) == 0;
+        return Double.compare(this.min, target.min) == 0
+                && Double.compare(this.max, target.max) == 0;
     }
 
     /**
@@ -127,7 +134,6 @@ public final class DoubleFiniteClosedInterval {
 
     /**
      * ハッシュコードを計算する.
-     * 不変クラスであるので, ライフサイクル全体でハッシュコードは不変である.
      * 
      * @return ハッシュコード
      */
@@ -138,14 +144,12 @@ public final class DoubleFiniteClosedInterval {
     }
 
     /**
-     * <p>
      * 自身の文字列表現を返す.
-     * </p>
      * 
      * <p>
      * 文字列表現はバージョン間の互換性は担保されない. <br>
      * おそらく次のような形式だろう. <br>
-     * {@code ClosedInterval[lower, upper]}
+     * {@code [%lower, %upper]}
      * </p>
      * 
      * @return 文字列表現
@@ -153,17 +157,15 @@ public final class DoubleFiniteClosedInterval {
     @Override
     public String toString() {
         return String.format(
-                "ClosedInterval[%s, %s]",
+                "[%s, %s]",
                 this.min, this.max);
     }
 
     /**
-     * <p>
      * 指定した値が閉区間の境界に適合するかを判定する. <br>
      * <i>x</i><sub>1</sub>, <i>x</i><sub>2</sub> &rarr;
      * [<i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>] または
      * [<i>x</i><sub>2</sub>, <i>x</i><sub>1</sub>]
-     * </p>
      * 
      * @param x1 <i>x</i><sub>1</sub>, 引数
      * @param x2 <i>x</i><sub>2</sub>, 引数
@@ -180,12 +182,10 @@ public final class DoubleFiniteClosedInterval {
     }
 
     /**
-     * <p>
      * 指定した値を境界に持つ有限閉区間を返す. <br>
      * <i>x</i><sub>1</sub>, <i>x</i><sub>2</sub> &rarr;
      * [<i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>] または
      * [<i>x</i><sub>2</sub>, <i>x</i><sub>1</sub>]
-     * </p>
      * 
      * <p>
      * 値の正当性の判定には {@link #acceptsBoundaryValues(double, double)} が用いられ,

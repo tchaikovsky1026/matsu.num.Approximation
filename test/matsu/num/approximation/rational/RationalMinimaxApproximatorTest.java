@@ -11,7 +11,7 @@ import matsu.num.approximation.DoubleFiniteClosedInterval;
  */
 @SuppressWarnings("deprecation")
 @Ignore
-public class RationalMinimaxApproximatorTest {
+final class RationalMinimaxApproximatorTest {
 
     public static void main(String[] args) {
         new RationalMinimaxApproximatorTest();

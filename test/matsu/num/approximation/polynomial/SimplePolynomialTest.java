@@ -11,8 +11,6 @@ import matsu.num.approximation.DoubleRelativeAssertion;
 
 /**
  * {@link SimplePolynomial} クラスのテスト.
- * 
- * @author Matsuura Y.
  */
 @SuppressWarnings("removal")
 @RunWith(Enclosed.class)

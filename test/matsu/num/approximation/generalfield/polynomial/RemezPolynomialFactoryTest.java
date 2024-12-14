@@ -19,8 +19,6 @@ import matsu.num.approximation.generalfield.PseudoRealNumber.Provider;
 
 /**
  * {@link RemezPolynomialFactory} クラスのテスト.
- * 
- * @author Matsuura Y.
  */
 @RunWith(Enclosed.class)
 final class RemezPolynomialFactoryTest {

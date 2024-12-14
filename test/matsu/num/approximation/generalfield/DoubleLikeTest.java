@@ -15,8 +15,6 @@ import matsu.num.approximation.generalfield.PseudoRealNumber.Provider;
 
 /**
  * {@link DoubleLikeTest} クラスのテスト.
- * 
- * @author Matsuura Y.
  */
 @RunWith(Enclosed.class)
 final class DoubleLikeTest {

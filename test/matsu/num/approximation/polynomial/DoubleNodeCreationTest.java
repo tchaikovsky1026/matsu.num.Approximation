@@ -18,8 +18,6 @@ import matsu.num.approximation.DoubleRelativeAssertion;
 
 /**
  * {@link DoubleNodeCreation} クラスのテスト.
- * 
- * @author Matsuura Y.
  */
 @RunWith(Enclosed.class)
 @SuppressWarnings("exports")
