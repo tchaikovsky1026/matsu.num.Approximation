@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.12.12
+ * 2024.12.25
  */
 package matsu.num.approximation.generalfield;
 
@@ -15,7 +15,7 @@ package matsu.num.approximation.generalfield;
  * {@code 0d} と {@code -0d} は等価である.)
  * 
  * @author Matsuura Y.
- * @version 21.0
+ * @version 21.1
  */
 public final class DoubleLike extends PseudoRealNumber<DoubleLike> {
 
@@ -38,6 +38,11 @@ public final class DoubleLike extends PseudoRealNumber<DoubleLike> {
     private final double value;
 
     /**
+     * このクラスのハッシュコード. イミュータブル.
+     */
+    private final int immutableHashCode;
+
+    /**
      * 唯一のコンストラクタ
      * 
      * @param value value
@@ -55,6 +60,7 @@ public final class DoubleLike extends PseudoRealNumber<DoubleLike> {
             value = 0d;
         }
         this.value = value;
+        this.immutableHashCode = this.calcHashCode();
     }
 
     /**
@@ -166,7 +172,19 @@ public final class DoubleLike extends PseudoRealNumber<DoubleLike> {
 
     @Override
     public int hashCode() {
-        return Double.hashCode(this.value);
+        return this.immutableHashCode;
+    }
+
+    /**
+     * ハッシュコードを計算する.
+     * 
+     * @return ハッシュコード
+     */
+    private int calcHashCode() {
+
+        int result = 1;
+        result = 31 * result + Double.hashCode(this.value);
+        return result;
     }
 
     @Override

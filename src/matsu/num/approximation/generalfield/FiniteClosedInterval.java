@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.12.14
+ * 2024.12.25
  */
 package matsu.num.approximation.generalfield;
 
@@ -33,7 +33,7 @@ package matsu.num.approximation.generalfield;
  * </p>
  *
  * @author Matsuura, Y.
- * @version 21.0
+ * @version 21.1
  * @param <T> 体の元を表現する型パラメータ
  */
 public final class FiniteClosedInterval<T extends PseudoRealNumber<T>> {
@@ -146,7 +146,8 @@ public final class FiniteClosedInterval<T extends PseudoRealNumber<T>> {
      * @return ハッシュコード
      */
     private int calcHashCode() {
-        int result = this.min.hashCode();
+        int result = 1;
+        result = 31 * result + this.min.hashCode();
         result = 31 * result + this.max.hashCode();
         return result;
     }

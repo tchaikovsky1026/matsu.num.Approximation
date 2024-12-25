@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.12.14
+ * 2024.12.25
  */
 package matsu.num.approximation;
 
@@ -34,7 +34,7 @@ package matsu.num.approximation;
  * </p>
  *
  * @author Matsuura, Y.
- * @version 21.0
+ * @version 21.1
  */
 public final class DoubleFiniteClosedInterval {
 
@@ -138,7 +138,8 @@ public final class DoubleFiniteClosedInterval {
      * @return ハッシュコード
      */
     private int calcHashCode() {
-        int result = Double.hashCode(this.min);
+        int result = 1;
+        result = 31 * result + Double.hashCode(this.min);
         result = 31 * result + Double.hashCode(this.max);
         return result;
     }

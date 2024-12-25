@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.12.14
+ * 2024.12.25
  */
 package matsu.num.approximation.generalfield;
 
@@ -16,7 +16,7 @@ import java.math.MathContext;
  * {@link MathContext#DECIMAL128} ルールに基づく {@link BigDecimal} と同等の実数体.
  * 
  * @author Matsuura Y.
- * @version 21.0
+ * @version 21.1
  */
 public final class Decimal128 extends PseudoRealNumber<Decimal128> {
 
@@ -189,7 +189,9 @@ public final class Decimal128 extends PseudoRealNumber<Decimal128> {
          * 
          * doubleの表現力のため, 異なる値でも同一のハッシュコード値になる場合がある.
          */
-        return Double.hashCode(this.value.doubleValue());
+        int result = 1;
+        result = 31 * result + Double.hashCode(this.value.doubleValue());
+        return result;
     }
 
     /**
