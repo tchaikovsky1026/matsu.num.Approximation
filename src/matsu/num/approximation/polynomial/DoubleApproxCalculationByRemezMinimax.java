@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.18
+ * 2024.12.26
  */
 package matsu.num.approximation.polynomial;
 
@@ -20,14 +20,14 @@ import matsu.num.approximation.component.ApproximationFailedException;
  * スレッドセーフでないので, 単一スレッド内でインスタンスが共有されるようにしなければならない.
  * 
  * @author Matsuura Y.
- * @version 19.0
+ * @version 22.0
  */
-final class MinimaxPolynomialApproxCalculation {
+final class DoubleApproxCalculationByRemezMinimax {
 
     private final DoubleApproxTarget target;
     private final int order;
 
-    private final RemezPolynomialFactory remezPolynomialFactory;
+    private final RemezTypeDoublePolynomialFactory remezPolynomialFactory;
 
     private DoublePolynomial result;
 
@@ -36,12 +36,12 @@ final class MinimaxPolynomialApproxCalculation {
      * @param target ターゲット関数, nullであってはいけない
      * @param order 多項式の次数, 0以上の適切な値でなければならない
      */
-    MinimaxPolynomialApproxCalculation(DoubleApproxTarget target, int order) {
+    DoubleApproxCalculationByRemezMinimax(DoubleApproxTarget target, int order) {
         super();
         this.target = target;
         this.order = order;
 
-        this.remezPolynomialFactory = new RemezPolynomialFactory(this.target);
+        this.remezPolynomialFactory = new RemezTypeDoublePolynomialFactory(this.target);
     }
 
     void calculate() throws ApproximationFailedException {

@@ -1,4 +1,4 @@
-package matsu.num.approximation.generalfield;
+package matsu.num.approximation;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
@@ -11,7 +11,7 @@ import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 
-import matsu.num.approximation.generalfield.PseudoRealNumber.Provider;
+import matsu.num.approximation.PseudoRealNumber.Provider;
 
 /**
  * {@link DoubleLikeTest} クラスのテスト.

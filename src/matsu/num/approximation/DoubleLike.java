@@ -5,17 +5,26 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.12.25
+ * 2024.12.26
  */
-package matsu.num.approximation.generalfield;
+package matsu.num.approximation;
 
 /**
  * {@code double} と同等の実数体. <br>
  * (ただし, {@link PseudoRealNumber} の契約に則り,
  * {@code 0d} と {@code -0d} は等価である.)
  * 
+ * <p>
+ * <i>
+ * このクラスは {@code double} を模した数体であるが,
+ * このモジュールの機能を利用する場合は {@code double} に特化した個別機能
+ * ({@link DoubleApproxTarget} とその周辺など)
+ * を利用したほうがよい.
+ * </i>
+ * </p>
+ * 
  * @author Matsuura Y.
- * @version 21.1
+ * @version 22.0
  */
 public final class DoubleLike extends PseudoRealNumber<DoubleLike> {
 

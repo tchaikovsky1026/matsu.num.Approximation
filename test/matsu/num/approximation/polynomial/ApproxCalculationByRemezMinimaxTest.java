@@ -1,4 +1,4 @@
-package matsu.num.approximation.generalfield.polynomial;
+package matsu.num.approximation.polynomial;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
@@ -8,12 +8,12 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
+import matsu.num.approximation.ApproxTarget;
+import matsu.num.approximation.DoubleLike;
 import matsu.num.approximation.DoubleRelativeAssertion;
-import matsu.num.approximation.generalfield.ApproxTarget;
-import matsu.num.approximation.generalfield.DoubleLike;
-import matsu.num.approximation.generalfield.FiniteClosedInterval;
-import matsu.num.approximation.generalfield.PseudoRealNumber;
-import matsu.num.approximation.generalfield.PseudoRealNumber.Provider;
+import matsu.num.approximation.FiniteClosedInterval;
+import matsu.num.approximation.PseudoRealNumber;
+import matsu.num.approximation.PseudoRealNumber.Provider;
 
 /**
  * {@link ApproxCalculationByRemezMinimax} クラスのテスト.

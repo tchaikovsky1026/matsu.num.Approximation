@@ -115,8 +115,7 @@ public abstract class DoubleApproxTarget {
      * 引数 <i>x</i> は必ず区間内である. <br>
      * 公開は禁止され, サブクラスからもコールしてはならない. <br>
      * 戻り値は, 0以下の数や,
-     * {@link Double#POSITIVE_INFINITY}, {@link Double#NEGATIVE_INFINITY},
-     * {@link Double#NaN}
+     * {@link Double#POSITIVE_INFINITY}, {@link Double#NaN}
      * を返しても良い. <br>
      * (呼び出し元 ({@link #scale(double)}) で {@link Double#NaN} に修正される.)
      * </p>

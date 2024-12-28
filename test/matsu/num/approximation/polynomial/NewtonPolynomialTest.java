@@ -1,4 +1,4 @@
-package matsu.num.approximation.generalfield.polynomial;
+package matsu.num.approximation.polynomial;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
@@ -13,8 +13,8 @@ import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 
-import matsu.num.approximation.generalfield.DoubleLike;
-import matsu.num.approximation.generalfield.PseudoRealNumber;
+import matsu.num.approximation.DoubleLike;
+import matsu.num.approximation.PseudoRealNumber;
 
 /**
  * {@link NewtonPolynomial} クラスのテスト.

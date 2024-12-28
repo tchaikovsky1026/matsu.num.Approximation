@@ -5,19 +5,19 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.19
+ * 2024.12.26
  */
-package matsu.num.approximation.generalfield.polynomial;
+package matsu.num.approximation.polynomial;
+
+import java.util.Objects;
 
 import matsu.num.approximation.ApproxResult;
-import matsu.num.approximation.generalfield.ApproxTarget;
-import matsu.num.approximation.generalfield.PseudoRealNumber;
+import matsu.num.approximation.DoubleApproxTarget;
+import matsu.num.approximation.component.ApproximationFailedException;
 
 /**
- * <p>
  * スケーリング付きミニマックス法 (重みづけ Chebyshev ノルム最小化) による,
- * 独自クラスによる実数体に関する多項式関数による近似の実行を扱う.
- * </p>
+ * {@code double} 型で表現された実数体に関する多項式関数による近似の実行を扱う.
  * 
  * <p>
  * 扱うことができる多項式の次数 <i>n</i> は, 次のとおりである. <br>
@@ -25,9 +25,9 @@ import matsu.num.approximation.generalfield.PseudoRealNumber;
  * </p>
  * 
  * @author Matsuura Y.
- * @version 19.1
+ * @version 22.0
  */
-public final class MinimaxPolynomialApproxExecutor {
+public final class MinimaxDoublePolynomialApproxExecutor {
 
     /**
      * 扱うことができる次数の下限.
@@ -46,7 +46,7 @@ public final class MinimaxPolynomialApproxExecutor {
      * 
      * @throws IllegalArgumentException 次数が不適の場合
      */
-    private MinimaxPolynomialApproxExecutor(int order) {
+    private MinimaxDoublePolynomialApproxExecutor(int order) {
         if (!(LOWER_LIMIT_OF_ORDER <= order &&
                 order <= UPPER_LIMIT_OF_ORDER)) {
             throw new IllegalArgumentException("次数が不適");
@@ -72,21 +72,19 @@ public final class MinimaxPolynomialApproxExecutor {
      * 近似の計算中に不具合が出た場合は, 空の {@link ApproxResult} が返る.
      * </p>
      * 
-     * @param <T> 体の元を表現する型パラメータ
      * @param target ターゲット関数
      * @return 近似結果, 計算に失敗した場合は空
      * @throws NullPointerException 引数がnullの場合
      */
-    public <T extends PseudoRealNumber<T>> ApproxResult<Polynomial<T>> apply(ApproxTarget<T> target) {
-
-        ApproxCalculationByRemezMinimax<T> calc =
-                new ApproxCalculationByRemezMinimax<>(target, this.order);
+    public ApproxResult<DoublePolynomial> apply(DoubleApproxTarget target) {
         try {
+            DoubleApproxCalculationByRemezMinimax calc = new DoubleApproxCalculationByRemezMinimax(
+                    Objects.requireNonNull(target), this.order);
             //ここで例外が発生する可能性がある.
             calc.calculate();
             return ApproxResult.of(calc.getResult());
-        } catch (ArithmeticException ae) {
-            return ApproxResult.failed("計算が破綻: おそらくターゲットが極端な値をとる");
+        } catch (ApproximationFailedException afe) {
+            return ApproxResult.failed(afe.failuerMessage());
         }
     }
 
@@ -103,7 +101,7 @@ public final class MinimaxPolynomialApproxExecutor {
      * @return 多項式近似エグゼキュータ
      * @throws IllegalArgumentException 次数が不適の場合
      */
-    public static MinimaxPolynomialApproxExecutor of(int order) {
-        return new MinimaxPolynomialApproxExecutor(order);
+    public static MinimaxDoublePolynomialApproxExecutor of(int order) {
+        return new MinimaxDoublePolynomialApproxExecutor(order);
     }
 }

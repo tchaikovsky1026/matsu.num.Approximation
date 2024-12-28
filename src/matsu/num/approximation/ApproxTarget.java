@@ -5,9 +5,9 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.12.12
+ * 2024.12.26
  */
-package matsu.num.approximation.generalfield;
+package matsu.num.approximation;
 
 /**
  * 独自クラスによる実数体で表現された, 近似されるターゲット関数を扱う. <br>
@@ -36,7 +36,7 @@ package matsu.num.approximation.generalfield;
  * </p>
  * 
  * @author Matsuura Y.
- * @version 21.0
+ * @version 22.0
  * @param <T> 体の元を表現する型パラメータ
  */
 public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {

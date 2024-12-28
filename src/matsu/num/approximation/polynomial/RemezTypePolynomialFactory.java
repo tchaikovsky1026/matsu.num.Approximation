@@ -5,19 +5,17 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.17
+ * 2024.12.26
  */
-package matsu.num.approximation.generalfield.polynomial;
+package matsu.num.approximation.polynomial;
 
 import java.util.Arrays;
 
-import matsu.num.approximation.generalfield.ApproxTarget;
-import matsu.num.approximation.generalfield.PseudoRealNumber;
+import matsu.num.approximation.ApproxTarget;
+import matsu.num.approximation.PseudoRealNumber;
 
 /**
- * <p>
  * Remez アルゴリズムで使われる, 与えたノードで誤差の最大値をとることを期待する多項式を扱う.
- * </p>
  * 
  * <p>
  * <i>n</i> 次の Remez 多項式は, <br>
@@ -25,15 +23,15 @@ import matsu.num.approximation.generalfield.PseudoRealNumber;
  * </p>
  * 
  * @author Matsuura Y.
- * @version 19.0
+ * @version 22.0
  * @param <T> 体を表す型パラメータ
  */
-final class RemezPolynomialFactory<T extends PseudoRealNumber<T>> {
+final class RemezTypePolynomialFactory<T extends PseudoRealNumber<T>> {
 
     private final ApproxTarget<T> target;
     private final PseudoRealNumber.Provider<T> provider;
 
-    RemezPolynomialFactory(ApproxTarget<T> target) {
+    RemezTypePolynomialFactory(ApproxTarget<T> target) {
         this.target = target;
         this.provider = target.elementProvider();
     }

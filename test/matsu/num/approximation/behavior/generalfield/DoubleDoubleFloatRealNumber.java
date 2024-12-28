@@ -2,8 +2,8 @@ package matsu.num.approximation.behavior.generalfield;
 
 import org.junit.Ignore;
 
-import matsu.num.approximation.generalfield.DoubleLike;
-import matsu.num.approximation.generalfield.PseudoRealNumber;
+import matsu.num.approximation.DoubleLike;
+import matsu.num.approximation.PseudoRealNumber;
 import matsu.num.mathtype.DoubleDoubleFloat;
 
 /**

@@ -5,9 +5,9 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.12.25
+ * 2024.12.26
  */
-package matsu.num.approximation.generalfield;
+package matsu.num.approximation;
 
 /**
  * {@link PseudoRealNumber} のサブタイプに関する有限閉区間を扱う. <br>
@@ -33,7 +33,7 @@ package matsu.num.approximation.generalfield;
  * </p>
  *
  * @author Matsuura, Y.
- * @version 21.1
+ * @version 22.0
  * @param <T> 体の元を表現する型パラメータ
  */
 public final class FiniteClosedInterval<T extends PseudoRealNumber<T>> {

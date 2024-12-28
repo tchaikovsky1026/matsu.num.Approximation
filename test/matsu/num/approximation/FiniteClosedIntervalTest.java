@@ -1,4 +1,4 @@
-package matsu.num.approximation.generalfield;
+package matsu.num.approximation;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
@@ -8,7 +8,7 @@ import org.junit.Test.None;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import matsu.num.approximation.generalfield.PseudoRealNumber.Provider;
+import matsu.num.approximation.PseudoRealNumber.Provider;
 
 /**
  * {@link FiniteClosedInterval} クラスのテスト.

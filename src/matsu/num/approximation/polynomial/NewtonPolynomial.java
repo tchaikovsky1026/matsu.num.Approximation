@@ -5,19 +5,17 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.10.24
+ * 2024.12.26
  */
-package matsu.num.approximation.generalfield.polynomial;
+package matsu.num.approximation.polynomial;
 
 import java.util.function.UnaryOperator;
 
-import matsu.num.approximation.generalfield.PseudoRealNumber;
-import matsu.num.approximation.generalfield.PseudoRealNumber.Provider;
+import matsu.num.approximation.PseudoRealNumber;
+import matsu.num.approximation.PseudoRealNumber.Provider;
 
 /**
- * <p>
  * Newton 補間による多項式関数を扱う.
- * </p>
  * 
  * <p>
  * <i>n</i>次の Newton 補間多項式は,
@@ -48,7 +46,7 @@ import matsu.num.approximation.generalfield.PseudoRealNumber.Provider;
  * </p>
  *
  * @author Matsuura, Y.
- * @version 20.0
+ * @version 22.0
  */
 final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements PolynomialSealed<T> {
 

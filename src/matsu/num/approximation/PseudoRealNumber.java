@@ -5,9 +5,9 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.12.14
+ * 2024.12.26
  */
-package matsu.num.approximation.generalfield;
+package matsu.num.approximation;
 
 /**
  * 実数に類似した体 (四則演算が定義された代数系) の元を表現する. <br>
@@ -214,7 +214,7 @@ package matsu.num.approximation.generalfield;
  * </blockquote>
  * 
  * @author Matsuura Y.
- * @version 21.0
+ * @version 22.0
  * @param <T> このクラスと二項演算が可能な体構造の元を表す型.
  *            体の定義より, 自身に一致する.
  */

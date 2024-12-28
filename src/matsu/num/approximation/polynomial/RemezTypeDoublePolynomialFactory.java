@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.18
+ * 2024.12.28
  */
 package matsu.num.approximation.polynomial;
 
@@ -15,9 +15,7 @@ import matsu.num.approximation.DoubleApproxTarget;
 import matsu.num.approximation.component.ApproximationFailedException;
 
 /**
- * <p>
  * Remez アルゴリズムで使われる, 与えたノードで誤差の最大値をとることを期待する多項式を扱う.
- * </p>
  * 
  * <p>
  * <i>n</i> 次の Remez 多項式は, <br>
@@ -30,13 +28,13 @@ import matsu.num.approximation.component.ApproximationFailedException;
  * </p>
  * 
  * @author Matsuura Y.
- * @version 19.0
+ * @version 22.0
  */
-final class RemezPolynomialFactory {
+final class RemezTypeDoublePolynomialFactory {
 
     private final DoubleApproxTarget target;
 
-    RemezPolynomialFactory(DoubleApproxTarget target) {
+    RemezTypeDoublePolynomialFactory(DoubleApproxTarget target) {
         this.target = target;
     }
 

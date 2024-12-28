@@ -5,21 +5,17 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.19
+ * 2024.12.26
  */
 package matsu.num.approximation.polynomial;
 
-import java.util.Objects;
-
 import matsu.num.approximation.ApproxResult;
-import matsu.num.approximation.DoubleApproxTarget;
-import matsu.num.approximation.component.ApproximationFailedException;
+import matsu.num.approximation.ApproxTarget;
+import matsu.num.approximation.PseudoRealNumber;
 
 /**
- * <p>
  * スケーリング付きミニマックス法 (重みづけ Chebyshev ノルム最小化) による,
- * {@code double} 型で表現された実数体に関する多項式関数による近似の実行を扱う.
- * </p>
+ * 独自クラスによる実数体に関する多項式関数による近似の実行を扱う.
  * 
  * <p>
  * 扱うことができる多項式の次数 <i>n</i> は, 次のとおりである. <br>
@@ -27,7 +23,7 @@ import matsu.num.approximation.component.ApproximationFailedException;
  * </p>
  * 
  * @author Matsuura Y.
- * @version 19.1
+ * @version 22.0
  */
 public final class MinimaxPolynomialApproxExecutor {
 
@@ -74,19 +70,21 @@ public final class MinimaxPolynomialApproxExecutor {
      * 近似の計算中に不具合が出た場合は, 空の {@link ApproxResult} が返る.
      * </p>
      * 
+     * @param <T> 体の元を表現する型パラメータ
      * @param target ターゲット関数
      * @return 近似結果, 計算に失敗した場合は空
      * @throws NullPointerException 引数がnullの場合
      */
-    public ApproxResult<DoublePolynomial> apply(DoubleApproxTarget target) {
+    public <T extends PseudoRealNumber<T>> ApproxResult<Polynomial<T>> apply(ApproxTarget<T> target) {
+
+        ApproxCalculationByRemezMinimax<T> calc =
+                new ApproxCalculationByRemezMinimax<>(target, this.order);
         try {
-            MinimaxPolynomialApproxCalculation calc = new MinimaxPolynomialApproxCalculation(
-                    Objects.requireNonNull(target), this.order);
             //ここで例外が発生する可能性がある.
             calc.calculate();
             return ApproxResult.of(calc.getResult());
-        } catch (ApproximationFailedException afe) {
-            return ApproxResult.failed(afe.failuerMessage());
+        } catch (ArithmeticException ae) {
+            return ApproxResult.failed("計算が破綻: おそらくターゲットが極端な値をとる");
         }
     }
 

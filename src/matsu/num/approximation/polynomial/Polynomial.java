@@ -5,14 +5,13 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.12.3
+ * 2024.22.0
  */
-package matsu.num.approximation.generalfield.polynomial;
+package matsu.num.approximation.polynomial;
 
-import matsu.num.approximation.generalfield.PseudoRealNumber;
+import matsu.num.approximation.PseudoRealNumber;
 
 /**
- * <p>
  * 独自クラスによる実数体に関する多項式関数を表現するインターフェース. <br>
  * <i>p</i>: &#x211D; &rarr; &#x211D; <br>
  * <i>p</i>(<i>x</i>) =
@@ -20,7 +19,6 @@ import matsu.num.approximation.generalfield.PseudoRealNumber;
  * <i>a</i><sub>1</sub><i>x</i> + &sdot;&sdot;&sdot; +
  * <i>a</i><sub><i>n</i></sub><i>x</i><sup><i>n</i></sup> <br>
  * <i>n</i> は多項式の次数.
- * </p>
  * 
  * <p>
  * 実数は {@link PseudoRealNumber} のサブタイプ {@code T} として表現される. <br>
@@ -43,7 +41,7 @@ import matsu.num.approximation.generalfield.PseudoRealNumber;
  * </p>
  *
  * @author Matsuura Y.
- * @version 20.0
+ * @version 22.0
  * @param <T> 体の元を表現する型パラメータ
  */
 public sealed interface Polynomial<T extends PseudoRealNumber<T>> permits PolynomialSealed {

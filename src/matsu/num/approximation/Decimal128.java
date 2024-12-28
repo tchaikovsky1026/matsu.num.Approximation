@@ -5,9 +5,9 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.12.25
+ * 2024.12.26
  */
-package matsu.num.approximation.generalfield;
+package matsu.num.approximation;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -16,7 +16,7 @@ import java.math.MathContext;
  * {@link MathContext#DECIMAL128} ルールに基づく {@link BigDecimal} と同等の実数体.
  * 
  * @author Matsuura Y.
- * @version 21.1
+ * @version 22.0
  */
 public final class Decimal128 extends PseudoRealNumber<Decimal128> {
 

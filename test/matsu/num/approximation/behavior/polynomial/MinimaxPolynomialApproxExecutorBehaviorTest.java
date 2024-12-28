@@ -6,11 +6,11 @@ import matsu.num.approximation.ApproxResult;
 import matsu.num.approximation.DoubleApproxTarget;
 import matsu.num.approximation.DoubleFiniteClosedInterval;
 import matsu.num.approximation.polynomial.DoublePolynomial;
-import matsu.num.approximation.polynomial.MinimaxPolynomialApproxExecutor;
+import matsu.num.approximation.polynomial.MinimaxDoublePolynomialApproxExecutor;
 
 /**
  * <p>
- * {@link MinimaxPolynomialApproxExecutor} の振る舞いテスト.
+ * {@link MinimaxDoublePolynomialApproxExecutor} の振る舞いテスト.
  * </p>
  * 
  * <p>
@@ -34,7 +34,7 @@ final class MinimaxPolynomialApproxExecutorBehaviorTest {
 
         int degree = 9;
         ApproxResult<DoublePolynomial> result =
-                MinimaxPolynomialApproxExecutor.of(degree).apply(target);
+                MinimaxDoublePolynomialApproxExecutor.of(degree).apply(target);
 
         double x_min = target.interval().lower();
         double x_max = target.interval().upper();

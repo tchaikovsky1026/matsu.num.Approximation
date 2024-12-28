@@ -5,22 +5,22 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.17
+ * 2024.12.26
  */
-package matsu.num.approximation.generalfield.polynomial;
+package matsu.num.approximation.polynomial;
 
 import java.util.Objects;
 import java.util.function.UnaryOperator;
 
-import matsu.num.approximation.generalfield.ApproxTarget;
-import matsu.num.approximation.generalfield.PseudoRealNumber;
+import matsu.num.approximation.ApproxTarget;
+import matsu.num.approximation.PseudoRealNumber;
 
 /**
  * 多項式関数による近似の計算処理を扱う. <br>
  * スレッドセーフでないので, 単一スレッド内でインスタンスが共有されるようにしなければならない.
  * 
  * @author Matsuura Y.
- * @version 18.2
+ * @version 22.0
  * @param <T> 体を表す型パラメータ
  */
 final class ApproxCalculationByRemezMinimax<T extends PseudoRealNumber<T>> {
@@ -28,7 +28,7 @@ final class ApproxCalculationByRemezMinimax<T extends PseudoRealNumber<T>> {
     private final ApproxTarget<T> target;
     private final int order;
 
-    private final RemezPolynomialFactory<T> remezPolynomialFactory;
+    private final RemezTypePolynomialFactory<T> remezPolynomialFactory;
 
     private Polynomial<T> result;
 
@@ -42,7 +42,7 @@ final class ApproxCalculationByRemezMinimax<T extends PseudoRealNumber<T>> {
         this.target = target;
         this.order = order;
 
-        this.remezPolynomialFactory = new RemezPolynomialFactory<>(this.target);
+        this.remezPolynomialFactory = new RemezTypePolynomialFactory<>(this.target);
     }
 
     /**

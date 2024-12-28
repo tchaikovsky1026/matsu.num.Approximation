@@ -3,13 +3,13 @@ package matsu.num.approximation.behavior.generalfield.polynomial;
 import org.junit.Ignore;
 
 import matsu.num.approximation.ApproxResult;
+import matsu.num.approximation.ApproxTarget;
+import matsu.num.approximation.FiniteClosedInterval;
+import matsu.num.approximation.PseudoRealNumber;
+import matsu.num.approximation.PseudoRealNumber.Provider;
 import matsu.num.approximation.behavior.generalfield.DoubleDoubleFloatRealNumber;
-import matsu.num.approximation.generalfield.ApproxTarget;
-import matsu.num.approximation.generalfield.FiniteClosedInterval;
-import matsu.num.approximation.generalfield.PseudoRealNumber;
-import matsu.num.approximation.generalfield.PseudoRealNumber.Provider;
-import matsu.num.approximation.generalfield.polynomial.MinimaxPolynomialApproxExecutor;
-import matsu.num.approximation.generalfield.polynomial.Polynomial;
+import matsu.num.approximation.polynomial.MinimaxPolynomialApproxExecutor;
+import matsu.num.approximation.polynomial.Polynomial;
 
 /**
  * <p>

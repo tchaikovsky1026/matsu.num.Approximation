@@ -13,24 +13,24 @@ import matsu.num.approximation.DoubleFiniteClosedInterval;
 import matsu.num.approximation.DoubleRelativeAssertion;
 
 /**
- * {@link MinimaxPolynomialApproxCalculation} クラスのテスト.
+ * {@link RemezTypeDoublePolynomialFactory} クラスのテスト.
  */
 @RunWith(Enclosed.class)
-final class MinimaxPolynomialApproxCalculationTest {
+final class RemezTypeDoublePolynomialFactoryTest {
 
-    public static final Class<?> TEST_CLASS = MinimaxPolynomialApproxCalculation.class;
+    public static final Class<?> TEST_CLASS = RemezTypeDoublePolynomialFactory.class;
 
     private static final DoubleRelativeAssertion DOUBLE_RELATIVE_ASSERTION =
             new DoubleRelativeAssertion(1E-12);
 
     public static class 構築のテスト_定数関数の近似 {
 
-        private DoubleApproxTarget target;
+        private RemezTypeDoublePolynomialFactory remezFactory;
 
         @Before
-        public void before_ターゲットを作成() {
+        public void before_remezを作成() {
             //定数関数
-            target = new DoubleApproxTarget() {
+            DoubleApproxTarget targetFunction = new DoubleApproxTarget() {
 
                 @Override
                 protected double calcValue(double x) {
@@ -47,13 +47,12 @@ final class MinimaxPolynomialApproxCalculationTest {
                     return DoubleFiniteClosedInterval.from(1, 3);
                 }
             };
+            remezFactory = new RemezTypeDoublePolynomialFactory(targetFunction);
         }
 
         @Test
-        public void test_定数関数で近似() throws Exception {
-            MinimaxPolynomialApproxCalculation calc = new MinimaxPolynomialApproxCalculation(target, 0);
-            calc.calculate();
-            DoublePolynomial poly = calc.getResult();
+        public void test_定数関数() throws Exception {
+            DoublePolynomial poly = remezFactory.create(new double[] { 1, 3 });
 
             assertThat(poly.degree(), is(0));
             DOUBLE_RELATIVE_ASSERTION.compareAndAssert(2d, poly.value(1d));
@@ -61,24 +60,10 @@ final class MinimaxPolynomialApproxCalculationTest {
         }
 
         @Test
-        public void test_1次関数で近似() throws Exception {
-            MinimaxPolynomialApproxCalculation calc = new MinimaxPolynomialApproxCalculation(target, 1);
-            calc.calculate();
-            DoublePolynomial poly = calc.getResult();
+        public void test_1次関数() throws Exception {
+            DoublePolynomial poly = remezFactory.create(new double[] { 1, 2, 3 });
 
             assertThat(poly.degree(), is(1));
-            DOUBLE_RELATIVE_ASSERTION.compareAndAssert(2d, poly.value(1d));
-            DOUBLE_RELATIVE_ASSERTION.compareAndAssert(2d, poly.value(2d));
-            DOUBLE_RELATIVE_ASSERTION.compareAndAssert(2d, poly.value(3d));
-        }
-
-        @Test
-        public void test_2次関数で近似() throws Exception {
-            MinimaxPolynomialApproxCalculation calc = new MinimaxPolynomialApproxCalculation(target, 2);
-            calc.calculate();
-            DoublePolynomial poly = calc.getResult();
-
-            assertThat(poly.degree(), is(2));
             DOUBLE_RELATIVE_ASSERTION.compareAndAssert(2d, poly.value(1d));
             DOUBLE_RELATIVE_ASSERTION.compareAndAssert(2d, poly.value(2d));
             DOUBLE_RELATIVE_ASSERTION.compareAndAssert(2d, poly.value(3d));
@@ -87,12 +72,11 @@ final class MinimaxPolynomialApproxCalculationTest {
 
     public static class 構築のテスト_1次関数の近似 {
 
-        private DoubleApproxTarget target;
+        private RemezTypeDoublePolynomialFactory remezFactory;
 
         @Before
-        public void before_ターゲットを作成() {
-            //定数関数
-            target = new DoubleApproxTarget() {
+        public void before_remezを作成() {
+            DoubleApproxTarget targetFunction = new DoubleApproxTarget() {
 
                 @Override
                 protected double calcValue(double x) {
@@ -101,7 +85,7 @@ final class MinimaxPolynomialApproxCalculationTest {
 
                 @Override
                 protected double calcScale(double x) {
-                    return x;
+                    return 2d;
                 }
 
                 @Override
@@ -109,13 +93,58 @@ final class MinimaxPolynomialApproxCalculationTest {
                     return DoubleFiniteClosedInterval.from(1, 3);
                 }
             };
+            remezFactory = new RemezTypeDoublePolynomialFactory(targetFunction);
         }
 
         @Test
-        public void test_定数関数で近似() throws Exception {
-            MinimaxPolynomialApproxCalculation calc = new MinimaxPolynomialApproxCalculation(target, 0);
-            calc.calculate();
-            DoublePolynomial poly = calc.getResult();
+        public void test_定数関数() throws Exception {
+            DoublePolynomial poly = remezFactory.create(new double[] { 1, 3 });
+
+            assertThat(poly.degree(), is(0));
+            DOUBLE_RELATIVE_ASSERTION.compareAndAssert(2d, poly.value(1d));
+            DOUBLE_RELATIVE_ASSERTION.compareAndAssert(2d, poly.value(3d));
+        }
+
+        @Test
+        public void test_1次関数() throws Exception {
+            DoublePolynomial poly = remezFactory.create(new double[] { 1, 2, 3 });
+
+            assertThat(poly.degree(), is(1));
+            DOUBLE_RELATIVE_ASSERTION.compareAndAssert(1d, poly.value(1d));
+            DOUBLE_RELATIVE_ASSERTION.compareAndAssert(2d, poly.value(2d));
+            DOUBLE_RELATIVE_ASSERTION.compareAndAssert(3d, poly.value(3d));
+        }
+    }
+
+    public static class 構築のテスト_1次関数の近似_スケールあり {
+
+        private RemezTypeDoublePolynomialFactory remezFactory;
+
+        @Before
+        public void before_remezを作成() {
+            DoubleApproxTarget targetFunction = new DoubleApproxTarget() {
+
+                @Override
+                protected double calcValue(double x) {
+                    return x;
+                }
+
+                @Override
+                protected double calcScale(double x) {
+                    return Math.abs(x);
+                }
+
+                @Override
+                public DoubleFiniteClosedInterval interval() {
+                    return DoubleFiniteClosedInterval.from(1, 3);
+                }
+            };
+            remezFactory = new RemezTypeDoublePolynomialFactory(targetFunction);
+        }
+
+        @Test
+        public void test_定数関数() throws Exception {
+            DoublePolynomial poly = remezFactory.create(new double[] { 1, 3 });
 
             assertThat(poly.degree(), is(0));
             DOUBLE_RELATIVE_ASSERTION.compareAndAssert(1.5d, poly.value(1d));
@@ -123,24 +152,10 @@ final class MinimaxPolynomialApproxCalculationTest {
         }
 
         @Test
-        public void test_1次関数で近似() throws Exception {
-            MinimaxPolynomialApproxCalculation calc = new MinimaxPolynomialApproxCalculation(target, 1);
-            calc.calculate();
-            DoublePolynomial poly = calc.getResult();
+        public void test_1次関数() throws Exception {
+            DoublePolynomial poly = remezFactory.create(new double[] { 1, 2, 3 });
 
             assertThat(poly.degree(), is(1));
-            DOUBLE_RELATIVE_ASSERTION.compareAndAssert(1d, poly.value(1d));
-            DOUBLE_RELATIVE_ASSERTION.compareAndAssert(2d, poly.value(2d));
-            DOUBLE_RELATIVE_ASSERTION.compareAndAssert(3d, poly.value(3d));
-        }
-
-        @Test
-        public void test_2次関数で近似() throws Exception {
-            MinimaxPolynomialApproxCalculation calc = new MinimaxPolynomialApproxCalculation(target, 2);
-            calc.calculate();
-            DoublePolynomial poly = calc.getResult();
-
-            assertThat(poly.degree(), is(2));
             DOUBLE_RELATIVE_ASSERTION.compareAndAssert(1d, poly.value(1d));
             DOUBLE_RELATIVE_ASSERTION.compareAndAssert(2d, poly.value(2d));
             DOUBLE_RELATIVE_ASSERTION.compareAndAssert(3d, poly.value(3d));

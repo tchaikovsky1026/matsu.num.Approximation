@@ -14,9 +14,7 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
- * <p>
  * 近似結果を扱う.
- * </p>
  * 
  * <p>
  * {@link java.util.Optional} を模したラッパーである. <br>

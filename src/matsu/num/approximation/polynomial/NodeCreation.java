@@ -5,18 +5,18 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.17
+ * 2024.12.26
  */
-package matsu.num.approximation.generalfield.polynomial;
+package matsu.num.approximation.polynomial;
 
-import matsu.num.approximation.generalfield.FiniteClosedInterval;
-import matsu.num.approximation.generalfield.PseudoRealNumber;
+import matsu.num.approximation.FiniteClosedInterval;
+import matsu.num.approximation.PseudoRealNumber;
 
 /**
  * ノードを作成するユーティリティクラス.
  * 
  * @author Matsuura Y.
- * @version 19.0
+ * @version 22.0
  */
 final class NodeCreation {
 

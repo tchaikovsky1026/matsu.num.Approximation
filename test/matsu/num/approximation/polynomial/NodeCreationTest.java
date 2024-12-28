@@ -1,13 +1,13 @@
-package matsu.num.approximation.generalfield.polynomial;
+package matsu.num.approximation.polynomial;
 
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
+import matsu.num.approximation.DoubleLike;
 import matsu.num.approximation.DoubleRelativeAssertion;
-import matsu.num.approximation.generalfield.DoubleLike;
-import matsu.num.approximation.generalfield.FiniteClosedInterval;
-import matsu.num.approximation.generalfield.PseudoRealNumber;
+import matsu.num.approximation.FiniteClosedInterval;
+import matsu.num.approximation.PseudoRealNumber;
 
 /**
  * {@link NodeCreation} クラスのテスト.
