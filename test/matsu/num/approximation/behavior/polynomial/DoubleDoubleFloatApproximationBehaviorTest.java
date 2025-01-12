@@ -4,7 +4,7 @@
  * This software is released under the MIT License.
  * http://opensource.org/licenses/mit-license.php
  */
-package matsu.num.approximation.behavior.generalfield.polynomial;
+package matsu.num.approximation.behavior.polynomial;
 
 import org.junit.Ignore;
 
@@ -13,7 +13,7 @@ import matsu.num.approximation.ApproxTarget;
 import matsu.num.approximation.FiniteClosedInterval;
 import matsu.num.approximation.PseudoRealNumber;
 import matsu.num.approximation.PseudoRealNumber.Provider;
-import matsu.num.approximation.behavior.generalfield.DoubleDoubleFloatRealNumber;
+import matsu.num.approximation.behavior.DoubleDoubleFloatRealNumber;
 import matsu.num.approximation.polynomial.MinimaxPolynomialApproxExecutor;
 import matsu.num.approximation.polynomial.Polynomial;
 

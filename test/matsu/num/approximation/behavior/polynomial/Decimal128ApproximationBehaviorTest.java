@@ -4,13 +4,13 @@
  * This software is released under the MIT License.
  * http://opensource.org/licenses/mit-license.php
  */
-package matsu.num.approximation.behavior.generalfield.polynomial;
+package matsu.num.approximation.behavior.polynomial;
 
 import org.junit.Ignore;
 
 import matsu.num.approximation.ApproxResult;
 import matsu.num.approximation.ApproxTarget;
-import matsu.num.approximation.DoubleLike;
+import matsu.num.approximation.Decimal128;
 import matsu.num.approximation.FiniteClosedInterval;
 import matsu.num.approximation.PseudoRealNumber;
 import matsu.num.approximation.PseudoRealNumber.Provider;
@@ -19,7 +19,7 @@ import matsu.num.approximation.polynomial.Polynomial;
 
 /**
  * <p>
- * {@link MinimaxPolynomialApproxExecutor} の振る舞いテスト.
+ * {@link Decimal128} を用いた関数近似のテスト.
  * </p>
  * 
  * <p>
@@ -27,42 +27,42 @@ import matsu.num.approximation.polynomial.Polynomial;
  * </p>
  */
 @Ignore
-final class MinimaxPolynomialApproxExecutorBehaviorTest {
+final class Decimal128ApproximationBehaviorTest {
 
-    private static final PseudoRealNumber.Provider<DoubleLike> PROVIDER = DoubleLike.elementProvider();
+    private static final PseudoRealNumber.Provider<Decimal128> PROVIDER = Decimal128.elementProvider();
 
-    private final ApproxTarget<DoubleLike> target;
+    private final ApproxTarget<Decimal128> target;
 
     public static void main(String[] args) {
-        new MinimaxPolynomialApproxExecutorBehaviorTest().execute();
+        new Decimal128ApproximationBehaviorTest().execute();
     }
 
-    MinimaxPolynomialApproxExecutorBehaviorTest() {
-        this.target = exp();
+    Decimal128ApproximationBehaviorTest() {
+        this.target = target_exp();
     }
 
     void execute() {
-        System.out.println(target.toString());
 
         long startTimeMills = System.currentTimeMillis();
         int degree = 9;
-        ApproxResult<Polynomial<DoubleLike>> result =
+        ApproxResult<Polynomial<Decimal128>> result =
                 MinimaxPolynomialApproxExecutor.of(degree).apply(target);
         long endTimeMills = System.currentTimeMillis();
         System.out.println((endTimeMills - startTimeMills) + "ms");
 
-        DoubleLike x_min = target.interval().lower();
-        DoubleLike x_max = target.interval().upper();
-        DoubleLike deltaX = x_max.minus(x_min).times(0.015625);
+        Decimal128 x_min = target.interval().lower();
+        Decimal128 x_max = target.interval().upper();
+        Decimal128 deltaX = x_max.minus(x_min).times(1d / 256);
 
+        System.out.println(target.toString());
         System.out.println("coeff");
-        for (DoubleLike polyCoeff : result.get().coefficient()) {
+        for (Decimal128 polyCoeff : result.get().coefficient()) {
             System.out.println(polyCoeff);
         }
         System.out.println("");
 
         System.out.println("x\tf\th\te");
-        for (DoubleLike x = x_min; x.compareTo(x_max) <= 0; x = x.plus(deltaX)) {
+        for (Decimal128 x = x_min; x.compareTo(x_max) <= 0; x = x.plus(deltaX)) {
             System.out.println(
                     x + "\t" +
                             target.value(x) + "\t" +
@@ -76,29 +76,29 @@ final class MinimaxPolynomialApproxExecutorBehaviorTest {
     /**
      * ターゲット関数: exp(x) [0d, 1d]
      */
-    static ApproxTarget<DoubleLike> exp() {
-        final FiniteClosedInterval<DoubleLike> interval = FiniteClosedInterval.from(
+    static ApproxTarget<Decimal128> target_exp() {
+        final FiniteClosedInterval<Decimal128> interval = FiniteClosedInterval.from(
                 PROVIDER.fromDoubleValue(0d), PROVIDER.fromDoubleValue(1d));
 
-        return new ApproxTarget<DoubleLike>() {
+        return new ApproxTarget<Decimal128>() {
 
             @Override
-            protected DoubleLike calcValue(DoubleLike x) {
+            protected Decimal128 calcValue(Decimal128 x) {
                 return exp(x);
             }
 
             @Override
-            protected DoubleLike calcScale(DoubleLike x) {
+            protected Decimal128 calcScale(Decimal128 x) {
                 return exp(x);
             }
 
             @Override
-            public FiniteClosedInterval<DoubleLike> interval() {
+            public FiniteClosedInterval<Decimal128> interval() {
                 return interval;
             }
 
             @Override
-            public Provider<DoubleLike> elementProvider() {
+            public Provider<Decimal128> elementProvider() {
                 return PROVIDER;
             }
 
@@ -109,15 +109,16 @@ final class MinimaxPolynomialApproxExecutorBehaviorTest {
         };
     }
 
-    private static DoubleLike exp(DoubleLike x) {
+    private static Decimal128 exp(Decimal128 x) {
 
         int kMax = 30;
 
-        DoubleLike sum = PROVIDER.zero();
+        Decimal128 sum = PROVIDER.zero();
         for (int k = kMax + 1; k >= 1; k--) {
             sum = sum.times(x).dividedBy(k);
             sum = sum.plus(1d);
         }
         return sum;
     }
+
 }

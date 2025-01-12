@@ -4,7 +4,7 @@
  * This software is released under the MIT License.
  * http://opensource.org/licenses/mit-license.php
  */
-package matsu.num.approximation.behavior.generalfield;
+package matsu.num.approximation.behavior;
 
 import org.junit.Ignore;
 

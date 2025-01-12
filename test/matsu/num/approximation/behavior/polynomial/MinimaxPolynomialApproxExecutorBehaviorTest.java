@@ -9,14 +9,17 @@ package matsu.num.approximation.behavior.polynomial;
 import org.junit.Ignore;
 
 import matsu.num.approximation.ApproxResult;
-import matsu.num.approximation.DoubleApproxTarget;
-import matsu.num.approximation.DoubleFiniteClosedInterval;
-import matsu.num.approximation.polynomial.DoublePolynomial;
-import matsu.num.approximation.polynomial.MinimaxDoublePolynomialApproxExecutor;
+import matsu.num.approximation.ApproxTarget;
+import matsu.num.approximation.DoubleLike;
+import matsu.num.approximation.FiniteClosedInterval;
+import matsu.num.approximation.PseudoRealNumber;
+import matsu.num.approximation.PseudoRealNumber.Provider;
+import matsu.num.approximation.polynomial.MinimaxPolynomialApproxExecutor;
+import matsu.num.approximation.polynomial.Polynomial;
 
 /**
  * <p>
- * {@link MinimaxDoublePolynomialApproxExecutor} の振る舞いテスト.
+ * {@link MinimaxPolynomialApproxExecutor} の振る舞いテスト.
  * </p>
  * 
  * <p>
@@ -26,7 +29,9 @@ import matsu.num.approximation.polynomial.MinimaxDoublePolynomialApproxExecutor;
 @Ignore
 final class MinimaxPolynomialApproxExecutorBehaviorTest {
 
-    private final DoubleApproxTarget target;
+    private static final PseudoRealNumber.Provider<DoubleLike> PROVIDER = DoubleLike.elementProvider();
+
+    private final ApproxTarget<DoubleLike> target;
 
     public static void main(String[] args) {
         new MinimaxPolynomialApproxExecutorBehaviorTest().execute();
@@ -37,30 +42,33 @@ final class MinimaxPolynomialApproxExecutorBehaviorTest {
     }
 
     void execute() {
-
-        int degree = 9;
-        ApproxResult<DoublePolynomial> result =
-                MinimaxDoublePolynomialApproxExecutor.of(degree).apply(target);
-
-        double x_min = target.interval().lower();
-        double x_max = target.interval().upper();
-        double deltaX = 0.015625 * (x_max - x_min);
-
         System.out.println(target.toString());
+
+        long startTimeMills = System.currentTimeMillis();
+        int degree = 9;
+        ApproxResult<Polynomial<DoubleLike>> result =
+                MinimaxPolynomialApproxExecutor.of(degree).apply(target);
+        long endTimeMills = System.currentTimeMillis();
+        System.out.println((endTimeMills - startTimeMills) + "ms");
+
+        DoubleLike x_min = target.interval().lower();
+        DoubleLike x_max = target.interval().upper();
+        DoubleLike deltaX = x_max.minus(x_min).times(0.015625);
+
         System.out.println("coeff");
-        for (double polyCoeff : result.get().coefficient()) {
+        for (DoubleLike polyCoeff : result.get().coefficient()) {
             System.out.println(polyCoeff);
         }
         System.out.println("");
 
         System.out.println("x\tf\th\te");
-        for (double x = x_min; x <= x_max; x += deltaX) {
+        for (DoubleLike x = x_min; x.compareTo(x_max) <= 0; x = x.plus(deltaX)) {
             System.out.println(
                     x + "\t" +
                             target.value(x) + "\t" +
                             result.get().value(x) + "\t" +
-                            (target.value(x) - result.get().value(x)) /
-                                    target.scale(x));
+                            target.value(x).minus(result.get().value(x))
+                                    .dividedBy(target.scale(x)));
         }
         System.out.println("");
     }
@@ -68,23 +76,30 @@ final class MinimaxPolynomialApproxExecutorBehaviorTest {
     /**
      * ターゲット関数: exp(x) [0d, 1d]
      */
-    static DoubleApproxTarget exp() {
-        final DoubleFiniteClosedInterval interval = DoubleFiniteClosedInterval.from(0d, 1d);
-        return new DoubleApproxTarget() {
+    static ApproxTarget<DoubleLike> exp() {
+        final FiniteClosedInterval<DoubleLike> interval = FiniteClosedInterval.from(
+                PROVIDER.fromDoubleValue(0d), PROVIDER.fromDoubleValue(1d));
+
+        return new ApproxTarget<DoubleLike>() {
 
             @Override
-            protected double calcValue(double x) {
-                return Math.exp(x);
+            protected DoubleLike calcValue(DoubleLike x) {
+                return exp(x);
             }
 
             @Override
-            protected double calcScale(double x) {
-                return Math.exp(x);
+            protected DoubleLike calcScale(DoubleLike x) {
+                return exp(x);
             }
 
             @Override
-            public DoubleFiniteClosedInterval interval() {
+            public FiniteClosedInterval<DoubleLike> interval() {
                 return interval;
+            }
+
+            @Override
+            public Provider<DoubleLike> elementProvider() {
+                return PROVIDER;
             }
 
             @Override
@@ -94,4 +109,15 @@ final class MinimaxPolynomialApproxExecutorBehaviorTest {
         };
     }
 
+    private static DoubleLike exp(DoubleLike x) {
+
+        int kMax = 30;
+
+        DoubleLike sum = PROVIDER.zero();
+        for (int k = kMax + 1; k >= 1; k--) {
+            sum = sum.times(x).dividedBy(k);
+            sum = sum.plus(1d);
+        }
+        return sum;
+    }
 }
