@@ -23,7 +23,6 @@ import matsu.num.approximation.PseudoRealNumber;
  * </p>
  * 
  * @author Matsuura Y.
- * @version 22.0
  * @param <T> 体を表す型パラメータ
  */
 final class RemezTypePolynomialFactory<T extends PseudoRealNumber<T>> {

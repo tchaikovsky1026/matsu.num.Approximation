@@ -19,7 +19,6 @@ package matsu.num.approximation.rational;
  * </p>
  * 
  * @author Matsuura Y.
- * @version 18.0
  * @deprecated このクラスの機能は使えない
  */
 @Deprecated

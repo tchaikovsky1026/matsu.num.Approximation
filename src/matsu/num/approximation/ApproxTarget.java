@@ -36,7 +36,6 @@ package matsu.num.approximation;
  * </p>
  * 
  * @author Matsuura Y.
- * @version 22.0
  * @param <T> 体の元を表現する型パラメータ
  */
 public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {

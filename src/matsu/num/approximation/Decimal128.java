@@ -16,7 +16,6 @@ import java.math.MathContext;
  * {@link MathContext#DECIMAL128} ルールに基づく {@link BigDecimal} と同等の実数体.
  * 
  * @author Matsuura Y.
- * @version 22.0
  */
 public final class Decimal128 extends PseudoRealNumber<Decimal128> {
 

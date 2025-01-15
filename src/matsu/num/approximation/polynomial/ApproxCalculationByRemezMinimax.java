@@ -20,7 +20,6 @@ import matsu.num.approximation.PseudoRealNumber;
  * スレッドセーフでないので, 単一スレッド内でインスタンスが共有されるようにしなければならない.
  * 
  * @author Matsuura Y.
- * @version 22.0
  * @param <T> 体を表す型パラメータ
  */
 final class ApproxCalculationByRemezMinimax<T extends PseudoRealNumber<T>> {

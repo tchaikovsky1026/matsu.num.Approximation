@@ -16,7 +16,6 @@ import java.util.function.DoubleUnaryOperator;
  * Function value and scale supplier.
  *
  * @author Matsuura, Y.
- * @version 17.0
  * @deprecated 一時的に非推奨に
  */
 @Deprecated

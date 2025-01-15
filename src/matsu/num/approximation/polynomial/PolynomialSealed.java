@@ -15,7 +15,6 @@ import matsu.num.approximation.PseudoRealNumber;
  * {@link Polynomial} をシールするための非公開インターフェース.
  * 
  * @author Matsuura Y.
- * @version 22.0
  * @param <T> 体の元を表現する型パラメータ
  */
 non-sealed interface PolynomialSealed<T extends PseudoRealNumber<T>> extends Polynomial<T> {

@@ -20,7 +20,6 @@ import matsu.num.approximation.component.ApproximationFailedException;
  * スレッドセーフでないので, 単一スレッド内でインスタンスが共有されるようにしなければならない.
  * 
  * @author Matsuura Y.
- * @version 22.0
  */
 final class DoubleApproxCalculationByRemezMinimax {
 

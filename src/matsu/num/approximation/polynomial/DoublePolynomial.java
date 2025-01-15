@@ -39,7 +39,6 @@ package matsu.num.approximation.polynomial;
  * </p>
  *
  * @author Matsuura Y.
- * @version 20.0
  */
 public sealed interface DoublePolynomial permits DoublePolynomialSealed {
 

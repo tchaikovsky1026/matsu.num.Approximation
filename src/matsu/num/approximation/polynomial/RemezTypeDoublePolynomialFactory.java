@@ -28,7 +28,6 @@ import matsu.num.approximation.component.ApproximationFailedException;
  * </p>
  * 
  * @author Matsuura Y.
- * @version 22.0
  */
 final class RemezTypeDoublePolynomialFactory {
 

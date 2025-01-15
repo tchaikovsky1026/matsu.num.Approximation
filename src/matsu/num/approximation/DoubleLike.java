@@ -24,7 +24,6 @@ package matsu.num.approximation;
  * </p>
  * 
  * @author Matsuura Y.
- * @version 22.0
  */
 public final class DoubleLike extends PseudoRealNumber<DoubleLike> {
 

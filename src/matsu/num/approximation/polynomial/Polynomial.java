@@ -41,7 +41,6 @@ import matsu.num.approximation.PseudoRealNumber;
  * </p>
  *
  * @author Matsuura Y.
- * @version 22.0
  * @param <T> 体の元を表現する型パラメータ
  */
 public sealed interface Polynomial<T extends PseudoRealNumber<T>> permits PolynomialSealed {

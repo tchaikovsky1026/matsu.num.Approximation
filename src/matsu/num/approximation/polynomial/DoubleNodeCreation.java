@@ -15,7 +15,6 @@ import matsu.num.approximation.DoubleFiniteClosedInterval;
  * ノードを作成するユーティリティクラス.
  * 
  * @author Matsuura Y.
- * @version 19.0
  */
 final class DoubleNodeCreation {
 

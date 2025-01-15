@@ -22,7 +22,6 @@ import matsu.num.approximation.DoubleFiniteClosedInterval;
  * Require that <i>g</i>(<i>x</i>) is strictly positive.
  *
  * @author Matsuura Y.
- * @version 17.0
  * @deprecated 依存先の機能が不完全である
  */
 @Deprecated

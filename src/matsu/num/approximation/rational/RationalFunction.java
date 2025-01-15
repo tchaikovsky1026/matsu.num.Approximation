@@ -13,7 +13,6 @@ package matsu.num.approximation.rational;
  * Rational function interface.
  *
  * @author Matsuura Y.
- * @version 17.0
  * @deprecated 一時的に非推奨に
  */
 @Deprecated

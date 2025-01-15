@@ -36,7 +36,6 @@ package matsu.num.approximation;
  * </p>
  * 
  * @author Matsuura Y.
- * @version 21.0
  */
 public abstract class DoubleApproxTarget {
 

@@ -46,7 +46,6 @@ import matsu.num.approximation.PseudoRealNumber.Provider;
  * </p>
  *
  * @author Matsuura, Y.
- * @version 22.0
  */
 final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements PolynomialSealed<T> {
 

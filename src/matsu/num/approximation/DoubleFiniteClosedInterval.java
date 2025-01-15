@@ -34,7 +34,6 @@ package matsu.num.approximation;
  * </p>
  *
  * @author Matsuura, Y.
- * @version 21.1
  */
 public final class DoubleFiniteClosedInterval {
 

@@ -30,7 +30,6 @@ import matsu.num.approximation.DoubleApproxTarget;
  * </p>
  * 
  * @author Matsuura Y.
- * @version 19.0
  */
 public final class ApproximationError {
 

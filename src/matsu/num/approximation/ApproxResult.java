@@ -34,7 +34,6 @@ import java.util.function.Supplier;
  * </p>
  * 
  * @author Matsuura Y.
- * @version 19.3
  * @param <T> 近似結果の内容の型パラメータ
  */
 public abstract class ApproxResult<T> {

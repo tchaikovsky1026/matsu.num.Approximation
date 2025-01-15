@@ -15,7 +15,6 @@ import java.util.Objects;
  * 近似計算が失敗したことを表す例外.
  * 
  * @author Matsuura Y.
- * @version 18.0
  */
 public final class ApproximationFailedException extends Exception {
 

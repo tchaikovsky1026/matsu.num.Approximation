@@ -16,7 +16,6 @@ import matsu.num.approximation.PseudoRealNumber;
  * ノードを作成するユーティリティクラス.
  * 
  * @author Matsuura Y.
- * @version 22.0
  */
 final class NodeCreation {
 

@@ -13,7 +13,6 @@ package matsu.num.approximation.polynomial;
  * {@link DoublePolynomial} をシールするための非公開インターフェース.
  * 
  * @author Matsuura Y.
- * @version 20.0
  */
 non-sealed interface DoublePolynomialSealed extends DoublePolynomial {
 

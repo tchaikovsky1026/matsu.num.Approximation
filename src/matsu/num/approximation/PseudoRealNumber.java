@@ -214,7 +214,6 @@ package matsu.num.approximation;
  * </blockquote>
  * 
  * @author Matsuura Y.
- * @version 22.0
  * @param <T> このクラスと二項演算が可能な体構造の元を表す型.
  *            体の定義より, 自身に一致する.
  */
