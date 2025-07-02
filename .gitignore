@@ -9,12 +9,16 @@
 .project
 .classpath
 .settings
+.checkstyle
 
 #Java
 *.class
 *.jar
 *.war
 *.ear
+
+#Local File
+local.properties
 
 # OS
 Thumbs.db

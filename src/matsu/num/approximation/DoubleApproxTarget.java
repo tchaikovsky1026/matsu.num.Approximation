@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.12.12
+ * 2025.6.23
  */
 package matsu.num.approximation;
 
@@ -151,27 +151,5 @@ public abstract class DoubleApproxTarget {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + ": anonymous";
-    }
-
-    /**
-     * -
-     * 
-     * @return -
-     * @throws CloneNotSupportedException 常に
-     * @deprecated Clone不可
-     */
-    @Deprecated
-    @Override
-    protected final Object clone() throws CloneNotSupportedException {
-        throw new CloneNotSupportedException();
-    }
-
-    /**
-     * オーバーライド不可.
-     */
-    @Override
-    @Deprecated
-    protected final void finalize() throws Throwable {
-        super.finalize();
     }
 }
