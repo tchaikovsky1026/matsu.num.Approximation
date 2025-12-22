@@ -9,6 +9,9 @@
  */
 package matsu.num.approximation;
 
+import java.lang.reflect.Array;
+import java.util.Objects;
+
 /**
  * 実数に類似した体 (四則演算が定義された代数系) の元を表現する. <br>
  * (実質的に) イミュータブルな値クラスである. <br>
@@ -416,6 +419,14 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
     /**
      * 体に対する値のプロバイダ.
      * 
+     * <p>
+     * {@link Provider} は {@link TypeProvider}
+     * のスーパータイプである. <br>
+     * 将来的に {@link Provider} が廃止され,
+     * {@link TypeProvider} のみを提供する可能性があるため,
+     * {@link Provider} 型に依存するコードは推奨されない.
+     * </p>
+     * 
      * @param <T> 体の元を表す型
      */
     public static interface Provider<T extends PseudoRealNumber<T>> {
@@ -486,5 +497,102 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
          * @throws NegativeArraySizeException lengthが0以上でないの場合
          */
         public abstract T[] createArray(int length);
+    }
+
+    /**
+     * {@link Provider} よりも型安全な,
+     * 体に対する値のプロバイダ.
+     * 
+     * <p>
+     * {@link TypeProvider} は {@link Provider} の骨格実装としての役割以外に,
+     * 型として扱うことの役割をになっている. <br>
+     * {@link TypeProvider} のサブタイプは, {@link Provider} 型としてでなく,
+     * {@link TypeProvider} 型として扱うことが推奨される.
+     * </p>
+     * 
+     * @param <T> 体の元を表す型
+     */
+    public static abstract class TypeProvider<T extends PseudoRealNumber<T>>
+            implements Provider<T> {
+
+        private final Class<T> elementType;
+        private final Class<T[]> arrayType;
+
+        /**
+         * 唯一のコンストラクタ. <br>
+         * 型パラメータ {@code T} の型トークンを渡し,
+         * 厳密な型安全性を実現する.
+         * 
+         * @param elementType 型パラメータ {@code T} の型トークン
+         * @throws NullPointerException 引数が null の場合
+         */
+        protected TypeProvider(Class<T> elementType) {
+            this.elementType = Objects.requireNonNull(elementType);
+
+            // このキャストは必ず成功する
+            @SuppressWarnings("unchecked")
+            Class<T[]> arrayType = (Class<T[]>) elementType.arrayType();
+            this.arrayType = arrayType;
+        }
+
+        /**
+         * 与えた {@code double} 値と同等の体の元を返す.
+         * 
+         * <p>
+         * 無限大, NaNが与えられた場合, かつその場合のみ例外がスローされる.
+         * </p>
+         * 
+         * @param value 値
+         * @return 体の元
+         * @throws IllegalArgumentException valueが無限大またはNaNの場合
+         */
+        @Override
+        public abstract T fromDoubleValue(double value);
+
+        /**
+         * 加法単位元 (0) を返す.
+         * 
+         * @implSpec
+         *               戻り値は複数回の呼び出しで同一でなければならない. <br>
+         *               すなわち,
+         *               {@code this.zero() == this.zero()}
+         *               が必ず {@code true} でなければならない.
+         * 
+         * @return 加法単位元
+         */
+        @Override
+        public abstract T zero();
+
+        /**
+         * 乗法単位元 (1) を返す.
+         * 
+         * @implSpec
+         *               戻り値は複数回の呼び出しで同一でなければならない. <br>
+         *               すなわち, {@code this.one() == this.one()}
+         *               が必ず {@code true} でなければならない.
+         * 
+         * @return 乗法単位元
+         */
+        @Override
+        public abstract T one();
+
+        /**
+         * 指定した長さの {@code T} 型の配列を返す. <br>
+         * 配列は {@code null} 埋めされている. <br>
+         * 長さは0以上でなければならない.
+         * 
+         * <p>
+         * 配列は共変であるが, このメソッドは厳密に {@code T} 型の配列を返す.
+         * </p>
+         * 
+         * @param length 配列の長さ
+         * @return 長さ {@code length} の {@code T} 型の配列
+         * @throws NegativeArraySizeException lengthが0以上でないの場合
+         */
+        @Override
+        public T[] createArray(int length) {
+            // このキャストは必ず成功する
+            return arrayType.cast(Array.newInstance(elementType, length));
+        }
     }
 }
