@@ -5,13 +5,13 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.12.26
+ * 2025.12.22
  */
 package matsu.num.approximation;
 
 /**
  * 実数に類似した体 (四則演算が定義された代数系) の元を表現する. <br>
- * 実質的にイミュータブルである. <br>
+ * (実質的に) イミュータブルな値クラスである. <br>
  * 値に基づく equality, comparability を提供する. <br>
  * comparability は数の自然順序と同等であり,
  * equality は compatibility と整合するように実装される.
@@ -27,7 +27,7 @@ package matsu.num.approximation;
  * 
  * <hr>
  * 
- * <h2>実装規約</h2>
+ * <h2>実装要件詳細</h2>
  * 
  * <h3>扱える値の範囲</h3>
  * 
@@ -213,6 +213,12 @@ package matsu.num.approximation;
  * 
  * </blockquote>
  * 
+ * @implSpec
+ *               型パラメータ {@code T} に自身型をバインドした場合, クラスを {@code final} にしなければならない.
+ * 
+ *               <p>
+ *               詳しくは「実装要件詳細」を参照すること.
+ *               </p>
  * @author Matsuura Y.
  * @param <T> このクラスと二項演算が可能な体構造の元を表す型.
  *            体の定義より, 自身に一致する.
@@ -363,16 +369,15 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
      * 与えられたインスタンスとの等価性を判定する. <br>
      * comparability と整合する.
      * 
-     * @param obj 比較相手
-     * @return 等価の場合はtrue
+     * @implSpec
+     *               comparability と整合するので,
+     *               型パラメータ {@code T} とのみ等価比較できることになる.
      */
     @Override
     public abstract boolean equals(Object obj);
 
     /**
      * このインスタンスのハッシュコードを返す.
-     * 
-     * @return ハッシュコード
      */
     @Override
     public abstract int hashCode();
@@ -381,8 +386,6 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
      * 与えられたインスタンスとを比較する. <br>
      * equality と整合する.
      * 
-     * @param o 比較相手
-     * @return 比較結果
      * @throws NullPointerException 引数がnullの場合
      */
     @Override
@@ -396,8 +399,6 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
      * おそらく次のような形式だろう. <br>
      * {@code %value}
      * </p>
-     * 
-     * @return 文字列表現
      */
     @Override
     public abstract String toString();
