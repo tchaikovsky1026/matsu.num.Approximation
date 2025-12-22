@@ -437,13 +437,10 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
          * 加法単位元 (0) を返す.
          * 
          * @implSpec
-         *               <p>
          *               戻り値は複数回の呼び出しで同一でなければならない. <br>
-         *               すなわち, 次が必ず {@code true} でなければならない.
-         *               </p>
-         *               <blockquote>
+         *               すなわち,
          *               {@code this.zero() == this.zero()}
-         *               </blockquote>
+         *               が必ず {@code true} でなければならない.
          * 
          * @return 加法単位元
          */
@@ -453,13 +450,9 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
          * 乗法単位元 (1) を返す.
          * 
          * @implSpec
-         *               <p>
          *               戻り値は複数回の呼び出しで同一でなければならない. <br>
-         *               すなわち, 次が必ず {@code true} でなければならない.
-         *               </p>
-         *               <blockquote>
-         *               {@code this.one() == this.one()}
-         *               </blockquote>
+         *               すなわち, {@code this.one() == this.one()}
+         *               が必ず {@code true} でなければならない.
          * 
          * @return 乗法単位元
          */
@@ -470,12 +463,23 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
          * 配列は {@code null} 埋めされている. <br>
          * 長さは0以上でなければならない.
          * 
+         * <p>
+         * 配列は共変であるが, このメソッドは厳密に {@code T} 型の配列を返す.
+         * </p>
+         * 
          * @implSpec
+         *               バインドされた型 {@code T} に厳密に一致する要素型を持つ配列を返さなければならない.
+         * 
+         *               <p>
          *               おそらく, 次のような実装であろう
          *               (ただし, {@code T} は具象型とする).
-         *               <blockquote>
-         *               {@code return new T[length];}
-         *               </blockquote>
+         *               </p>
+         * 
+         *               <pre>
+         * public T[] createArray(int length){
+         *     return new T[length];
+         * }
+         * </pre>
          * 
          * @param length 配列の長さ
          * @return 長さ {@code length} の {@code T} 型の配列
