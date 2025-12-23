@@ -13,14 +13,12 @@ import matsu.num.approximation.ApproxTarget;
 import matsu.num.approximation.Decimal128;
 import matsu.num.approximation.FiniteClosedInterval;
 import matsu.num.approximation.PseudoRealNumber;
-import matsu.num.approximation.PseudoRealNumber.Provider;
+import matsu.num.approximation.PseudoRealNumber.TypeProvider;
 import matsu.num.approximation.polynomial.MinimaxPolynomialApproxExecutor;
 import matsu.num.approximation.polynomial.Polynomial;
 
 /**
- * <p>
  * {@link Decimal128} を用いた関数近似のテスト.
- * </p>
  * 
  * <p>
  * このクラスは自動テストではない.
@@ -29,7 +27,8 @@ import matsu.num.approximation.polynomial.Polynomial;
 @Ignore
 final class Decimal128ApproximationBehaviorTest {
 
-    private static final PseudoRealNumber.Provider<Decimal128> PROVIDER = Decimal128.elementProvider();
+    private static final PseudoRealNumber.TypeProvider<Decimal128> PROVIDER =
+            Decimal128.elementTypeProvider();
 
     private final ApproxTarget<Decimal128> target;
 
@@ -98,7 +97,7 @@ final class Decimal128ApproximationBehaviorTest {
             }
 
             @Override
-            public Provider<Decimal128> elementProvider() {
+            public TypeProvider<Decimal128> elementTypeProvider() {
                 return PROVIDER;
             }
 

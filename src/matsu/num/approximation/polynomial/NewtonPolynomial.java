@@ -135,18 +135,17 @@ final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements Polynomia
      * @param <T> 体の元を表す型パラメータ
      * @param node ノード
      * @param value ノードに対応する値
-     * @param elementProvider 体の元に関するプロバイダ
+     * @param elementTypeProvider 体の元に関するプロバイダ
      * @return Newton 補間多項式
      * @throws ArithmeticException 多項式が適切に生成できない場合
      * @throws NullPointerException null
      */
     static <T extends PseudoRealNumber<T>> NewtonPolynomial<T> from(
-            T[] node, T[] value, PseudoRealNumber.Provider<T> elementProvider) {
+            T[] node, T[] value, PseudoRealNumber.TypeProvider<T> elementTypeProvider) {
 
-        // TODO: メソッド引数の型をTypeProviderに変えた後に修正する.
         return construct(
                 node.clone(), value.clone(),
-                PseudoRealNumber.TypeProvider.from(elementProvider));
+                PseudoRealNumber.TypeProvider.from(elementTypeProvider));
     }
 
     /**
@@ -163,23 +162,24 @@ final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements Polynomia
      * @param <T> 体の元を表す型パラメータ
      * @param node ノード
      * @param function 関数
-     * @param elementProvider 体の元に関するプロバイダ
+     * @param elementTypeProvider 体の元に関するプロバイダ
      * @return Newton 補間多項式
      * @throws ArithmeticException 多項式が適切に生成できない場合
      * @throws NullPointerException nullが含まれる場合, 関数がnullを返した場合
      */
     static <T extends PseudoRealNumber<T>> NewtonPolynomial<T> from(
-            T[] node, UnaryOperator<T> function, PseudoRealNumber.Provider<T> elementProvider) {
+            T[] node, UnaryOperator<T> function,
+            PseudoRealNumber.TypeProvider<T> elementTypeProvider) {
+
         T[] nodeClone = node.clone();
-        T[] value = elementProvider.createArray(nodeClone.length);
+        T[] value = elementTypeProvider.createArray(nodeClone.length);
         for (int i = 0; i < nodeClone.length; i++) {
             value[i] = function.apply(nodeClone[i]);
         }
 
-        // TODO: メソッド引数の型をTypeProviderに変えた後に修正する.
         return construct(
                 nodeClone, value,
-                PseudoRealNumber.TypeProvider.from(elementProvider));
+                PseudoRealNumber.TypeProvider.from(elementTypeProvider));
     }
 
     /**

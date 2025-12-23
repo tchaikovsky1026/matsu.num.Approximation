@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.12.26
+ * 2025.12.23
  */
 package matsu.num.approximation.polynomial;
 
@@ -32,15 +32,17 @@ final class NodeCreation {
      * @param <T> 体を表す型パラメータ
      * @param size ノードの数, 2以上でなければならない
      * @param interval ノードを配置する区間
-     * @param provider 体の元に関するプロバイダ
+     * @param typeProvider 体の元に関するプロバイダ
      * @return ノード, 昇順に並んでいる
      * @throws NullPointerException null
      */
     static <T extends PseudoRealNumber<T>> T[] execute(
-            int size, FiniteClosedInterval<T> interval, PseudoRealNumber.Provider<T> provider) {
+            int size, FiniteClosedInterval<T> interval,
+            PseudoRealNumber.TypeProvider<T> typeProvider) {
+
         assert size >= 2 : "sizeが不正";
 
-        T[] out = provider.createArray(size);
+        T[] out = typeProvider.createArray(size);
 
         T lower = interval.lower();
         T upper = interval.upper();

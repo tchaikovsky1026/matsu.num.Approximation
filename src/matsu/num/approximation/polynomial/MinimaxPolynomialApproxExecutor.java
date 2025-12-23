@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.12.26
+ * 2025.12.23
  */
 package matsu.num.approximation.polynomial;
 
@@ -74,7 +74,8 @@ public final class MinimaxPolynomialApproxExecutor {
      * @return 近似結果, 計算に失敗した場合は空
      * @throws NullPointerException 引数がnullの場合
      */
-    public <T extends PseudoRealNumber<T>> ApproxResult<Polynomial<T>> apply(ApproxTarget<T> target) {
+    public <T extends PseudoRealNumber<T>> ApproxResult<Polynomial<T>> apply(
+            ApproxTarget<T> target) {
 
         ApproxCalculationByRemezMinimax<T> calc =
                 new ApproxCalculationByRemezMinimax<>(target, this.order);

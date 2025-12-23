@@ -27,7 +27,7 @@ public final class DoubleDoubleFloatRealNumber
     public static final DoubleDoubleFloatRealNumber ONE =
             new DoubleDoubleFloatRealNumber(DoubleDoubleFloat.POSITIVE_1);
 
-    private static final PseudoRealNumber.Provider<
+    private static final PseudoRealNumber.TypeProvider<
             DoubleDoubleFloatRealNumber> PROVIDER = new Provider();
 
     private final DoubleDoubleFloat value;
@@ -147,18 +147,18 @@ public final class DoubleDoubleFloatRealNumber
      * 
      * @return プロバイダ
      */
-    public static PseudoRealNumber.Provider<DoubleDoubleFloatRealNumber> elementProvider() {
+    public static PseudoRealNumber.TypeProvider<DoubleDoubleFloatRealNumber> elementTypeProvider() {
         return PROVIDER;
     }
 
     private static final class Provider
-            implements PseudoRealNumber.Provider<DoubleDoubleFloatRealNumber> {
+            extends PseudoRealNumber.TypeProvider<DoubleDoubleFloatRealNumber> {
 
         /**
          * 唯一のコンストラクタ.
          */
         Provider() {
-            super();
+            super(DoubleDoubleFloatRealNumber.class);
         }
 
         @Override
@@ -174,14 +174,6 @@ public final class DoubleDoubleFloatRealNumber
         @Override
         public DoubleDoubleFloatRealNumber fromDoubleValue(double value) {
             return new DoubleDoubleFloatRealNumber(value);
-        }
-
-        @Override
-        public DoubleDoubleFloatRealNumber[] createArray(int length) {
-            if (length < 0) {
-                throw new IllegalArgumentException("サイズが負");
-            }
-            return new DoubleDoubleFloatRealNumber[length];
         }
     }
 }
