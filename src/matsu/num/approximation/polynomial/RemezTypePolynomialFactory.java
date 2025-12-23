@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.12.26
+ * 2025.12.23
  */
 package matsu.num.approximation.polynomial;
 
@@ -28,11 +28,11 @@ import matsu.num.approximation.PseudoRealNumber;
 final class RemezTypePolynomialFactory<T extends PseudoRealNumber<T>> {
 
     private final ApproxTarget<T> target;
-    private final PseudoRealNumber.Provider<T> provider;
+    private final PseudoRealNumber.TypeProvider<T> typeProvider;
 
     RemezTypePolynomialFactory(ApproxTarget<T> target) {
         this.target = target;
-        this.provider = target.elementProvider();
+        this.typeProvider = target.elementTypeProvider();
     }
 
     /**
@@ -58,24 +58,24 @@ final class RemezTypePolynomialFactory<T extends PseudoRealNumber<T>> {
          * p1は, p(x_i) = f(x_i)を満たすような多項式.
          * i = 0, ... , n
          */
-        T[] f = provider.createArray(thinnedNode.length);
+        T[] f = typeProvider.createArray(thinnedNode.length);
         for (int i = 0; i < f.length; i++) {
             //ArithmeticExが発生する可能性
             f[i] = this.target.value(thinnedNode[i]);
         }
-        Polynomial<T> p1 = NewtonPolynomial.from(thinnedNode, f, provider);
+        Polynomial<T> p1 = NewtonPolynomial.from(thinnedNode, f, typeProvider);
 
         /*
          * p2は, p(x_i) = (-1)^i * scale(x_i)を満たすような多項式.
          * i = 0, ... , n
          */
-        T[] alternateError = provider.createArray(thinnedNode.length);
+        T[] alternateError = typeProvider.createArray(thinnedNode.length);
         for (int i = 0; i < alternateError.length; i++) {
             //ArithmeticExが発生する可能性
             T scale = this.target.scale(thinnedNode[i]);
             alternateError[i] = (i & 1) == 1 ? scale.negated() : scale;
         }
-        Polynomial<T> p2 = NewtonPolynomial.from(thinnedNode, alternateError, provider);
+        Polynomial<T> p2 = NewtonPolynomial.from(thinnedNode, alternateError, typeProvider);
 
         //x_{n+1}からEを求める
         T x_last = node[node.length - 1];
@@ -89,6 +89,6 @@ final class RemezTypePolynomialFactory<T extends PseudoRealNumber<T>> {
         for (int i = 0; i < f.length; i++) {
             f[i] = f[i].minus(alternateError[i].times(e));
         }
-        return NewtonPolynomial.from(thinnedNode, f, provider);
+        return NewtonPolynomial.from(thinnedNode, f, typeProvider);
     }
 }

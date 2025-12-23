@@ -14,7 +14,7 @@ import org.junit.Test.None;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import matsu.num.approximation.PseudoRealNumber.Provider;
+import matsu.num.approximation.PseudoRealNumber.TypeProvider;
 
 /**
  * {@link FiniteClosedInterval} クラスのテスト.
@@ -24,7 +24,8 @@ final class FiniteClosedIntervalTest {
 
     public static final Class<?> TEST_CLASS = FiniteClosedInterval.class;
 
-    private static final Provider<DoubleLike> ELEMENT_PROVIDER = DoubleLike.elementProvider();
+    private static final TypeProvider<DoubleLike> ELEMENT_PROVIDER =
+            DoubleLike.elementTypeProvider();
 
     public static class 生成に関するテスト {
 

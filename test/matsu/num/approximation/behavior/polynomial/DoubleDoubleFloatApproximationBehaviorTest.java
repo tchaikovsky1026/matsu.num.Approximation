@@ -12,7 +12,7 @@ import matsu.num.approximation.ApproxResult;
 import matsu.num.approximation.ApproxTarget;
 import matsu.num.approximation.FiniteClosedInterval;
 import matsu.num.approximation.PseudoRealNumber;
-import matsu.num.approximation.PseudoRealNumber.Provider;
+import matsu.num.approximation.PseudoRealNumber.TypeProvider;
 import matsu.num.approximation.behavior.DoubleDoubleFloatRealNumber;
 import matsu.num.approximation.polynomial.MinimaxPolynomialApproxExecutor;
 import matsu.num.approximation.polynomial.Polynomial;
@@ -29,8 +29,8 @@ import matsu.num.approximation.polynomial.Polynomial;
 @Ignore
 final class DoubleDoubleFloatApproximationBehaviorTest {
 
-    private static final PseudoRealNumber.Provider<DoubleDoubleFloatRealNumber> PROVIDER =
-            DoubleDoubleFloatRealNumber.elementProvider();
+    private static final PseudoRealNumber.TypeProvider<DoubleDoubleFloatRealNumber> PROVIDER =
+            DoubleDoubleFloatRealNumber.elementTypeProvider();
 
     private final ApproxTarget<DoubleDoubleFloatRealNumber> target;
 
@@ -100,7 +100,7 @@ final class DoubleDoubleFloatApproximationBehaviorTest {
             }
 
             @Override
-            public Provider<DoubleDoubleFloatRealNumber> elementProvider() {
+            public TypeProvider<DoubleDoubleFloatRealNumber> elementTypeProvider() {
                 return PROVIDER;
             }
 

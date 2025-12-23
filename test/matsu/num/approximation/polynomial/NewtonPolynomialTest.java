@@ -30,7 +30,8 @@ final class NewtonPolynomialTest {
 
     public static final Class<?> TEST_CLASS = NewtonPolynomial.class;
 
-    private static final PseudoRealNumber.Provider<DoubleLike> PROVIDER = DoubleLike.elementProvider();
+    private static final PseudoRealNumber.TypeProvider<DoubleLike> PROVIDER =
+            DoubleLike.elementTypeProvider();
 
     @RunWith(Theories.class)
     public static class 多項式のテスト_サイズ1 {

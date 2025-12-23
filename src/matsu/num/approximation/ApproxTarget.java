@@ -129,7 +129,7 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
         }
 
         T out = this.calcScale(x);
-        if (out.compareTo(this.elementProvider().zero()) <= 0) {
+        if (out.compareTo(this.elementTypeProvider().zero()) <= 0) {
             throw new ArithmeticException("スケールの値が正でない");
         }
         return out;

@@ -13,7 +13,7 @@ import matsu.num.approximation.ApproxTarget;
 import matsu.num.approximation.DoubleLike;
 import matsu.num.approximation.FiniteClosedInterval;
 import matsu.num.approximation.PseudoRealNumber;
-import matsu.num.approximation.PseudoRealNumber.Provider;
+import matsu.num.approximation.PseudoRealNumber.TypeProvider;
 import matsu.num.approximation.polynomial.MinimaxPolynomialApproxExecutor;
 import matsu.num.approximation.polynomial.Polynomial;
 
@@ -29,7 +29,8 @@ import matsu.num.approximation.polynomial.Polynomial;
 @Ignore
 final class MinimaxPolynomialApproxExecutorBehaviorTest {
 
-    private static final PseudoRealNumber.Provider<DoubleLike> PROVIDER = DoubleLike.elementProvider();
+    private static final PseudoRealNumber.TypeProvider<DoubleLike> PROVIDER =
+            DoubleLike.elementTypeProvider();
 
     private final ApproxTarget<DoubleLike> target;
 
@@ -98,7 +99,7 @@ final class MinimaxPolynomialApproxExecutorBehaviorTest {
             }
 
             @Override
-            public Provider<DoubleLike> elementProvider() {
+            public TypeProvider<DoubleLike> elementTypeProvider() {
                 return PROVIDER;
             }
 
