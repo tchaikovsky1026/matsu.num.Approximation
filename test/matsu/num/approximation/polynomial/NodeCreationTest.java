@@ -21,7 +21,8 @@ import matsu.num.approximation.PseudoRealNumber;
 @RunWith(Enclosed.class)
 final class NodeCreationTest {
 
-    private static final PseudoRealNumber.Provider<DoubleLike> PROVIDER = DoubleLike.elementProvider();
+    private static final PseudoRealNumber.TypeProvider<DoubleLike> PROVIDER =
+            DoubleLike.elementTypeProvider();
 
     private static final DoubleRelativeAssertion DOUBLE_RELATIVE_ASSERTION =
             new DoubleRelativeAssertion(1E-12);

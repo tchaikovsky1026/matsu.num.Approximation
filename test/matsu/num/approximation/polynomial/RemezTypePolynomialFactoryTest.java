@@ -21,7 +21,7 @@ import matsu.num.approximation.DoubleLike;
 import matsu.num.approximation.DoubleRelativeAssertion;
 import matsu.num.approximation.FiniteClosedInterval;
 import matsu.num.approximation.PseudoRealNumber;
-import matsu.num.approximation.PseudoRealNumber.Provider;
+import matsu.num.approximation.PseudoRealNumber.TypeProvider;
 
 /**
  * {@link RemezTypePolynomialFactory} クラスのテスト.
@@ -29,7 +29,8 @@ import matsu.num.approximation.PseudoRealNumber.Provider;
 @RunWith(Enclosed.class)
 final class RemezTypePolynomialFactoryTest {
 
-    private static final PseudoRealNumber.Provider<DoubleLike> PROVIDER = DoubleLike.elementProvider();
+    private static final PseudoRealNumber.TypeProvider<DoubleLike> PROVIDER =
+            DoubleLike.elementTypeProvider();
 
     private static final DoubleRelativeAssertion DOUBLE_RELATIVE_ASSERTION =
             new DoubleRelativeAssertion(1E-12);
@@ -78,7 +79,7 @@ final class RemezTypePolynomialFactoryTest {
                 }
 
                 @Override
-                public Provider<DoubleLike> elementProvider() {
+                public TypeProvider<DoubleLike> elementTypeProvider() {
                     return PROVIDER;
                 }
             };

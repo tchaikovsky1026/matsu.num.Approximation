@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.22.0
+ * 2025.12.23
  */
 package matsu.num.approximation.polynomial;
 
@@ -31,19 +31,15 @@ import matsu.num.approximation.PseudoRealNumber;
  * かつすべてのメソッドはスレッドセーフであることが保証されている.
  * </p>
  * 
- * <p>
- * <i>
- * <u>
- * このインターフェースは実装を隠ぺいして型を公開するためのものである. <br>
- * 外部で実装することは不可.
- * </u>
- * </i>
- * </p>
+ * @implSpec
+ *               このインターフェースはモジュール内で実装されるために用意されており,
+ *               モジュール外では実装してはいけない. <br>
+ *               モジュール内で実装する場合でも, イミュータブルで関数的でなければならない.
  *
  * @author Matsuura Y.
  * @param <T> 体の元を表現する型パラメータ
  */
-public sealed interface Polynomial<T extends PseudoRealNumber<T>> permits PolynomialSealed {
+public interface Polynomial<T extends PseudoRealNumber<T>> {
 
     /**
      * 多項式の次数 <i>n</i> を返す.
@@ -80,6 +76,9 @@ public sealed interface Polynomial<T extends PseudoRealNumber<T>> permits Polyno
      * このターゲットが扱う体の元に関するプロバイダを返す.
      * 
      * @return 体の元に関するプロバイダ
+     * @deprecated
+     *                 このメソッドはこのインターフェースにおいて不要な要素であり, 将来的に削除される.
      */
+    @Deprecated(forRemoval = true)
     public abstract PseudoRealNumber.Provider<T> elementProvider();
 }
