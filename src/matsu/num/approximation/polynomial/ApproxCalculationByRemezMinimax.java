@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.12.26
+ * 2025.12.23
  */
 package matsu.num.approximation.polynomial;
 
@@ -49,7 +49,10 @@ final class ApproxCalculationByRemezMinimax<T extends PseudoRealNumber<T>> {
      */
     void calculate() {
         RemezIterator remezIterator =
-                new RemezIterator(NodeCreation.execute(this.order + 2, target.interval(), target.elementProvider()));
+                new RemezIterator(
+                        NodeCreation.execute(
+                                this.order + 2, target.interval(),
+                                target.elementTypeProvider()));
 
         int iteration = 100;
         double[] relativeDeltas = { 0.1, 0.03, 0.01, 0.003, 0.001, 3E-4, 1E-4 };
@@ -170,13 +173,13 @@ final class ApproxCalculationByRemezMinimax<T extends PseudoRealNumber<T>> {
          * @throws ArithmeticException
          */
         private boolean errSignIsPositive(ApproximationError error) {
-            T sum = target.elementProvider().zero();
+            T sum = target.elementTypeProvider().zero();
             for (int i = 0; i < node.length; i++) {
                 T err = error.value(node[i]);
                 sum = sum.plus((i & 1) == 0 ? err : err.negated());
             }
 
-            return sum.compareTo(target.elementProvider().zero()) > 0;
+            return sum.compareTo(target.elementTypeProvider().zero()) > 0;
         }
 
         /**

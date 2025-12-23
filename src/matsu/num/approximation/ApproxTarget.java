@@ -5,9 +5,14 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2025.6.23
+ * 2025.12.23
  */
 package matsu.num.approximation;
+
+import java.util.Objects;
+
+import matsu.num.approximation.PseudoRealNumber.Provider;
+import matsu.num.approximation.PseudoRealNumber.TypeProvider;
 
 /**
  * 独自クラスによる実数体で表現された, 近似されるターゲット関数を扱う. <br>
@@ -35,10 +40,22 @@ package matsu.num.approximation;
  * かつすべてのメソッドはスレッドセーフであることが保証されている.
  * </p>
  * 
+ * @implSpec
+ *               {@link #elementTypeProvider()} をオーバーライドしなければならない. <br>
+ *               ({@link #elementTypeProvider()} または {@link #elementProvider()}
+ *               のどちらかをオーバーライドすれば一応動くが,
+ *               {@link #elementTypeProvider()} をオーバーライドすることを強く推奨する.)
+ * 
  * @author Matsuura Y.
  * @param <T> 体の元を表現する型パラメータ
  */
 public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
+
+    // 遅延初期化用のロックオブジェクト
+    private final Object lock = new Object();
+    private volatile PseudoRealNumber.TypeProvider<T> typeProvider;
+    // elementProvider() が再帰的に呼ばれた場合に検出できるようなフラグ
+    private volatile boolean recursion;
 
     /**
      * 唯一のコンストラクタ.
@@ -48,9 +65,12 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
     }
 
     /**
-     * 与えられた <i>x</i> に対し, <i>f</i>(<i>x</i>) の値 (有限値) を返す. <br>
+     * 与えられた <i>x</i> に対し, <i>f</i>(<i>x</i>) の値 (有限値) を返す.
+     *
+     * <p>
      * <i>x</i> が区間外の場合は {@link IllegalArgumentException} がスローされる. <br>
      * オーバーフローなどで値が計算できなかった場合, {@link ArithmeticException} がスローされる.
+     * </p>
      * 
      * @param x <i>x</i>, 引数
      * @return <i>f</i>(<i>x</i>)
@@ -74,11 +94,12 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
      * このメソッドは {@link #value(PseudoRealNumber)} の内部で呼ばれるために用意されており,
      * 引数 <i>x</i> は必ず区間内である
      * (したがって {@code null} でない). <br>
-     * 公開は禁止され, サブクラスからもコールしてはならない. <br>
-     * 戻り値が計算できない場合, {@link ArithmeticException} をスローすること.
+     * 公開は禁止され, サブクラスからもコールしてはならない.
      * </p>
      * 
-     * @implSpec アクセス修飾子を {@code public} にしてはいけない.
+     * @implSpec
+     *               アクセス修飾子を {@code public} にしてはいけない. <br>
+     *               戻り値が計算できない場合, {@link ArithmeticException} をスローすること.
      * 
      * @param x <i>x</i>, 引数
      * @return <i>f</i>(<i>x</i>) の候補値
@@ -88,10 +109,13 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
 
     /**
      * 与えられた <i>x</i> に対し,
-     * <i>s</i><sub><i>f</i></sub>(<i>x</i>) の値 (有限の正の値) を返す. <br>
+     * <i>s</i><sub><i>f</i></sub>(<i>x</i>) の値 (有限の正の値) を返す.
+     * 
+     * <p>
      * <i>x</i> が区間外の場合は {@link IllegalArgumentException} がスローされる. <br>
-     * 値が正でなかった場合 (一種のバグ) やオーバーフローなどで値が計算できなかった場合, {@link ArithmeticException}
-     * がスローされる.
+     * 値が正でなかった場合 (一種のバグ) やオーバーフローなどで値が計算できなかった場合,
+     * {@link ArithmeticException} がスローされる.
+     * </p>
      * 
      * @param x <i>x</i>, 引数
      * @return <i>s</i><sub><i>f</i></sub>(<i>x</i>)
@@ -105,7 +129,7 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
         }
 
         T out = this.calcScale(x);
-        if (out.compareTo(this.elementProvider().zero()) <= 0) {
+        if (out.compareTo(this.elementTypeProvider().zero()) <= 0) {
             throw new ArithmeticException("スケールの値が正でない");
         }
         return out;
@@ -118,13 +142,14 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
      * このメソッドは {@link #scale(PseudoRealNumber)} の内部で呼ばれるために用意されており,
      * 引数 <i>x</i> は必ず区間内である
      * (したがって {@code null} でない). <br>
-     * 公開は禁止され, サブクラスからもコールしてはならない. <br>
-     * 戻り値が計算できない場合, {@link ArithmeticException} をスローすること. <br>
-     * 0以下の数を返しても良い
-     * (呼び出し元で例外スローに変換される).
+     * 公開は禁止され, サブクラスからもコールしてはならない.
      * </p>
      * 
-     * @implSpec アクセス修飾子を {@code public} にしてはいけない.
+     * @implSpec
+     *               アクセス修飾子を {@code public} にしてはいけない. <br>
+     *               戻り値が計算できない場合, {@link ArithmeticException} をスローすること. <br>
+     *               0以下の数を返しても良い
+     *               (呼び出し元で例外スローに変換される).
      * 
      * @param x <i>x</i>, 引数
      * @return <i>s</i><sub><i>f</i></sub>(<i>x</i>) の候補値
@@ -164,6 +189,11 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
     /**
      * このターゲットが扱う体の元に関するプロバイダを返す.
      * 
+     * <p>
+     * このメソッドは将来非推奨になり, 削除される可能性がある. <br>
+     * {@link #elementTypeProvider()} が代替となる.
+     * </p>
+     * 
      * @implSpec
      *               このプロバイダにより返されるインスタンスは複数回の呼び出しで同一でなければならない. <br>
      *               すなわち, 次が必ず {@code true} でなければならない.
@@ -171,14 +201,94 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
      *               {@code this.elementProvider() == this.elementProvider()}
      *               </blockquote>
      * 
+     *               <p>
+     *               {@link #elementTypeProvider()} をオーバーライドできる場合,
+     *               このメソッドをオーバーライドしてはいけない.
+     *               </p>
+     * 
      * @return 体の元に関するプロバイダ
      */
-    public abstract PseudoRealNumber.Provider<T> elementProvider();
+    public PseudoRealNumber.Provider<T> elementProvider() {
+        TypeProvider<T> out = typeProvider;
+        if (Objects.nonNull(out)) {
+            return out;
+        }
+        synchronized (lock) {
+            out = typeProvider;
+            if (Objects.nonNull(out)) {
+                return out;
+            }
+
+            // 呼び出しが循環した場合にアサーションエラーをスローできるように対応
+            try {
+                if (recursion) {
+                    throw new AssertionError(
+                            "require overriding elementTypeProvider() or elementProvider(), "
+                                    + "and returning non-null");
+                }
+                recursion = true;
+                out = this.elementTypeProvider();
+            } finally {
+                recursion = false;
+            }
+
+            if (Objects.isNull(out)) {
+                throw new AssertionError(
+                        "require overriding elementTypeProvider() or elementProvider(), "
+                                + "and returning non-null");
+            }
+            typeProvider = out;
+            return out;
+        }
+    }
+
+    /**
+     * このターゲットが扱う体の元に関するプロバイダを返す.
+     * 
+     * @implSpec
+     *               このプロバイダにより返されるインスタンスは複数回の呼び出しで同一でなければならない. <br>
+     *               すなわち, 次が必ず {@code true} でなければならない.
+     *               <blockquote>
+     *               {@code this.elementTypeProvider() == this.elementTypeProvider()}
+     *               </blockquote>
+     * 
+     *               <p>
+     *               このメソッドをオーバーライドできる場合,
+     *               {@link #elementProvider()} をオーバーライドしてはいけない.
+     *               </p>
+     * 
+     * @return 体の元に関するプロバイダ
+     */
+    /*
+     * 将来的に elementProvider() が削除された場合,
+     * このメソッドは抽象メソッドに変更する.
+     */
+    public PseudoRealNumber.TypeProvider<T> elementTypeProvider() {
+        TypeProvider<T> out = typeProvider;
+        if (Objects.nonNull(out)) {
+            return out;
+        }
+        synchronized (lock) {
+            out = typeProvider;
+            if (Objects.nonNull(out)) {
+                return out;
+            }
+
+            Provider<T> wrapped = this.elementProvider();
+
+            if (Objects.isNull(wrapped)) {
+                throw new AssertionError(
+                        "require overriding elementTypeProvider() or elementProvider(), "
+                                + "and returning non-null");
+            }
+            out = TypeProvider.from(wrapped);
+            typeProvider = out;
+            return out;
+        }
+    }
 
     /**
      * このインスタンスの文字列表現を返す.
-     * 
-     * @return 文字列表現
      */
     @Override
     public String toString() {

@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.12.26
+ * 2025.12.23
  */
 package matsu.num.approximation.polynomial;
 
@@ -47,12 +47,12 @@ import matsu.num.approximation.PseudoRealNumber.Provider;
  *
  * @author Matsuura, Y.
  */
-final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements PolynomialSealed<T> {
+final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements Polynomial<T> {
 
     private final T[] node;
     private final T[] newtonCoeff;
 
-    private final PseudoRealNumber.Provider<T> elementProvider;
+    private final PseudoRealNumber.TypeProvider<T> elementTypeProvider;
 
     //多項式の係数
     private final T[] coeff;
@@ -61,10 +61,10 @@ final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements Polynomia
      * 内部でバリデーションされていない.
      */
     private NewtonPolynomial(T[] node, T[] newtonCoeff,
-            PseudoRealNumber.Provider<T> elementProvider) {
+            PseudoRealNumber.TypeProvider<T> elementTypeProvider) {
         this.node = node;
         this.newtonCoeff = newtonCoeff;
-        this.elementProvider = elementProvider;
+        this.elementTypeProvider = elementTypeProvider;
 
         //ここでArithmeticExceptionを発生させる可能性がある
         this.coeff = this.calcCoeff();
@@ -77,7 +77,7 @@ final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements Polynomia
 
     @Override
     public T value(T x) {
-        T value = elementProvider.zero();
+        T value = elementTypeProvider.zero();
 
         for (int i = this.node.length - 1; i >= 0; i--) {
             /*
@@ -98,8 +98,9 @@ final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements Polynomia
     }
 
     @Override
+    @Deprecated(forRemoval = true)
     public Provider<T> elementProvider() {
-        return this.elementProvider;
+        return this.elementTypeProvider;
     }
 
     /**
@@ -107,10 +108,10 @@ final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements Polynomia
      */
     private T[] calcCoeff() {
         final int size = this.node.length;
-        T[] polyCoeff = elementProvider.createArray(0);
+        T[] polyCoeff = elementTypeProvider.createArray(0);
         for (int i = 0; i < size; i++) {
             T cp_smim1 = this.node[size - 1 - i];
-            T[] nextCoeff = elementProvider.createArray(i + 1);
+            T[] nextCoeff = elementTypeProvider.createArray(i + 1);
 
             nextCoeff[0] = this.newtonCoeff[size - 1 - i];
             System.arraycopy(polyCoeff, 0, nextCoeff, 1, i);
@@ -134,14 +135,17 @@ final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements Polynomia
      * @param <T> 体の元を表す型パラメータ
      * @param node ノード
      * @param value ノードに対応する値
-     * @param elementProvider 体の元に関するプロバイダ
+     * @param elementTypeProvider 体の元に関するプロバイダ
      * @return Newton 補間多項式
      * @throws ArithmeticException 多項式が適切に生成できない場合
      * @throws NullPointerException null
      */
     static <T extends PseudoRealNumber<T>> NewtonPolynomial<T> from(
-            T[] node, T[] value, PseudoRealNumber.Provider<T> elementProvider) {
-        return construct(node.clone(), value.clone(), elementProvider);
+            T[] node, T[] value, PseudoRealNumber.TypeProvider<T> elementTypeProvider) {
+
+        return construct(
+                node.clone(), value.clone(),
+                PseudoRealNumber.TypeProvider.from(elementTypeProvider));
     }
 
     /**
@@ -158,19 +162,24 @@ final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements Polynomia
      * @param <T> 体の元を表す型パラメータ
      * @param node ノード
      * @param function 関数
-     * @param elementProvider 体の元に関するプロバイダ
+     * @param elementTypeProvider 体の元に関するプロバイダ
      * @return Newton 補間多項式
      * @throws ArithmeticException 多項式が適切に生成できない場合
      * @throws NullPointerException nullが含まれる場合, 関数がnullを返した場合
      */
     static <T extends PseudoRealNumber<T>> NewtonPolynomial<T> from(
-            T[] node, UnaryOperator<T> function, PseudoRealNumber.Provider<T> elementProvider) {
+            T[] node, UnaryOperator<T> function,
+            PseudoRealNumber.TypeProvider<T> elementTypeProvider) {
+
         T[] nodeClone = node.clone();
-        T[] value = elementProvider.createArray(nodeClone.length);
+        T[] value = elementTypeProvider.createArray(nodeClone.length);
         for (int i = 0; i < nodeClone.length; i++) {
             value[i] = function.apply(nodeClone[i]);
         }
-        return construct(nodeClone, value, elementProvider);
+
+        return construct(
+                nodeClone, value,
+                PseudoRealNumber.TypeProvider.from(elementTypeProvider));
     }
 
     /**
@@ -181,26 +190,27 @@ final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements Polynomia
      * @throws NullPointerException null
      */
     private static <T extends PseudoRealNumber<T>> NewtonPolynomial<T> construct(
-            T[] node, T[] value, PseudoRealNumber.Provider<T> elementProvider) {
+            T[] node, T[] value, PseudoRealNumber.TypeProvider<T> elementTypeProvider) {
 
         assert node.length == value.length : "サイズが整合しない";
         assert node.length > 0 : "サイズ0";
 
-        NewtonCoefficientCalc<T> calc = new NewtonCoefficientCalc<>(node, value, elementProvider);
-        return new NewtonPolynomial<>(node, calc.calcAndGet(), elementProvider);
+        NewtonCoefficientCalc<T> calc =
+                new NewtonCoefficientCalc<>(node, value, elementTypeProvider);
+        return new NewtonPolynomial<>(node, calc.calcAndGet(), elementTypeProvider);
     }
 
     private static final class NewtonCoefficientCalc<T extends PseudoRealNumber<T>> {
 
         private final T[] node;
         private final T[] value;
-        private final PseudoRealNumber.Provider<T> elementProvider;
+        private final PseudoRealNumber.TypeProvider<T> elementTypeProvider;
 
-        NewtonCoefficientCalc(T[] node, T[] value, PseudoRealNumber.Provider<T> elementProvider) {
+        NewtonCoefficientCalc(T[] node, T[] value, PseudoRealNumber.TypeProvider<T> elementTypeProvider) {
             super();
             this.node = node;
             this.value = value;
-            this.elementProvider = elementProvider;
+            this.elementTypeProvider = elementTypeProvider;
         }
 
         /**
@@ -208,7 +218,7 @@ final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements Polynomia
          * @throws NullPointerException null
          */
         T[] calcAndGet() {
-            T[] newtonCoeff = elementProvider.createArray(this.node.length);
+            T[] newtonCoeff = elementTypeProvider.createArray(this.node.length);
             for (int i = 0, size = this.node.length; i < size; i++) {
                 T value_i = this.value[i];
                 T x_i = this.node[i];
