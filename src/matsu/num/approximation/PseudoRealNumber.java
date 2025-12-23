@@ -676,7 +676,7 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
          * このアダプターで実行される型チェックは厳密でない. <br>
          * したがって, ここで例外がスローしなかった場合に, 後で
          * {@link ArrayStoreException} が生じる可能性がある. <br>
-         * 可能であるならば, {@link TypeProvider} を直接継承することが強く推奨される.
+         * 可能な限り, {@link TypeProvider} を直接継承することが強く推奨される.
          * </p>
          * 
          * @param <T> 体の元を表す型
