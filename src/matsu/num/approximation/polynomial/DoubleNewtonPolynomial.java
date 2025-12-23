@@ -40,7 +40,7 @@ import matsu.num.approximation.component.ApproximationFailedException;
  *
  * @author Matsuura, Y.
  */
-final class DoubleNewtonPolynomial implements DoublePolynomialSealed {
+final class DoubleNewtonPolynomial implements DoublePolynomial {
 
     private final double[] node;
     private final double[] newtonCoeff;
