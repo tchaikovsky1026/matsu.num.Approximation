@@ -5,13 +5,16 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.12.26
+ * 2025.12.23
  */
 package matsu.num.approximation;
 
+import java.lang.reflect.Array;
+import java.util.Objects;
+
 /**
  * 実数に類似した体 (四則演算が定義された代数系) の元を表現する. <br>
- * 実質的にイミュータブルである. <br>
+ * (実質的に) イミュータブルな値クラスである. <br>
  * 値に基づく equality, comparability を提供する. <br>
  * comparability は数の自然順序と同等であり,
  * equality は compatibility と整合するように実装される.
@@ -27,7 +30,11 @@ package matsu.num.approximation;
  * 
  * <hr>
  * 
- * <h2>実装規約</h2>
+ * <h2>実装要件詳細</h2>
+ * 
+ * <p>
+ * (実装要件タグも合わせて参照すること.)
+ * </p>
  * 
  * <h3>扱える値の範囲</h3>
  * 
@@ -213,6 +220,20 @@ package matsu.num.approximation;
  * 
  * </blockquote>
  * 
+ * @implSpec
+ *               型パラメータ {@code T} に自身型をバインドした場合,
+ *               クラスを {@code final} にしなければならない.
+ * 
+ *               <p>
+ *               {@link #typeProvider()} をオーバーライドしなければならない. <br>
+ *               ({@link #typeProvider()} または {@link #provider()}
+ *               のどちらかをオーバーライドすれば一応動くが,
+ *               {@link #typeProvider()} をオーバーライドすることを強く推奨する.)
+ *               </p>
+ * 
+ *               <p>
+ *               その他は詳しくは「実装要件詳細」を参照すること.
+ *               </p>
  * @author Matsuura Y.
  * @param <T> このクラスと二項演算が可能な体構造の元を表す型.
  *            体の定義より, 自身に一致する.
@@ -234,6 +255,11 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
      * 公開は禁止であり, サブクラスからもコールしてはならない.
      * </p>
      * 
+     * <p>
+     * このメソッドは将来非推奨になり, 削除される可能性がある. <br>
+     * {@link #typeProvider()} が代替となる.
+     * </p>
+     * 
      * @implSpec
      *               アクセス修飾子を {@code public} にしてはいけない.
      * 
@@ -245,9 +271,66 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
      *               {@code this.provider() == this.provider()}
      *               </blockquote>
      * 
+     *               <p>
+     *               {@link #typeProvider()} をオーバーライドできる場合,
+     *               このメソッドをオーバーライドしてはいけない.
+     *               </p>
+     * 
      * @return プロバイダ
      */
-    protected abstract Provider<T> provider();
+    protected Provider<T> provider() {
+        return null;
+    }
+
+    /**
+     * このクラスが表現する元の生成を受け持つプロバイダを返す.
+     * 
+     * <p>
+     * この抽象メソッドは内部で利用されるために用意されているので,
+     * 公開は禁止であり, サブクラスからもコールしてはならない.
+     * </p>
+     * 
+     * @implSpec
+     *               アクセス修飾子を {@code public} にしてはいけない.
+     * 
+     *               <p>
+     *               このプロバイダにより返されるインスタンスは複数回の呼び出しで同一でなければならない. <br>
+     *               すなわち, 次が必ず {@code true} でなければならない.
+     *               </p>
+     *               <blockquote>
+     *               {@code this.typeProvider() == this.typeProvider()}
+     *               </blockquote>
+     * 
+     *               <p>
+     *               このメソッドをオーバーライドできる場合,
+     *               {@link #provider()} をオーバーライドしてはいけない.
+     *               </p>
+     * 
+     * @return プロバイダ
+     */
+    /*
+     * 将来的に provider() が削除された場合,
+     * このメソッドは抽象メソッドに変更する.
+     */
+    protected TypeProvider<T> typeProvider() {
+        return null;
+    }
+
+    /**
+     * {@code double} 値を T 型に変換する.
+     */
+    private T fromDoubleValue(double value) {
+        TypeProvider<T> typeProvider = this.typeProvider();
+        Provider<T> provider = Objects.nonNull(typeProvider)
+                ? typeProvider
+                : this.provider();
+
+        if (Objects.isNull(provider)) {
+            throw new AssertionError("require overriding typeProvider() or provider()");
+        }
+
+        return provider.fromDoubleValue(value);
+    }
 
     /**
      * 和を返す.
@@ -268,7 +351,7 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
      * @throws ArithmeticException 演算結果がインスタンスとして表現できない場合
      */
     public final T plus(double augend) {
-        return this.plus(this.provider().fromDoubleValue(augend));
+        return this.plus(fromDoubleValue(augend));
     }
 
     /**
@@ -290,7 +373,7 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
      * @throws ArithmeticException 演算結果がインスタンスとして表現できない場合
      */
     public final T minus(double subtrahend) {
-        return this.minus(this.provider().fromDoubleValue(subtrahend));
+        return this.minus(fromDoubleValue(subtrahend));
     }
 
     /**
@@ -312,7 +395,7 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
      * @throws ArithmeticException 演算結果がインスタンスとして表現できない場合
      */
     public final T times(double multiplicand) {
-        return this.times(this.provider().fromDoubleValue(multiplicand));
+        return this.times(fromDoubleValue(multiplicand));
     }
 
     /**
@@ -334,7 +417,7 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
      * @throws ArithmeticException 演算結果がインスタンスとして表現できない場合 (0割りが発生した場合を含む)
      */
     public final T dividedBy(double divisor) {
-        return this.dividedBy(this.provider().fromDoubleValue(divisor));
+        return this.dividedBy(fromDoubleValue(divisor));
     }
 
     /**
@@ -363,16 +446,15 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
      * 与えられたインスタンスとの等価性を判定する. <br>
      * comparability と整合する.
      * 
-     * @param obj 比較相手
-     * @return 等価の場合はtrue
+     * @implSpec
+     *               comparability と整合するので,
+     *               型パラメータ {@code T} とのみ等価比較できることになる.
      */
     @Override
     public abstract boolean equals(Object obj);
 
     /**
      * このインスタンスのハッシュコードを返す.
-     * 
-     * @return ハッシュコード
      */
     @Override
     public abstract int hashCode();
@@ -381,8 +463,6 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
      * 与えられたインスタンスとを比較する. <br>
      * equality と整合する.
      * 
-     * @param o 比較相手
-     * @return 比較結果
      * @throws NullPointerException 引数がnullの場合
      */
     @Override
@@ -396,8 +476,6 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
      * おそらく次のような形式だろう. <br>
      * {@code %value}
      * </p>
-     * 
-     * @return 文字列表現
      */
     @Override
     public abstract String toString();
@@ -414,6 +492,14 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
 
     /**
      * 体に対する値のプロバイダ.
+     * 
+     * <p>
+     * {@link Provider} は {@link TypeProvider}
+     * のスーパータイプである. <br>
+     * 将来的に {@link Provider} が廃止され,
+     * {@link TypeProvider} のみを提供する可能性があるため,
+     * {@link Provider} 型に依存するコードは推奨されない.
+     * </p>
      * 
      * @param <T> 体の元を表す型
      */
@@ -436,13 +522,10 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
          * 加法単位元 (0) を返す.
          * 
          * @implSpec
-         *               <p>
          *               戻り値は複数回の呼び出しで同一でなければならない. <br>
-         *               すなわち, 次が必ず {@code true} でなければならない.
-         *               </p>
-         *               <blockquote>
+         *               すなわち,
          *               {@code this.zero() == this.zero()}
-         *               </blockquote>
+         *               が必ず {@code true} でなければならない.
          * 
          * @return 加法単位元
          */
@@ -452,13 +535,9 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
          * 乗法単位元 (1) を返す.
          * 
          * @implSpec
-         *               <p>
          *               戻り値は複数回の呼び出しで同一でなければならない. <br>
-         *               すなわち, 次が必ず {@code true} でなければならない.
-         *               </p>
-         *               <blockquote>
-         *               {@code this.one() == this.one()}
-         *               </blockquote>
+         *               すなわち, {@code this.one() == this.one()}
+         *               が必ず {@code true} でなければならない.
          * 
          * @return 乗法単位元
          */
@@ -469,17 +548,173 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
          * 配列は {@code null} 埋めされている. <br>
          * 長さは0以上でなければならない.
          * 
+         * <p>
+         * 配列は共変であるが, このメソッドは厳密に {@code T} 型の配列を返す.
+         * </p>
+         * 
          * @implSpec
+         *               バインドされた型 {@code T} に厳密に一致する要素型を持つ配列を返さなければならない.
+         * 
+         *               <p>
          *               おそらく, 次のような実装であろう
          *               (ただし, {@code T} は具象型とする).
-         *               <blockquote>
-         *               {@code return new T[length];}
-         *               </blockquote>
+         *               </p>
+         * 
+         *               <pre>
+         * public T[] createArray(int length){
+         *     return new T[length];
+         * }
+         * </pre>
          * 
          * @param length 配列の長さ
          * @return 長さ {@code length} の {@code T} 型の配列
          * @throws NegativeArraySizeException lengthが0以上でないの場合
          */
         public abstract T[] createArray(int length);
+    }
+
+    /**
+     * {@link Provider} よりも型安全な,
+     * 体に対する値のプロバイダ.
+     * 
+     * <p>
+     * {@link TypeProvider} は {@link Provider} の骨格実装としての役割以外に,
+     * 型として扱うことの役割をになっている. <br>
+     * {@link TypeProvider} のサブタイプは, {@link Provider} 型としてでなく,
+     * {@link TypeProvider} 型として扱うことが推奨される.
+     * </p>
+     * 
+     * @param <T> 体の元を表す型
+     */
+    public static abstract class TypeProvider<T extends PseudoRealNumber<T>>
+            implements Provider<T> {
+
+        private final Class<T> elementType;
+        private final Class<T[]> arrayType;
+
+        /**
+         * 唯一のコンストラクタ. <br>
+         * 型パラメータ {@code T} の型トークンを渡し,
+         * 厳密な型安全性を実現する.
+         * 
+         * @param elementType 型パラメータ {@code T} の型トークン
+         * @throws NullPointerException 引数が null の場合
+         */
+        protected TypeProvider(Class<T> elementType) {
+            this.elementType = Objects.requireNonNull(elementType);
+
+            // このキャストは必ず成功する
+            @SuppressWarnings("unchecked")
+            Class<T[]> arrayType = (Class<T[]>) elementType.arrayType();
+            this.arrayType = arrayType;
+        }
+
+        /**
+         * 与えた {@code double} 値と同等の体の元を返す.
+         * 
+         * <p>
+         * 無限大, NaNが与えられた場合, かつその場合のみ例外がスローされる.
+         * </p>
+         * 
+         * @param value 値
+         * @return 体の元
+         * @throws IllegalArgumentException valueが無限大またはNaNの場合
+         */
+        @Override
+        public abstract T fromDoubleValue(double value);
+
+        /**
+         * 加法単位元 (0) を返す.
+         * 
+         * @implSpec
+         *               戻り値は複数回の呼び出しで同一でなければならない. <br>
+         *               すなわち,
+         *               {@code this.zero() == this.zero()}
+         *               が必ず {@code true} でなければならない.
+         * 
+         * @return 加法単位元
+         */
+        @Override
+        public abstract T zero();
+
+        /**
+         * 乗法単位元 (1) を返す.
+         * 
+         * @implSpec
+         *               戻り値は複数回の呼び出しで同一でなければならない. <br>
+         *               すなわち, {@code this.one() == this.one()}
+         *               が必ず {@code true} でなければならない.
+         * 
+         * @return 乗法単位元
+         */
+        @Override
+        public abstract T one();
+
+        /**
+         * 指定した長さの {@code T} 型の配列を返す. <br>
+         * 配列は {@code null} 埋めされている. <br>
+         * 長さは0以上でなければならない.
+         * 
+         * <p>
+         * 配列は共変であるが, このメソッドは厳密に {@code T} 型の配列を返す.
+         * </p>
+         * 
+         * @param length 配列の長さ
+         * @return 長さ {@code length} の {@code T} 型の配列
+         * @throws NegativeArraySizeException lengthが0以上でないの場合
+         */
+        @Override
+        public final T[] createArray(int length) {
+            // このキャストは必ず成功する
+            return arrayType.cast(Array.newInstance(elementType, length));
+        }
+
+        /**
+         * {@link Provider} から {@link TypeProvider} を生成するためのアダプター.
+         * 
+         * <p>
+         * このアダプターで実行される型チェックは厳密でない. <br>
+         * したがって, ここで例外がスローしなかった場合に, 後で
+         * {@link ArrayStoreException} が生じる可能性がある. <br>
+         * 可能な限り, {@link TypeProvider} を直接継承することが強く推奨される.
+         * </p>
+         * 
+         * @param <T> 体の元を表す型
+         * @param provider プロバイダ
+         * @return {@link TypeProvider} に変換されたプロバイダ
+         * @throws ClassCastException
+         *             {@link Provider#createArray(int)} によって返される配列が,
+         *             {@code T} の狭義サブタイプである場合 (ただし, 必ずスローするとは限らない)
+         * @throws NullPointerException 引数が nullの場合
+         */
+        public static <T extends PseudoRealNumber<T>>
+                TypeProvider<T> from(Provider<T> provider) {
+
+            // サイズ0配列を生成し, クラスオブジェクトを取得する.
+            @SuppressWarnings("unchecked")
+            Class<T> elementType = (Class<T>) provider.createArray(0).getClass().componentType();
+
+            // 正しい型かどうか, インスタンスをキャストすることで確かめる.
+            elementType.cast(provider.zero());
+            elementType.cast(provider.one());
+
+            return new TypeProvider<>(elementType) {
+
+                @Override
+                public T fromDoubleValue(double value) {
+                    return provider.fromDoubleValue(value);
+                }
+
+                @Override
+                public T zero() {
+                    return provider.zero();
+                }
+
+                @Override
+                public T one() {
+                    return provider.one();
+                }
+            };
+        }
     }
 }
