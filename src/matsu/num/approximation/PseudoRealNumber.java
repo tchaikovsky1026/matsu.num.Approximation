@@ -670,10 +670,13 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
         }
 
         /**
-         * {@link Provider} から{@link TypeProvider} を生成するためのアダプター.
+         * {@link Provider} から {@link TypeProvider} を生成するためのアダプター.
          * 
          * <p>
-         * 本来は, {@link TypeProvider} を直接実装することが好ましい.
+         * このアダプターで実行される型チェックは厳密でない. <br>
+         * したがって, ここで例外がスローしなかった場合に, 後で
+         * {@link ArrayStoreException} が生じる可能性がある. <br>
+         * 可能であるならば, {@link TypeProvider} を直接継承することが強く推奨される.
          * </p>
          * 
          * @param <T> 体の元を表す型
@@ -681,7 +684,8 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
          * @return {@link TypeProvider} に変換されたプロバイダ
          * @throws ClassCastException
          *             {@link Provider#createArray(int)} によって返される配列が,
-         *             {@code T} の狭義サブタイプである場合
+         *             {@code T} の狭義サブタイプである場合 (ただし, 必ずスローするとは限らない)
+         * @throws NullPointerException 引数が nullの場合
          */
         public static <T extends PseudoRealNumber<T>>
                 TypeProvider<T> from(Provider<T> provider) {
@@ -692,6 +696,7 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
 
             // 正しい型かどうか, インスタンスをキャストすることで確かめる.
             elementType.cast(provider.zero());
+            elementType.cast(provider.one());
 
             return new TypeProvider<>(elementType) {
 
