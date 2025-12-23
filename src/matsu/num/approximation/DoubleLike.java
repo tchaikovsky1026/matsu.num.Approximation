@@ -30,8 +30,8 @@ public final class DoubleLike extends PseudoRealNumber<DoubleLike> {
     /**
      * {@link DoubleLike} の元のプロバイダ.
      */
-    private static final PseudoRealNumber.Provider<DoubleLike> PROVIDER =
-            new DoubleLike.Provider();
+    private static final PseudoRealNumber.TypeProvider<DoubleLike> TYPE_PROVIDER =
+            new DoubleLike.TypeProvider();
 
     /**
      * 0を表す.
@@ -77,8 +77,8 @@ public final class DoubleLike extends PseudoRealNumber<DoubleLike> {
      * @return -
      */
     @Override
-    protected PseudoRealNumber.Provider<DoubleLike> provider() {
-        return PROVIDER;
+    protected PseudoRealNumber.TypeProvider<DoubleLike> typeProvider() {
+        return TYPE_PROVIDER;
     }
 
     /**
@@ -215,20 +215,34 @@ public final class DoubleLike extends PseudoRealNumber<DoubleLike> {
     /**
      * {@link DoubleLike} の元のプロバイダを返す.
      * 
+     * <p>
+     * このメソッドは将来非推奨になり, 削除される可能性がある. <br>
+     * {@link #elementTypeProvider()} が代替となる.
+     * </p>
+     * 
      * @return プロバイダ
      */
     public static PseudoRealNumber.Provider<DoubleLike> elementProvider() {
-        return PROVIDER;
+        return TYPE_PROVIDER;
     }
 
-    private static final class Provider
-            implements PseudoRealNumber.Provider<DoubleLike> {
+    /**
+     * {@link DoubleLike} の元のプロバイダを返す.
+     * 
+     * @return プロバイダ
+     */
+    public static PseudoRealNumber.TypeProvider<DoubleLike> elementTypeProvider() {
+        return TYPE_PROVIDER;
+    }
+
+    private static final class TypeProvider
+            extends PseudoRealNumber.TypeProvider<DoubleLike> {
 
         /**
          * 唯一のコンストラクタ.
          */
-        Provider() {
-            super();
+        TypeProvider() {
+            super(DoubleLike.class);
         }
 
         @Override
@@ -244,11 +258,6 @@ public final class DoubleLike extends PseudoRealNumber<DoubleLike> {
         @Override
         public DoubleLike fromDoubleValue(double value) {
             return new DoubleLike(value);
-        }
-
-        @Override
-        public DoubleLike[] createArray(int length) {
-            return new DoubleLike[length];
         }
     }
 }

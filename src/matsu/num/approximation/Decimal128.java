@@ -19,8 +19,9 @@ import java.math.MathContext;
  */
 public final class Decimal128 extends PseudoRealNumber<Decimal128> {
 
-    private static final PseudoRealNumber.Provider<Decimal128> PROVIDER =
-            new Decimal128.Provider();
+    private static final PseudoRealNumber.TypeProvider<Decimal128> TYPE_PROVIDER =
+            new Decimal128.TypeProvider();
+
     private static final Decimal128 ZERO = new Decimal128(0d);
     private static final Decimal128 ONE = new Decimal128(1d);
 
@@ -73,8 +74,8 @@ public final class Decimal128 extends PseudoRealNumber<Decimal128> {
      * @return -
      */
     @Override
-    protected PseudoRealNumber.Provider<Decimal128> provider() {
-        return PROVIDER;
+    protected PseudoRealNumber.TypeProvider<Decimal128> typeProvider() {
+        return TYPE_PROVIDER;
     }
 
     /**
@@ -213,20 +214,34 @@ public final class Decimal128 extends PseudoRealNumber<Decimal128> {
     /**
      * {@link Decimal128} の元のプロバイダを返す.
      * 
+     * <p>
+     * このメソッドは将来非推奨になり, 削除される可能性がある. <br>
+     * {@link #elementTypeProvider()} が代替となる.
+     * </p>
+     * 
      * @return プロバイダ
      */
     public static PseudoRealNumber.Provider<Decimal128> elementProvider() {
-        return PROVIDER;
+        return TYPE_PROVIDER;
     }
 
-    private static final class Provider
-            implements PseudoRealNumber.Provider<Decimal128> {
+    /**
+     * {@link Decimal128} の元のプロバイダを返す.
+     * 
+     * @return プロバイダ
+     */
+    public static PseudoRealNumber.TypeProvider<Decimal128> elementTypeProvider() {
+        return TYPE_PROVIDER;
+    }
+
+    private static final class TypeProvider
+            extends PseudoRealNumber.TypeProvider<Decimal128> {
 
         /**
          * 唯一のコンストラクタ.
          */
-        Provider() {
-            super();
+        TypeProvider() {
+            super(Decimal128.class);
         }
 
         @Override
@@ -242,11 +257,6 @@ public final class Decimal128 extends PseudoRealNumber<Decimal128> {
         @Override
         public Decimal128 one() {
             return ONE;
-        }
-
-        @Override
-        public Decimal128[] createArray(int length) {
-            return new Decimal128[length];
         }
     }
 }

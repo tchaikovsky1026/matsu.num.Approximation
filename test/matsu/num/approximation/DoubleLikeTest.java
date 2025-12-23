@@ -17,7 +17,7 @@ import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 
-import matsu.num.approximation.PseudoRealNumber.Provider;
+import matsu.num.approximation.PseudoRealNumber.TypeProvider;
 
 /**
  * {@link DoubleLikeTest} クラスのテスト.
@@ -27,7 +27,7 @@ final class DoubleLikeTest {
 
     public static final Class<?> TEST_CLASS = DoubleLike.class;
 
-    private static final Provider<DoubleLike> ELEMENT_PROVIDER = DoubleLike.elementProvider();
+    private static final TypeProvider<DoubleLike> ELEMENT_PROVIDER = DoubleLike.elementTypeProvider();
 
     public static class 生成のテスト {
 
@@ -51,6 +51,13 @@ final class DoubleLikeTest {
         @Test(expected = IllegalArgumentException.class)
         public void test_NaNはIAEx() {
             ELEMENT_PROVIDER.fromDoubleValue(Double.NaN);
+        }
+
+        @Test
+        public void test_配列の型を検証() {
+            assertThat(
+                    ELEMENT_PROVIDER.createArray(0).getClass().getComponentType(),
+                    is(DoubleLike.class));
         }
     }
 
