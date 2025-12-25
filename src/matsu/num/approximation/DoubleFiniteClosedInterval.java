@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.12.25
+ * 2025.12.25
  */
 package matsu.num.approximation;
 
@@ -33,7 +33,7 @@ package matsu.num.approximation;
  * により事前検証すべきである.
  * </p>
  *
- * @author Matsuura, Y.
+ * @author Matsuura Y.
  */
 public final class DoubleFiniteClosedInterval {
 
@@ -104,10 +104,7 @@ public final class DoubleFiniteClosedInterval {
     }
 
     /**
-     * 与えられたインスタンスと自身との等価性を判定する.
-     * 
-     * @param obj 比較対象
-     * @return 等価の場合はtrue
+     * 与えられたインスタンスとの等価性を判定する.
      */
     @Override
     public boolean equals(Object obj) {
@@ -122,9 +119,7 @@ public final class DoubleFiniteClosedInterval {
     }
 
     /**
-     * 自身のハッシュコードを返す.
-     * 
-     * @return ハッシュコード
+     * このインスタンスのハッシュコードを返す.
      */
     @Override
     public int hashCode() {
@@ -133,8 +128,6 @@ public final class DoubleFiniteClosedInterval {
 
     /**
      * ハッシュコードを計算する.
-     * 
-     * @return ハッシュコード
      */
     private int calcHashCode() {
         int result = 1;
@@ -151,8 +144,6 @@ public final class DoubleFiniteClosedInterval {
      * おそらく次のような形式だろう. <br>
      * {@code [%lower, %upper]}
      * </p>
-     * 
-     * @return 文字列表現
      */
     @Override
     public String toString() {
@@ -200,7 +191,7 @@ public final class DoubleFiniteClosedInterval {
     public static DoubleFiniteClosedInterval from(double x1, double x2) {
         if (!acceptsBoundaryValues(x1, x2)) {
             throw new IllegalArgumentException(
-                    String.format("値が不適である: x1 = %s, x2 = %s", x1, x2));
+                    String.format("not accepted: x1 = %s, x2 = %s", x1, x2));
         }
 
         double min;

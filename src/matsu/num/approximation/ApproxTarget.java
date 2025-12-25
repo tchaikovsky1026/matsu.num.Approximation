@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2025.12.23
+ * 2025.12.25
  */
 package matsu.num.approximation;
 
@@ -32,7 +32,9 @@ import matsu.num.approximation.PseudoRealNumber.TypeProvider;
  * 実数は {@link PseudoRealNumber} のサブタイプ {@code T} として表現される. <br>
  * 区間内において, <i>f</i>は有限の値を返し,
  * <i>s</i><sub><i>f</i></sub>は有限かつ正の値を返す. <br>
- * 値が返せない場合は {@link ArithmeticException} をスローことになるが, 近似には失敗するだろう.
+ * 値が返せない場合は {@link ArithmeticException} をスローことになるが, 近似には失敗するだろう. <br>
+ * 近似計算を安定させるには,
+ * <i>s</i><sub><i>f</i></sub> が穏やかに変化することが望ましい.
  * </p>
  * 
  * <p>
@@ -80,8 +82,7 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
      */
     public final T value(T x) {
         if (!this.accepts(x)) {
-            throw new IllegalArgumentException(
-                    String.format("範囲外: %s", x));
+            throw new IllegalArgumentException("out of range: x = " + x);
         }
 
         return this.calcValue(x);
@@ -125,12 +126,12 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
      */
     public final T scale(T x) {
         if (!this.accepts(x)) {
-            throw new IllegalArgumentException("範囲外");
+            throw new IllegalArgumentException("out of range: x = " + x);
         }
 
         T out = this.calcScale(x);
         if (out.compareTo(this.elementTypeProvider().zero()) <= 0) {
-            throw new ArithmeticException("スケールの値が正でない");
+            throw new ArithmeticException("cannot calculate scale at x = " + x);
         }
         return out;
     }
@@ -176,11 +177,10 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
      * 自身が定義された閉区間 [<i>a</i>, <i>b</i>] を返す.
      * 
      * @implSpec
-     *               このプロバイダにより返されるインスタンスは複数回の呼び出しで同一でなければならない. <br>
-     *               すなわち, 次が必ず {@code true} でなければならない.
-     *               <blockquote>
+     *               返されるインスタンスは複数回の呼び出しで同一でなければならない. <br>
+     *               すなわち,
      *               {@code this.interval() == this.interval()}
-     *               </blockquote>
+     *               が必ず {@code true} でなければならない.
      * 
      * @return 区間
      */
@@ -196,10 +196,9 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
      * 
      * @implSpec
      *               このプロバイダにより返されるインスタンスは複数回の呼び出しで同一でなければならない. <br>
-     *               すなわち, 次が必ず {@code true} でなければならない.
-     *               <blockquote>
+     *               すなわち,
      *               {@code this.elementProvider() == this.elementProvider()}
-     *               </blockquote>
+     *               が必ず {@code true} でなければならない.
      * 
      *               <p>
      *               {@link #elementTypeProvider()} をオーバーライドできる場合,
@@ -247,10 +246,9 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
      * 
      * @implSpec
      *               このプロバイダにより返されるインスタンスは複数回の呼び出しで同一でなければならない. <br>
-     *               すなわち, 次が必ず {@code true} でなければならない.
-     *               <blockquote>
+     *               すなわち,
      *               {@code this.elementTypeProvider() == this.elementTypeProvider()}
-     *               </blockquote>
+     *               が必ず {@code true} でなければならない.
      * 
      *               <p>
      *               このメソッドをオーバーライドできる場合,
@@ -292,6 +290,8 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
      */
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + ": anonymous";
+        return this.getClass() == ApproxTarget.class
+                ? this.getClass().getSimpleName() + ": anonymous"
+                : this.getClass().getSimpleName();
     }
 }

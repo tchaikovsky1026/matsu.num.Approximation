@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.10.21
+ * 2025.12.25
  */
 package matsu.num.approximation;
 
@@ -215,7 +215,7 @@ public abstract class ApproxResult<T> {
 
         @Override
         T getInner() {
-            throw new AssertionError("Bug: 到達不能のはず");
+            throw new AssertionError("unreachable");
         }
 
         @Override
