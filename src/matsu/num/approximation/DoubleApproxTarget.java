@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2025.6.23
+ * 2025.12.25
  */
 package matsu.num.approximation;
 
@@ -27,7 +27,9 @@ package matsu.num.approximation;
  * 実数は {@code double} 値として表現される. <br>
  * 区間内において, <i>f</i>は有限の値を返し,
  * <i>s</i><sub><i>f</i></sub>は有限かつ正の値を返す. <br>
- * 値が返せない場合は NaN を返しても良いが, 近似には失敗するだろう.
+ * 値が返せない場合は NaN を返しても良いが, 近似には失敗するだろう. <br>
+ * 近似計算を安定させるには,
+ * <i>s</i><sub><i>f</i></sub> が穏やかに変化することが望ましい.
  * </p>
  * 
  * <p>
@@ -57,7 +59,7 @@ public abstract class DoubleApproxTarget {
      */
     public final double value(double x) {
         if (!this.accepts(x)) {
-            throw new IllegalArgumentException("範囲外");
+            throw new IllegalArgumentException("out of range: x = " + x);
         }
 
         double out = this.calcValue(x);
@@ -99,7 +101,7 @@ public abstract class DoubleApproxTarget {
      */
     public final double scale(double x) {
         if (!this.accepts(x)) {
-            throw new IllegalArgumentException("範囲外");
+            throw new IllegalArgumentException("out of range: x = " + x);
         }
 
         double out = this.calcScale(x);
@@ -139,17 +141,23 @@ public abstract class DoubleApproxTarget {
     /**
      * 自身が定義された閉区間 [<i>a</i>, <i>b</i>] を返す.
      * 
+     * @implSpec
+     *               返されるインスタンスは複数回の呼び出しで同一でなければならない. <br>
+     *               すなわち,
+     *               {@code this.interval() == this.interval()}
+     *               が必ず {@code true} でなければならない.
+     * 
      * @return 区間
      */
     public abstract DoubleFiniteClosedInterval interval();
 
     /**
      * このインスタンスの文字列表現を返す.
-     * 
-     * @return 文字列表現
      */
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + ": anonymous";
+        return this.getClass() == DoubleApproxTarget.class
+                ? this.getClass().getSimpleName() + ": anonymous"
+                : this.getClass().getSimpleName();
     }
 }
