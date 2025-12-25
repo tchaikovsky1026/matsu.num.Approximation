@@ -14,7 +14,7 @@
  * </p>
  * 
  * @author Matsuura Y.
- * @version 24.2.0
+ * @version 24.2.1
  */
 module matsu.num.Approximation {
 
