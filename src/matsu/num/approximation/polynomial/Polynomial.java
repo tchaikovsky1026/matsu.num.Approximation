@@ -75,10 +75,12 @@ public interface Polynomial<T extends PseudoRealNumber<T>> {
     /**
      * このターゲットが扱う体の元に関するプロバイダを返す.
      * 
+     * <p>
+     * このメソッドは将来非推奨になり, 削除される可能性がある. <br>
+     * このインターフェースにおいて不要な要素であるので, 代替はない.
+     * </p>
+     * 
      * @return 体の元に関するプロバイダ
-     * @deprecated
-     *                 このメソッドはこのインターフェースにおいて不要な要素であり, 将来的に削除される.
      */
-    @Deprecated(forRemoval = true)
     public abstract PseudoRealNumber.Provider<T> elementProvider();
 }
