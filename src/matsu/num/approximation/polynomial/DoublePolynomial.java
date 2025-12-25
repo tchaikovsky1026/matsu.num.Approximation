@@ -5,20 +5,19 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2025.12.23
+ * 2025.12.25
  */
 package matsu.num.approximation.polynomial;
 
 /**
- * <p>
  * {@code double} 型で表現された実数体に関する多項式関数を表現するインターフェース. <br>
  * <i>p</i>: &#x211D; &rarr; &#x211D; <br>
  * <i>p</i>(<i>x</i>) =
  * <i>a</i><sub>0</sub> +
  * <i>a</i><sub>1</sub><i>x</i> + &sdot;&sdot;&sdot; +
  * <i>a</i><sub><i>n</i></sub><i>x</i><sup><i>n</i></sup> <br>
- * <i>n</i> は多項式の次数.
- * </p>
+ * <i>n</i> は多項式の次数. <br>
+ * ただし, <i>a</i><sub><i>n</i></sub> &ne; 0 は保証されない.
  * 
  * <p>
  * 実数は {@code double} 値として表現される.
@@ -63,7 +62,7 @@ public interface DoublePolynomial {
      * <i>a</i><sub>1</sub>, ... ,
      * <i>a</i><sub><i>n</i></sub>
      * }
-     * を返す.
+     * を配列として返す.
      *
      * @return 多項式の係数
      */
