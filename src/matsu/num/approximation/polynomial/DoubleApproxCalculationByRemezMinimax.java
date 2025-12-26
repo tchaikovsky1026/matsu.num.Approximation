@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.12.26
+ * 2025.12.26
  */
 package matsu.num.approximation.polynomial;
 
@@ -172,7 +172,7 @@ final class DoubleApproxCalculationByRemezMinimax {
                 sum += (i & 1) == 0 ? err : -err;
             }
             if (!Double.isFinite(sum)) {
-                throw new ApproximationFailedException("近似誤差が適切に計算できない");
+                throw new ApproximationFailedException("approx error cannot be calculated appropriately");
             }
 
             return sum >= 0;

@@ -63,7 +63,7 @@ public final class ApproximationError {
         double scale = this.target.scale(x);
         double out = delta / scale;
         if (!(Double.isFinite(out))) {
-            throw new ApproximationFailedException("計算に失敗");
+            throw new ApproximationFailedException("failure");
         }
         return out;
     }

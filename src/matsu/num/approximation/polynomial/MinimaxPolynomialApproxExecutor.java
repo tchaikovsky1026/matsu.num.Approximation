@@ -66,7 +66,7 @@ public final class MinimaxPolynomialApproxExecutor {
     private MinimaxPolynomialApproxExecutor(int order) {
         if (!(LOWER_LIMIT_OF_ORDER <= order &&
                 order <= UPPER_LIMIT_OF_ORDER)) {
-            throw new IllegalArgumentException("次数が不適");
+            throw new IllegalArgumentException("invalid order");
         }
         this.order = order;
     }
@@ -107,7 +107,7 @@ public final class MinimaxPolynomialApproxExecutor {
 
             return ApproxResult.of(calc.getResult());
         } catch (ArithmeticException ae) {
-            return ApproxResult.failed("計算が破綻: おそらくターゲットが極端な値をとる");
+            return ApproxResult.failed("failure: extreme value in target function (probably)");
         }
     }
 

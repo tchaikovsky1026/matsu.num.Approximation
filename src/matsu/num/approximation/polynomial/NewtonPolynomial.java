@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2025.12.23
+ * 2025.12.26
  */
 package matsu.num.approximation.polynomial;
 
@@ -192,8 +192,8 @@ final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements Polynomia
     private static <T extends PseudoRealNumber<T>> NewtonPolynomial<T> construct(
             T[] node, T[] value, PseudoRealNumber.TypeProvider<T> elementTypeProvider) {
 
-        assert node.length == value.length : "サイズが整合しない";
-        assert node.length > 0 : "サイズ0";
+        assert node.length == value.length : "mismatch size";
+        assert node.length > 0 : "size 0";
 
         NewtonCoefficientCalc<T> calc =
                 new NewtonCoefficientCalc<>(node, value, elementTypeProvider);

@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.12.28
+ * 2025.12.26
  */
 package matsu.num.approximation.polynomial;
 
@@ -46,13 +46,13 @@ final class RemezTypeDoublePolynomialFactory {
      * @throws NullPointerException null
      */
     DoublePolynomial create(double[] node) throws ApproximationFailedException {
-        assert node.length >= 2 : "ノード数が2未満";
+        assert node.length >= 2 : "node.length is less than 2";
 
         //ノードを検証し,ソートする
         node = node.clone();
         Arrays.sort(node);
 
-        assert Arrays.stream(node).allMatch(this.target::accepts) : "ノードが定義域内でない";
+        assert Arrays.stream(node).allMatch(this.target::accepts) : "node is out of range";
 
         double[] thinnedNode = Arrays.copyOf(node, node.length - 1);
 
@@ -64,7 +64,7 @@ final class RemezTypeDoublePolynomialFactory {
         for (int i = 0; i < f.length; i++) {
             double v = this.target.value(thinnedNode[i]);
             if (!Double.isFinite(v)) {
-                throw new ApproximationFailedException("valueが不正");
+                throw new ApproximationFailedException("invalid value");
             }
             f[i] = v;
         }
@@ -78,7 +78,7 @@ final class RemezTypeDoublePolynomialFactory {
         for (int i = 0; i < alternateError.length; i++) {
             double scale = this.target.scale(thinnedNode[i]);
             if (!(Double.isFinite(scale))) {
-                throw new ApproximationFailedException("scaleが不正");
+                throw new ApproximationFailedException("invalid scale");
             }
             alternateError[i] = (i & 1) == 1 ? -scale : scale;
         }
@@ -92,7 +92,7 @@ final class RemezTypeDoublePolynomialFactory {
         double e = (p1.value(x_last) - this.target.value(x_last)) /
                 (p2.value(x_last) - sign_scale);
         if (!(Double.isFinite(e))) {
-            throw new ApproximationFailedException("誤差の値が不正");
+            throw new ApproximationFailedException("error value is invalid");
         }
 
         for (int i = 0; i < f.length; i++) {
