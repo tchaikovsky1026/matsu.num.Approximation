@@ -12,8 +12,8 @@ package matsu.num.approximation.polynomial;
 import java.util.Objects;
 
 import matsu.num.approximation.DoubleApproxTarget;
-import matsu.num.approximation.component.DoubleApproximationErrorCalc;
 import matsu.num.approximation.component.ApproximationFailedException;
+import matsu.num.approximation.component.DoubleApproximationErrorCalc;
 
 /**
  * 多項式関数による近似の計算処理を扱う. <br>
@@ -84,9 +84,7 @@ final class DoubleApproxCalculationByRemezMinimax {
         }
 
         /**
-         * <p>
          * 1回のイテレーションを行う.
-         * </p>
          * 
          * <p>
          * 初期状態: ノードを保持している. <br>
@@ -109,7 +107,8 @@ final class DoubleApproxCalculationByRemezMinimax {
             DoublePolynomial remezPolynomial = remezPolynomialFactory.create(node);
             DoubleApproximationErrorCalc error = new DoubleApproximationErrorCalc(target, remezPolynomial::value);
 
-            //近似誤差の分布を表す
+            // 近似誤差の分布を表す
+            // ここで例外が発生する可能性
             boolean err_sign_is_positive = this.errSignIsPositive(error);
 
             //端を除くノードをわずかに動かす処理
