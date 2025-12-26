@@ -280,9 +280,11 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
             if (Objects.isNull(wrapped)) {
                 throw new AssertionError(OVERRIDE_ASSERTION_ERROR_MESSAGE);
             }
-            out = TypeProvider.from(wrapped);
-            typeProvider = out;
-            return out;
+
+            @SuppressWarnings("deprecation")
+            TypeProvider<T> adapted = TypeProvider.from(wrapped);
+            typeProvider = adapted;
+            return adapted;
         }
     }
 

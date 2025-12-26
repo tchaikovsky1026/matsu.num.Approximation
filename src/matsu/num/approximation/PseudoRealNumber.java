@@ -668,6 +668,11 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
          * 可能な限り, {@link TypeProvider} を直接継承することが強く推奨される.
          * </p>
          * 
+         * <p>
+         * 将来的に {@link Provider} が廃止された場合,
+         * このアダプターメソッドは同時に廃止となる.
+         * </p>
+         * 
          * @param <T> 体の元を表す型
          * @param provider プロバイダ
          * @return {@link TypeProvider} に変換されたプロバイダ
@@ -675,7 +680,9 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
          *             {@link Provider#createArray(int)} によって返される配列が,
          *             {@code T} の狭義サブタイプである場合 (ただし, 必ずスローするとは限らない)
          * @throws NullPointerException 引数が nullの場合
+         * @deprecated 将来の削除に向けて, 非推奨とする.
          */
+        @Deprecated
         public static <T extends PseudoRealNumber<T>>
                 TypeProvider<T> from(Provider<T> provider) {
 
