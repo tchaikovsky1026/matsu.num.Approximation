@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2025.12.23
+ * 2025.12.26
  */
 package matsu.num.approximation.polynomial;
 
@@ -44,13 +44,13 @@ final class RemezTypePolynomialFactory<T extends PseudoRealNumber<T>> {
      * @throws ArithmeticException 計算が破綻して多項式の生成に失敗する場合 (ノードが接近しすぎる場合を含む)
      */
     Polynomial<T> create(T[] node) {
-        assert node.length >= 2 : "ノード数が2未満";
+        assert node.length >= 2 : "node.length is less than 2";
 
         //ノードを検証し,ソートする
         node = node.clone();
         Arrays.sort(node);
 
-        assert Arrays.stream(node).allMatch(this.target::accepts) : "ノードが定義域内でない";
+        assert Arrays.stream(node).allMatch(this.target::accepts) : "node is out of range";
 
         T[] thinnedNode = Arrays.copyOf(node, node.length - 1);
 

@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.10.24
+ * 2025.12.26
  */
 package matsu.num.approximation.polynomial;
 
@@ -96,7 +96,7 @@ final class DoubleNewtonPolynomial implements DoublePolynomial {
         }
 
         if (!Arrays.stream(polyCoeff).allMatch(Double::isFinite)) {
-            throw new ApproximationFailedException("多項式係数が不正");
+            throw new ApproximationFailedException("invalid coefficients");
         }
 
         return polyCoeff;
@@ -117,10 +117,10 @@ final class DoubleNewtonPolynomial implements DoublePolynomial {
         node = node.clone();
         value = value.clone();
 
-        assert node.length == value.length : "サイズが整合しない";
-        assert node.length > 0 : "サイズ0";
+        assert node.length == value.length : "mismatch size";
+        assert node.length > 0 : "size 0";
         assert Arrays.stream(node).allMatch(Double::isFinite)
-                && Arrays.stream(value).allMatch(Double::isFinite) : "不正な値を含む";
+                && Arrays.stream(value).allMatch(Double::isFinite) : "including invalid values";
 
         return new DoubleNewtonPolynomial(node, new NewtonCoefficientCalc(node, value).calcAndGet());
     }
