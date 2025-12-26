@@ -144,8 +144,7 @@ final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements Polynomia
             T[] node, T[] value, PseudoRealNumber.TypeProvider<T> elementTypeProvider) {
 
         return construct(
-                node.clone(), value.clone(),
-                PseudoRealNumber.TypeProvider.from(elementTypeProvider));
+                node.clone(), value.clone(), elementTypeProvider);
     }
 
     /**
@@ -178,8 +177,7 @@ final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements Polynomia
         }
 
         return construct(
-                nodeClone, value,
-                PseudoRealNumber.TypeProvider.from(elementTypeProvider));
+                nodeClone, value, elementTypeProvider);
     }
 
     /**
