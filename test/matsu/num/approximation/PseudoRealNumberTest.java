@@ -17,7 +17,14 @@ import org.junit.runner.RunWith;
 @RunWith(Enclosed.class)
 final class PseudoRealNumberTest {
 
+    @SuppressWarnings("deprecation")
     public static class プロバイダの実装に関する {
+
+        /*
+         * Provider の脆弱性を確かめるためのテスト.
+         * Provider が削除まで意味がある.
+         * 不要になったら削除する.
+         */
 
         /**
          * 数体.

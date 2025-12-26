@@ -210,7 +210,9 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
      *               </p>
      * 
      * @return 体の元に関するプロバイダ
+     * @deprecated 将来の削除に向けて, 非推奨とする.
      */
+    @Deprecated
     public PseudoRealNumber.Provider<T> elementProvider() {
         TypeProvider<T> out = typeProvider;
         if (Objects.nonNull(out)) {
@@ -272,6 +274,7 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
                 return out;
             }
 
+            @SuppressWarnings("deprecation")
             Provider<T> wrapped = this.elementProvider();
 
             if (Objects.isNull(wrapped)) {

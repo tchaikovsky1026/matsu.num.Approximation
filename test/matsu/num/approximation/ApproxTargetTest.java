@@ -21,7 +21,13 @@ import matsu.num.approximation.PseudoRealNumber.TypeProvider;
 @RunWith(Enclosed.class)
 final class ApproxTargetTest {
 
+    @Deprecated
     public static class 実装における元プロバイダに関する_実装無し {
+
+        /*
+         * elementProvider と elementTypeProvider の両方を維持している間に意味のあるテスト.
+         * 不要になったら削除する.
+         */
 
         private static final class ApproxTargetImpl extends ApproxTarget<DoubleLike> {
 
@@ -53,7 +59,13 @@ final class ApproxTargetTest {
         }
     }
 
+    @Deprecated
     public static class 実装における元プロバイダに関する_elementProvider実装 {
+
+        /*
+         * elementProvider と elementTypeProvider の両方を維持している間に意味のあるテスト.
+         * 不要になったら削除する.
+         */
 
         private static final class ApproxTargetImpl extends ApproxTarget<DoubleLike> {
 
@@ -89,7 +101,13 @@ final class ApproxTargetTest {
         }
     }
 
+    @Deprecated
     public static class 実装における元プロバイダに関する_elementTypeProvider実装 {
+
+        /*
+         * elementProvider と elementTypeProvider の両方を維持している間に意味のあるテスト.
+         * 不要になったら削除する.
+         */
 
         private static final class ApproxTargetImpl extends ApproxTarget<DoubleLike> {
 

@@ -489,7 +489,9 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
      * </p>
      * 
      * @param <T> 体の元を表す型
+     * @deprecated 将来の削除に向けて, 非推奨とする.
      */
+    @Deprecated
     public static interface Provider<T extends PseudoRealNumber<T>> {
 
         /**

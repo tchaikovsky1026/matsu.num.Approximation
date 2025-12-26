@@ -62,7 +62,7 @@ public final class DoubleDoubleFloatRealNumber
     }
 
     @Override
-    protected PseudoRealNumber.Provider<DoubleDoubleFloatRealNumber> provider() {
+    protected TypeProvider<DoubleDoubleFloatRealNumber> typeProvider() {
         return PROVIDER;
     }
 
