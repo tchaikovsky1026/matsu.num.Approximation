@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.12.26
+ * 2025.12.26
  */
 package matsu.num.approximation;
 
@@ -60,8 +60,7 @@ public final class DoubleLike extends PseudoRealNumber<DoubleLike> {
         super();
 
         if (!Double.isFinite(value)) {
-            throw new IllegalArgumentException(
-                    String.format("扱えない値: value = %s", value));
+            throw new IllegalArgumentException("NOT accepted: value = " + value);
         }
         //-0dを回避する
         if (value == 0d) {
@@ -138,7 +137,7 @@ public final class DoubleLike extends PseudoRealNumber<DoubleLike> {
         try {
             return new DoubleLike(value);
         } catch (IllegalArgumentException iae) {
-            throw new ArithmeticException(String.format("扱えない値: value = %s", value));
+            throw new ArithmeticException("illegal operation");
         }
     }
 
@@ -257,6 +256,8 @@ public final class DoubleLike extends PseudoRealNumber<DoubleLike> {
 
         @Override
         public DoubleLike fromDoubleValue(double value) {
+            // ここで例外が発生する可能性がある
+
             return new DoubleLike(value);
         }
     }

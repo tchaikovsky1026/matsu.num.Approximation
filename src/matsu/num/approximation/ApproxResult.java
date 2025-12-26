@@ -53,7 +53,7 @@ public abstract class ApproxResult<T> {
      */
     public final T get() {
         if (this.isEmpty()) {
-            throw new NoSuchElementException("resultは空である");
+            throw new NoSuchElementException("result is empty");
         }
         return this.getInner();
     }

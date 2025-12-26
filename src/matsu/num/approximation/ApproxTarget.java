@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2025.12.25
+ * 2025.12.26
  */
 package matsu.num.approximation;
 
@@ -52,6 +52,10 @@ import matsu.num.approximation.PseudoRealNumber.TypeProvider;
  * @param <T> 体の元を表現する型パラメータ
  */
 public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
+
+    private static final String OVERRIDE_ASSERTION_ERROR_MESSAGE =
+            "require overriding elementTypeProvider() or elementProvider(), "
+                    + "and returning non-null";
 
     // 遅延初期化用のロックオブジェクト
     private final Object lock = new Object();
@@ -221,9 +225,7 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
             // 呼び出しが循環した場合にアサーションエラーをスローできるように対応
             try {
                 if (recursion) {
-                    throw new AssertionError(
-                            "require overriding elementTypeProvider() or elementProvider(), "
-                                    + "and returning non-null");
+                    throw new AssertionError(OVERRIDE_ASSERTION_ERROR_MESSAGE);
                 }
                 recursion = true;
                 out = this.elementTypeProvider();
@@ -232,9 +234,7 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
             }
 
             if (Objects.isNull(out)) {
-                throw new AssertionError(
-                        "require overriding elementTypeProvider() or elementProvider(), "
-                                + "and returning non-null");
+                throw new AssertionError(OVERRIDE_ASSERTION_ERROR_MESSAGE);
             }
             typeProvider = out;
             return out;
@@ -275,9 +275,7 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
             Provider<T> wrapped = this.elementProvider();
 
             if (Objects.isNull(wrapped)) {
-                throw new AssertionError(
-                        "require overriding elementTypeProvider() or elementProvider(), "
-                                + "and returning non-null");
+                throw new AssertionError(OVERRIDE_ASSERTION_ERROR_MESSAGE);
             }
             out = TypeProvider.from(wrapped);
             typeProvider = out;
