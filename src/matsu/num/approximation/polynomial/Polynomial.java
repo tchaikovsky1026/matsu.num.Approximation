@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2025.12.23
+ * 2025.12.25
  */
 package matsu.num.approximation.polynomial;
 
@@ -18,12 +18,13 @@ import matsu.num.approximation.PseudoRealNumber;
  * <i>a</i><sub>0</sub> +
  * <i>a</i><sub>1</sub><i>x</i> + &sdot;&sdot;&sdot; +
  * <i>a</i><sub><i>n</i></sub><i>x</i><sup><i>n</i></sup> <br>
- * <i>n</i> は多項式の次数.
+ * <i>n</i> は多項式の次数. <br>
+ * ただし, <i>a</i><sub><i>n</i></sub> &ne; 0 は保証されない.
  * 
  * <p>
  * 実数は {@link PseudoRealNumber} のサブタイプ {@code T} として表現される. <br>
- * <i>p</i>は有限の値を返すか, あるいは {@code T} で表現できない場合
- * (例えばオーバーフローした場合) は例外をスローする.
+ * <i>p</i>は有限の値を返す. <br>
+ * オーバーフロー等, {@code T} で表現できない場合は例外をスローする.
  * </p>
  * 
  * <p>
@@ -66,7 +67,7 @@ public interface Polynomial<T extends PseudoRealNumber<T>> {
      * <i>a</i><sub>1</sub>, ... ,
      * <i>a</i><sub><i>n</i></sub>
      * }
-     * を返す.
+     * を配列として返す.
      * 
      * @return 多項式の係数
      */

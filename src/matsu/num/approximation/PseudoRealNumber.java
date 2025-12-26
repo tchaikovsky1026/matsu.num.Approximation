@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2025.12.23
+ * 2025.12.25
  */
 package matsu.num.approximation;
 
@@ -139,12 +139,10 @@ import java.util.Objects;
  * 例えば, コンストラクタは次のコードになる.
  * </p>
  * 
- * <blockquote>
- * 
  * <pre>
  * T(E e) {
  *     if (!e.isFinite()) {
- *         throw new IllegalArgumentException("有限でない");
+ *         throw new IllegalArgumentException("not finite");
  *     }
  *     if (e.isZero()) {
  *         e = E.POSITIVE_0;
@@ -152,8 +150,6 @@ import java.util.Objects;
  *     this.e = e;
  * }
  * </pre>
- * 
- * </blockquote>
  * 
  * <p>
  * 上記コンストラクタにより, {@code T} のインスタンスのフィールド {@code e}
@@ -164,7 +160,7 @@ import java.util.Objects;
  * <h3>comparability, equaltity, abs, negated</h3>
  * 
  * <p>
- * 存在し得る存在し得る {@code T} 型インスタンスは正規化されているので, <br>
+ * 存在し得る {@code T} 型インスタンスは正規化されているので, <br>
  * {@code T} 型に要求される comparability は {@code E} 型の comparability に整合し, <br>
  * {@code equals} メソッド, {@code hashCode} メソッド, {@code compareTo} メソッドは
  * {@code E} 型のそれらを用いて実現できる. <br>
@@ -188,37 +184,29 @@ import java.util.Objects;
  * 例えば, 加算の場合は次のコードになる.
  * </p>
  * 
- * <blockquote>
- * 
  * <pre>
  * T plus(T augend) {
  *     E result = this.e.plus(augend.e);
  *     if(!result.isFinite(){
- *         throw new ArithmeticException("演算結果が有限でない");
+ *         throw new ArithmeticException("not finite");
  *     }
  *     return new T(result);
  * }
  * </pre>
  * 
- * </blockquote>
- * 
  * <p>
  * もしくは, 前述のコンストラクタを採用している場合, 次の例外翻訳でもよい.
  * </p>
- * 
- * <blockquote>
  * 
  * <pre>
  * T plus(T augend) {
  *     try {
  *         return new T(this.e.plus(augend.e));
  *     } catch (IllegalArgumentException iae) {
- *         throw new ArithmeticException("演算結果が有限でない");
+ *         throw new ArithmeticException("not finite");
  *     }
  * }
  * </pre>
- * 
- * </blockquote>
  * 
  * @implSpec
  *               型パラメータ {@code T} に自身型をバインドした場合,
@@ -265,11 +253,9 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
      * 
      *               <p>
      *               このプロバイダにより返されるインスタンスは複数回の呼び出しで同一でなければならない. <br>
-     *               すなわち, 次が必ず {@code true} でなければならない.
+     *               すなわち, {@code this.provider() == this.provider()}
+     *               が必ず {@code true} でなければならない.
      *               </p>
-     *               <blockquote>
-     *               {@code this.provider() == this.provider()}
-     *               </blockquote>
      * 
      *               <p>
      *               {@link #typeProvider()} をオーバーライドできる場合,
@@ -295,11 +281,10 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
      * 
      *               <p>
      *               このプロバイダにより返されるインスタンスは複数回の呼び出しで同一でなければならない. <br>
-     *               すなわち, 次が必ず {@code true} でなければならない.
-     *               </p>
-     *               <blockquote>
+     *               すなわち,
      *               {@code this.typeProvider() == this.typeProvider()}
-     *               </blockquote>
+     *               が必ず {@code true} でなければならない.
+     *               </p>
      * 
      *               <p>
      *               このメソッドをオーバーライドできる場合,
@@ -326,7 +311,9 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
                 : this.provider();
 
         if (Objects.isNull(provider)) {
-            throw new AssertionError("require overriding typeProvider() or provider()");
+            throw new AssertionError(
+                    "require overriding elementTypeProvider() or elementProvider(), "
+                            + "and returning non-null");
         }
 
         return provider.fromDoubleValue(value);
@@ -481,7 +468,7 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
     public abstract String toString();
 
     /**
-     * clone不可.
+     * clone不可, 常に例外をスローする.
      * 
      * @throws CloneNotSupportedException 常に
      */

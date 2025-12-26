@@ -9,12 +9,25 @@
  * 関数の近似を扱うモジュール.
  * 
  * <p>
+ * このモジュールの主要なパッケージは次である. <br>
+ * 詳細は各パッケージの説明文を参照すること.
+ * </p>
+ * <ul>
+ * <li>{@link matsu.num.approximation}:
+ * 関数近似のためのコンポーネントを定義するパッケージ.
+ * </li>
+ * <li>{@link matsu.num.approximation.polynomial}:
+ * 関数の多項式近似に係るインターフェース, 機能を提供するパッケージ.
+ * </li>
+ * </ul>
+ * 
+ * <p>
  * <i>依存モジュール:</i> <br>
  * (無し)
  * </p>
  * 
  * @author Matsuura Y.
- * @version 24.2.1
+ * @version 24.3.0
  */
 module matsu.num.Approximation {
 

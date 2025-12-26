@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.18
+ * 2025.12.26
  */
 package matsu.num.approximation.polynomial;
 
@@ -34,7 +34,7 @@ final class DoubleNodeCreation {
      * @throws NullPointerException null
      */
     public static double[] execute(int size, DoubleFiniteClosedInterval interval) {
-        assert size >= 2 : "sizeが不正";
+        assert size >= 2 : "invalid size";
 
         double[] out = new double[size];
         for (int i = 1; i < size - 1; i++) {

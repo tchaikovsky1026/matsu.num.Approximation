@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.12.26
+ * 2025.12.26
  */
 package matsu.num.approximation;
 
@@ -60,8 +60,7 @@ public final class Decimal128 extends PseudoRealNumber<Decimal128> {
      */
     private static BigDecimal toBigDecimal128(double value) {
         if (!Double.isFinite(value)) {
-            throw new IllegalArgumentException(
-                    String.format("扱えない値: value = %s", value));
+            throw new IllegalArgumentException("NOT accepted: value = " + value);
         }
 
         //BigDecimalは正の0と負の0を区別しないので, これでよい.
@@ -131,10 +130,12 @@ public final class Decimal128 extends PseudoRealNumber<Decimal128> {
     @Override
     public Decimal128 dividedBy(Decimal128 divisor) {
         try {
+            // 計算が破綻する可能性がある: ArithmeticException
             BigDecimal result = this.value.divide(divisor.value, MathContext.DECIMAL128);
+
             return new Decimal128(result);
         } catch (ArithmeticException ae) {
-            throw new ArithmeticException("計算結果が扱えない値");
+            throw new ArithmeticException("illegal operation");
         }
     }
 
@@ -246,6 +247,7 @@ public final class Decimal128 extends PseudoRealNumber<Decimal128> {
 
         @Override
         public Decimal128 fromDoubleValue(double value) {
+            // ここで例外をスローする可能性がある
             return new Decimal128(value);
         }
 

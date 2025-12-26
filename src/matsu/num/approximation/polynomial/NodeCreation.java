@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2025.12.23
+ * 2025.12.26
  */
 package matsu.num.approximation.polynomial;
 
@@ -40,7 +40,7 @@ final class NodeCreation {
             int size, FiniteClosedInterval<T> interval,
             PseudoRealNumber.TypeProvider<T> typeProvider) {
 
-        assert size >= 2 : "sizeが不正";
+        assert size >= 2 : "invalid size";
 
         T[] out = typeProvider.createArray(size);
 
