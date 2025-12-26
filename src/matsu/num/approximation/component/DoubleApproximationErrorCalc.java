@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2024.9.18
+ * 2025.12.26
  */
 package matsu.num.approximation.component;
 
@@ -15,9 +15,7 @@ import java.util.function.DoubleUnaryOperator;
 import matsu.num.approximation.DoubleApproxTarget;
 
 /**
- * <p>
- * 関数の近似誤差を扱う.
- * </p>
+ * {@code double} 型の関数の近似誤差を扱う.
  * 
  * <p>
  * ターゲット関数を <i>f</i>, そのスケールを
@@ -31,7 +29,7 @@ import matsu.num.approximation.DoubleApproxTarget;
  * 
  * @author Matsuura Y.
  */
-public final class ApproximationError {
+public final class DoubleApproximationErrorCalc {
 
     private final DoubleApproxTarget target;
     private final DoubleUnaryOperator approxFunction;
@@ -43,7 +41,7 @@ public final class ApproximationError {
      * @param approxFunction テスト関数
      * @throws NullPointerException 引数にnullが含まれる場合
      */
-    public ApproximationError(DoubleApproxTarget target, DoubleUnaryOperator approxFunction) {
+    public DoubleApproximationErrorCalc(DoubleApproxTarget target, DoubleUnaryOperator approxFunction) {
         this.target = Objects.requireNonNull(target);
         this.approxFunction = Objects.requireNonNull(approxFunction);
     }
@@ -63,7 +61,7 @@ public final class ApproximationError {
         double scale = this.target.scale(x);
         double out = delta / scale;
         if (!(Double.isFinite(out))) {
-            throw new ApproximationFailedException("failure");
+            throw new ApproximationFailedException("error-calc-failure");
         }
         return out;
     }

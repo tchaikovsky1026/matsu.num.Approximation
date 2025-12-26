@@ -12,7 +12,7 @@ package matsu.num.approximation.polynomial;
 import java.util.Objects;
 
 import matsu.num.approximation.DoubleApproxTarget;
-import matsu.num.approximation.component.ApproximationError;
+import matsu.num.approximation.component.DoubleApproximationErrorCalc;
 import matsu.num.approximation.component.ApproximationFailedException;
 
 /**
@@ -107,7 +107,7 @@ final class DoubleApproxCalculationByRemezMinimax {
 
             //ノードからRemez多項式を構築する
             DoublePolynomial remezPolynomial = remezPolynomialFactory.create(node);
-            ApproximationError error = new ApproximationError(target, remezPolynomial::value);
+            DoubleApproximationErrorCalc error = new DoubleApproximationErrorCalc(target, remezPolynomial::value);
 
             //近似誤差の分布を表す
             boolean err_sign_is_positive = this.errSignIsPositive(error);
@@ -165,7 +165,7 @@ final class DoubleApproxCalculationByRemezMinimax {
          * @return 正の場合はtrue
          * @throws ApproximationFailedException 近似誤差を適切に計算できない場合
          */
-        private boolean errSignIsPositive(ApproximationError error) throws ApproximationFailedException {
+        private boolean errSignIsPositive(DoubleApproximationErrorCalc error) throws ApproximationFailedException {
             double sum = 0d;
             for (int i = 0; i < node.length; i++) {
                 double err = error.value(node[i]);
