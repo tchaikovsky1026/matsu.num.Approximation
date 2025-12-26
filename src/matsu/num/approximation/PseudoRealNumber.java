@@ -263,7 +263,9 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
      *               </p>
      * 
      * @return プロバイダ
+     * @deprecated 将来の削除に向けて, 非推奨とする.
      */
+    @Deprecated
     protected Provider<T> provider() {
         return null;
     }
@@ -306,6 +308,8 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
      */
     private T fromDoubleValue(double value) {
         TypeProvider<T> typeProvider = this.typeProvider();
+
+        @SuppressWarnings("deprecation")
         Provider<T> provider = Objects.nonNull(typeProvider)
                 ? typeProvider
                 : this.provider();
@@ -685,6 +689,10 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
         @Deprecated
         public static <T extends PseudoRealNumber<T>>
                 TypeProvider<T> from(Provider<T> provider) {
+
+            if (provider instanceof TypeProvider<T> typeProvider) {
+                return typeProvider;
+            }
 
             // サイズ0配列を生成し, クラスオブジェクトを取得する.
             @SuppressWarnings("unchecked")
