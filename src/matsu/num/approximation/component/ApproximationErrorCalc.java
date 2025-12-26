@@ -1,23 +1,23 @@
 /*
- * Copyright © 2024 Matsuura Y.
+ * Copyright © 2025 Matsuura Y.
  * 
  * This software is released under the MIT License.
  * http://opensource.org/licenses/mit-license.php
  */
+
 /*
- * 2024.9.18
+ * 2025.12.26
  */
 package matsu.num.approximation.component;
 
 import java.util.Objects;
-import java.util.function.DoubleUnaryOperator;
+import java.util.function.UnaryOperator;
 
-import matsu.num.approximation.DoubleApproxTarget;
+import matsu.num.approximation.ApproxTarget;
+import matsu.num.approximation.PseudoRealNumber;
 
 /**
- * <p>
- * 関数の近似誤差を扱う.
- * </p>
+ * 任意実数型の関数の近似誤差を扱う.
  * 
  * <p>
  * ターゲット関数を <i>f</i>, そのスケールを
@@ -30,11 +30,12 @@ import matsu.num.approximation.DoubleApproxTarget;
  * </p>
  * 
  * @author Matsuura Y.
+ * @param <T> 体の元を表現する型パラメータ
  */
-public final class ApproximationError {
+public final class ApproximationErrorCalc<T extends PseudoRealNumber<T>> {
 
-    private final DoubleApproxTarget target;
-    private final DoubleUnaryOperator approxFunction;
+    private final ApproxTarget<T> target;
+    private final UnaryOperator<T> approxFunction;
 
     /**
      * ターゲット関数とテスト関数を与えて, 近似誤差評価を構築する.
@@ -43,7 +44,7 @@ public final class ApproximationError {
      * @param approxFunction テスト関数
      * @throws NullPointerException 引数にnullが含まれる場合
      */
-    public ApproximationError(DoubleApproxTarget target, DoubleUnaryOperator approxFunction) {
+    public ApproximationErrorCalc(ApproxTarget<T> target, UnaryOperator<T> approxFunction) {
         this.target = Objects.requireNonNull(target);
         this.approxFunction = Objects.requireNonNull(approxFunction);
     }
@@ -56,15 +57,19 @@ public final class ApproximationError {
      * @return 近似誤差
      * @throws IllegalArgumentException xが範囲外の場合
      * @throws ApproximationFailedException 計算に失敗した場合
+     * @throws NullPointerException 引数がnullの場合
      */
-    public double value(double x) throws ApproximationFailedException {
+    public T value(T x) throws ApproximationFailedException {
 
-        double delta = this.target.value(x) - approxFunction.applyAsDouble(x);
-        double scale = this.target.scale(x);
-        double out = delta / scale;
-        if (!(Double.isFinite(out))) {
-            throw new ApproximationFailedException("failure");
+        //xがtargetの範囲外の場合IAExが発生する
+        //計算が破綻する場合, ArithExが発生 -> 例外翻訳
+        try {
+            T delta = target.value(x).minus(approxFunction.apply(x));
+            T scale = target.scale(x);
+
+            return delta.dividedBy(scale);
+        } catch (ArithmeticException e) {
+            throw new ApproximationFailedException("error-calc-failure");
         }
-        return out;
     }
 }

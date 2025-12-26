@@ -5,13 +5,14 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2025.12.25
+ * 2025.12.26
  */
 package matsu.num.approximation.polynomial;
 
 import matsu.num.approximation.ApproxResult;
 import matsu.num.approximation.ApproxTarget;
 import matsu.num.approximation.PseudoRealNumber;
+import matsu.num.approximation.component.ApproximationFailedException;
 
 /**
  * スケーリング付きミニマックス法 (重みづけ Chebyshev ノルム最小化) による,
@@ -97,17 +98,18 @@ public final class MinimaxPolynomialApproxExecutor {
     public <T extends PseudoRealNumber<T>> ApproxResult<Polynomial<T>> apply(
             ApproxTarget<T> target) {
 
-        ApproxCalculationByRemezMinimax<T> calc =
-                new ApproxCalculationByRemezMinimax<>(target, this.order);
         try {
+            ApproxCalculationByRemezMinimax<T> calc =
+                    new ApproxCalculationByRemezMinimax<>(target, this.order);
+
             //ここで例外が発生する可能性がある.
             calc.calculate();
 
             assert this.order() == calc.getResult().degree();
 
             return ApproxResult.of(calc.getResult());
-        } catch (ArithmeticException ae) {
-            return ApproxResult.failed("failure: extreme value in target function (probably)");
+        } catch (ApproximationFailedException afe) {
+            return ApproxResult.failed(afe.failuerMessage());
         }
     }
 

@@ -10,10 +10,11 @@
 package matsu.num.approximation.polynomial;
 
 import java.util.Objects;
-import java.util.function.UnaryOperator;
 
 import matsu.num.approximation.ApproxTarget;
 import matsu.num.approximation.PseudoRealNumber;
+import matsu.num.approximation.component.ApproximationErrorCalc;
+import matsu.num.approximation.component.ApproximationFailedException;
 
 /**
  * 多項式関数による近似の計算処理を扱う. <br>
@@ -44,10 +45,7 @@ final class ApproxCalculationByRemezMinimax<T extends PseudoRealNumber<T>> {
         this.remezPolynomialFactory = new RemezTypePolynomialFactory<>(this.target);
     }
 
-    /**
-     * @throws ArithmeticException 計算が破綻した場合
-     */
-    void calculate() {
+    void calculate() throws ApproximationFailedException {
         RemezIterator remezIterator =
                 new RemezIterator(
                         NodeCreation.execute(
@@ -91,9 +89,7 @@ final class ApproxCalculationByRemezMinimax<T extends PseudoRealNumber<T>> {
         }
 
         /**
-         * <p>
          * 1回のイテレーションを行う.
-         * </p>
          * 
          * <p>
          * 初期状態: ノードを保持している. <br>
@@ -106,20 +102,22 @@ final class ApproxCalculationByRemezMinimax<T extends PseudoRealNumber<T>> {
          * </ul>
          * 
          * @param relativeDelta 1E-4から0.1の範囲
-         * @throws ArithmeticException
+         * @throws ApproximationFailedException
          */
-        void iteration(double relativeDelta) {
+        void iteration(double relativeDelta) throws ApproximationFailedException {
             assert 1E-4 <= relativeDelta;
             assert relativeDelta <= 0.1;
 
             //ノードからRemez多項式を構築する
             Polynomial<T> remezPolynomial = remezPolynomialFactory.create(node);
-            ApproximationError error = new ApproximationError(remezPolynomial::value);
+            var error = new ApproximationErrorCalc<T>(target, remezPolynomial::value);
 
-            //近似誤差の分布を表す
+            // 近似誤差の分布を表す
+            // ここで例外が発生する可能性
             boolean err_sign_is_positive = this.errSignIsPositive(error);
 
-            //端を除くノードをわずかに動かす処理
+            // 端を除くノードをわずかに動かす処理
+            // ここでは, 例外が発生しない
             T[] nextNodes = this.node.clone();
             for (int i = 0; i < node.length; i++) {
                 //偶数番目のノードはそのまま, 奇数番目のノードは反転させる
@@ -170,16 +168,21 @@ final class ApproxCalculationByRemezMinimax<T extends PseudoRealNumber<T>> {
          * 
          * @param error 近似誤差の計算
          * @return 正の場合はtrue
-         * @throws ArithmeticException
+         * @throws ApproximationFailedException 近似誤差を適切に計算できない場合
          */
-        private boolean errSignIsPositive(ApproximationError error) {
-            T sum = target.elementTypeProvider().zero();
-            for (int i = 0; i < node.length; i++) {
-                T err = error.value(node[i]);
-                sum = sum.plus((i & 1) == 0 ? err : err.negated());
-            }
+        private boolean errSignIsPositive(ApproximationErrorCalc<T> error) throws ApproximationFailedException {
 
-            return sum.compareTo(target.elementTypeProvider().zero()) > 0;
+            try {
+                T sum = target.elementTypeProvider().zero();
+                for (int i = 0; i < node.length; i++) {
+                    T err = error.value(node[i]);
+                    sum = sum.plus((i & 1) == 0 ? err : err.negated());
+                }
+
+                return sum.compareTo(target.elementTypeProvider().zero()) > 0;
+            } catch (ArithmeticException e) {
+                throw new ApproximationFailedException("approx error cannot be calculated appropriately");
+            }
         }
 
         /**
@@ -192,52 +195,4 @@ final class ApproxCalculationByRemezMinimax<T extends PseudoRealNumber<T>> {
             return remezPolynomialFactory.create(node);
         }
     }
-
-    /**
-     * <p>
-     * 関数の近似誤差を扱う.
-     * </p>
-     * 
-     * <p>
-     * ターゲット関数を <i>f</i>, そのスケールを
-     * <i>s</i><sub><i>f</i></sub>
-     * として,
-     * テスト関数 <i>h</i> の近似誤差: <br>
-     * (<i>f</i> - <i>h</i>) /
-     * <i>s</i><sub><i>f</i></sub> <br>
-     * を表す.
-     * </p>
-     */
-    private final class ApproximationError {
-
-        private final UnaryOperator<T> approxFunction;
-
-        /**
-         * ターゲット関数とテスト関数を与えて, 近似誤差評価を構築する.
-         * 
-         * @param approxFunction テスト関数
-         */
-        ApproximationError(UnaryOperator<T> approxFunction) {
-            this.approxFunction = approxFunction;
-        }
-
-        /**
-         * 与えられた <i>x</i> に対する関数の近似誤差を返す.
-         * 
-         * @param x <i>x</i>, 引数
-         * @return 近似誤差
-         * @throws IllegalArgumentException xが範囲外の場合
-         * @throws ArithmeticException 演算が破綻した場合
-         */
-        public T value(T x) {
-
-            //xがtargetの範囲外の場合, valueあるいはscaleの呼び出しでIAExが発生する
-            //計算が破綻する場合, ArithExが発生
-            T delta = target.value(x).minus(approxFunction.apply(x));
-            T scale = target.scale(x);
-
-            return delta.dividedBy(scale);
-        }
-    }
-
 }
