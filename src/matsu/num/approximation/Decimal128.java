@@ -221,7 +221,9 @@ public final class Decimal128 extends PseudoRealNumber<Decimal128> {
      * </p>
      * 
      * @return プロバイダ
+     * @deprecated 将来の削除に向けて, 非推奨とする.
      */
+    @Deprecated(since = "24.4.0")
     public static PseudoRealNumber.Provider<Decimal128> elementProvider() {
         return TYPE_PROVIDER;
     }

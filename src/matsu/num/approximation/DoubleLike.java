@@ -220,7 +220,9 @@ public final class DoubleLike extends PseudoRealNumber<DoubleLike> {
      * </p>
      * 
      * @return プロバイダ
+     * @deprecated 将来の削除に向けて, 非推奨とする.
      */
+    @Deprecated(since = "24.4.0")
     public static PseudoRealNumber.Provider<DoubleLike> elementProvider() {
         return TYPE_PROVIDER;
     }
