@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2025.12.26
+ * 2025.12.27
  */
 package matsu.num.approximation;
 
@@ -210,9 +210,8 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
      *               </p>
      * 
      * @return 体の元に関するプロバイダ
-     * @deprecated 将来の削除に向けて, 非推奨とする.
      */
-    @Deprecated(since = "24.4.0")
+    @Deprecated(since = "24.4.0", forRemoval = true)
     public PseudoRealNumber.Provider<T> elementProvider() {
         TypeProvider<T> out = typeProvider;
         if (Objects.nonNull(out)) {
@@ -274,14 +273,14 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
                 return out;
             }
 
-            @SuppressWarnings("deprecation")
+            @SuppressWarnings({ "removal", "deprecation" })
             Provider<T> wrapped = this.elementProvider();
 
             if (Objects.isNull(wrapped)) {
                 throw new AssertionError(OVERRIDE_ASSERTION_ERROR_MESSAGE);
             }
 
-            @SuppressWarnings("deprecation")
+            @SuppressWarnings("removal")
             TypeProvider<T> adapted = TypeProvider.from(wrapped);
             typeProvider = adapted;
             return adapted;

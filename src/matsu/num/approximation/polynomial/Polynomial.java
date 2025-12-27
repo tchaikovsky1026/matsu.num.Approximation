@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2025.12.25
+ * 2025.12.27
  */
 package matsu.num.approximation.polynomial;
 
@@ -82,10 +82,8 @@ public interface Polynomial<T extends PseudoRealNumber<T>> {
      * </p>
      * 
      * @return 体の元に関するプロバイダ
-     * @deprecated
-     *                 将来の削除に向けて, 非推奨とする. <br>
-     *                 このインターフェースにおいて不要な要素であるので, 代替はない.
+     * @deprecated このインターフェースにおいて不要な要素であるので, 代替はない.
      */
-    @Deprecated(since = "24.4.0")
+    @Deprecated(since = "24.4.0", forRemoval = true)
     public abstract PseudoRealNumber.Provider<T> elementProvider();
 }

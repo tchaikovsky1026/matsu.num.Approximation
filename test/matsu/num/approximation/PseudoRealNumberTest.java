@@ -128,6 +128,7 @@ final class PseudoRealNumberTest {
             }
         }
 
+        @SuppressWarnings("removal")
         @Test(expected = ClassCastException.class)
         public void test_正しいProviderでない場合はアダプターに失敗() {
             PseudoRealNumber.TypeProvider.from(new Provider());
