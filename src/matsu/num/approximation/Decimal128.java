@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2025.12.26
+ * 2025.12.27
  */
 package matsu.num.approximation;
 
@@ -221,9 +221,8 @@ public final class Decimal128 extends PseudoRealNumber<Decimal128> {
      * </p>
      * 
      * @return プロバイダ
-     * @deprecated 将来の削除に向けて, 非推奨とする.
      */
-    @Deprecated(since = "24.4.0")
+    @Deprecated(since = "24.4.0", forRemoval = true)
     public static PseudoRealNumber.Provider<Decimal128> elementProvider() {
         return TYPE_PROVIDER;
     }

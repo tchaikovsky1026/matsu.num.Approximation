@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2025.12.25
+ * 2025.12.27
  */
 package matsu.num.approximation;
 
@@ -263,9 +263,8 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
      *               </p>
      * 
      * @return プロバイダ
-     * @deprecated 将来の削除に向けて, 非推奨とする.
      */
-    @Deprecated(since = "24.4.0")
+    @Deprecated(since = "24.4.0", forRemoval = true)
     protected Provider<T> provider() {
         return null;
     }
@@ -309,7 +308,7 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
     private T fromDoubleValue(double value) {
         TypeProvider<T> typeProvider = this.typeProvider();
 
-        @SuppressWarnings("deprecation")
+        @SuppressWarnings("removal")
         Provider<T> provider = Objects.nonNull(typeProvider)
                 ? typeProvider
                 : this.provider();
@@ -493,9 +492,9 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
      * </p>
      * 
      * @param <T> 体の元を表す型
-     * @deprecated 将来の削除に向けて, 非推奨とする.
+     * @deprecated {@link TypeProvider} が代替である.
      */
-    @Deprecated(since = "24.4.0")
+    @Deprecated(since = "24.4.0", forRemoval = true)
     public static interface Provider<T extends PseudoRealNumber<T>> {
 
         /**
@@ -684,9 +683,8 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
          *             {@link Provider#createArray(int)} によって返される配列が,
          *             {@code T} の狭義サブタイプである場合 (ただし, 必ずスローするとは限らない)
          * @throws NullPointerException 引数が nullの場合
-         * @deprecated 将来の削除に向けて, 非推奨とする.
          */
-        @Deprecated(since = "24.4.0")
+        @Deprecated(since = "24.4.0", forRemoval = true)
         public static <T extends PseudoRealNumber<T>>
                 TypeProvider<T> from(Provider<T> provider) {
 
