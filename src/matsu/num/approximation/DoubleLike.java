@@ -214,21 +214,6 @@ public final class DoubleLike extends PseudoRealNumber<DoubleLike> {
     /**
      * {@link DoubleLike} の元のプロバイダを返す.
      * 
-     * <p>
-     * このメソッドは将来非推奨になり, 削除される可能性がある. <br>
-     * {@link #elementTypeProvider()} が代替となる.
-     * </p>
-     * 
-     * @return プロバイダ
-     */
-    @Deprecated(since = "24.4.0", forRemoval = true)
-    public static PseudoRealNumber.Provider<DoubleLike> elementProvider() {
-        return TYPE_PROVIDER;
-    }
-
-    /**
-     * {@link DoubleLike} の元のプロバイダを返す.
-     * 
      * @return プロバイダ
      */
     public static PseudoRealNumber.TypeProvider<DoubleLike> elementTypeProvider() {

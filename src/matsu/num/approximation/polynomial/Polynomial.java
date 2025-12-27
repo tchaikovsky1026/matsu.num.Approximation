@@ -72,18 +72,4 @@ public interface Polynomial<T extends PseudoRealNumber<T>> {
      * @return 多項式の係数
      */
     public abstract T[] coefficient();
-
-    /**
-     * このターゲットが扱う体の元に関するプロバイダを返す.
-     * 
-     * <p>
-     * このメソッドは将来非推奨になり, 削除される可能性がある. <br>
-     * このインターフェースにおいて不要な要素であるので, 代替はない.
-     * </p>
-     * 
-     * @return 体の元に関するプロバイダ
-     * @deprecated このインターフェースにおいて不要な要素であるので, 代替はない.
-     */
-    @Deprecated(since = "24.4.0", forRemoval = true)
-    public abstract PseudoRealNumber.Provider<T> elementProvider();
 }

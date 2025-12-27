@@ -9,11 +9,6 @@
  */
 package matsu.num.approximation;
 
-import java.util.Objects;
-
-import matsu.num.approximation.PseudoRealNumber.Provider;
-import matsu.num.approximation.PseudoRealNumber.TypeProvider;
-
 /**
  * 独自クラスによる実数体で表現された, 近似されるターゲット関数を扱う. <br>
  * 有限閉区間で定義された1変数関数 <i>f</i>:
@@ -42,26 +37,10 @@ import matsu.num.approximation.PseudoRealNumber.TypeProvider;
  * かつすべてのメソッドはスレッドセーフであることが保証されている.
  * </p>
  * 
- * @implSpec
- *               {@link #elementTypeProvider()} をオーバーライドしなければならない. <br>
- *               ({@link #elementTypeProvider()} または {@link #elementProvider()}
- *               のどちらかをオーバーライドすれば一応動くが,
- *               {@link #elementTypeProvider()} をオーバーライドすることを強く推奨する.)
- * 
  * @author Matsuura Y.
  * @param <T> 体の元を表現する型パラメータ
  */
 public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
-
-    private static final String OVERRIDE_ASSERTION_ERROR_MESSAGE =
-            "require overriding elementTypeProvider() or elementProvider(), "
-                    + "and returning non-null";
-
-    // 遅延初期化用のロックオブジェクト
-    private final Object lock = new Object();
-    private volatile PseudoRealNumber.TypeProvider<T> typeProvider;
-    // elementProvider() が再帰的に呼ばれた場合に検出できるようなフラグ
-    private volatile boolean recursion;
 
     /**
      * 唯一のコンストラクタ.
@@ -193,68 +172,11 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
     /**
      * このターゲットが扱う体の元に関するプロバイダを返す.
      * 
-     * <p>
-     * このメソッドは将来非推奨になり, 削除される可能性がある. <br>
-     * {@link #elementTypeProvider()} が代替となる.
-     * </p>
-     * 
-     * @implSpec
-     *               このプロバイダにより返されるインスタンスは複数回の呼び出しで同一でなければならない. <br>
-     *               すなわち,
-     *               {@code this.elementProvider() == this.elementProvider()}
-     *               が必ず {@code true} でなければならない.
-     * 
-     *               <p>
-     *               {@link #elementTypeProvider()} をオーバーライドできる場合,
-     *               このメソッドをオーバーライドしてはいけない.
-     *               </p>
-     * 
-     * @return 体の元に関するプロバイダ
-     */
-    @Deprecated(since = "24.4.0", forRemoval = true)
-    public PseudoRealNumber.Provider<T> elementProvider() {
-        TypeProvider<T> out = typeProvider;
-        if (Objects.nonNull(out)) {
-            return out;
-        }
-        synchronized (lock) {
-            out = typeProvider;
-            if (Objects.nonNull(out)) {
-                return out;
-            }
-
-            // 呼び出しが循環した場合にアサーションエラーをスローできるように対応
-            try {
-                if (recursion) {
-                    throw new AssertionError(OVERRIDE_ASSERTION_ERROR_MESSAGE);
-                }
-                recursion = true;
-                out = this.elementTypeProvider();
-            } finally {
-                recursion = false;
-            }
-
-            if (Objects.isNull(out)) {
-                throw new AssertionError(OVERRIDE_ASSERTION_ERROR_MESSAGE);
-            }
-            typeProvider = out;
-            return out;
-        }
-    }
-
-    /**
-     * このターゲットが扱う体の元に関するプロバイダを返す.
-     * 
      * @implSpec
      *               このプロバイダにより返されるインスタンスは複数回の呼び出しで同一でなければならない. <br>
      *               すなわち,
      *               {@code this.elementTypeProvider() == this.elementTypeProvider()}
      *               が必ず {@code true} でなければならない.
-     * 
-     *               <p>
-     *               このメソッドをオーバーライドできる場合,
-     *               {@link #elementProvider()} をオーバーライドしてはいけない.
-     *               </p>
      * 
      * @return 体の元に関するプロバイダ
      */
@@ -262,30 +184,7 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
      * 将来的に elementProvider() が削除された場合,
      * このメソッドは抽象メソッドに変更する.
      */
-    public PseudoRealNumber.TypeProvider<T> elementTypeProvider() {
-        TypeProvider<T> out = typeProvider;
-        if (Objects.nonNull(out)) {
-            return out;
-        }
-        synchronized (lock) {
-            out = typeProvider;
-            if (Objects.nonNull(out)) {
-                return out;
-            }
-
-            @SuppressWarnings({ "removal", "deprecation" })
-            Provider<T> wrapped = this.elementProvider();
-
-            if (Objects.isNull(wrapped)) {
-                throw new AssertionError(OVERRIDE_ASSERTION_ERROR_MESSAGE);
-            }
-
-            @SuppressWarnings("removal")
-            TypeProvider<T> adapted = TypeProvider.from(wrapped);
-            typeProvider = adapted;
-            return adapted;
-        }
-    }
+    public abstract PseudoRealNumber.TypeProvider<T> elementTypeProvider();
 
     /**
      * このインスタンスの文字列表現を返す.

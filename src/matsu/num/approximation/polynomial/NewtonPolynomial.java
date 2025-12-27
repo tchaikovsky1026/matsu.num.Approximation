@@ -5,14 +5,13 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /*
- * 2025.12.26
+ * 2025.12.27
  */
 package matsu.num.approximation.polynomial;
 
 import java.util.function.UnaryOperator;
 
 import matsu.num.approximation.PseudoRealNumber;
-import matsu.num.approximation.PseudoRealNumber.Provider;
 
 /**
  * Newton 補間による多項式関数を扱う.
@@ -95,12 +94,6 @@ final class NewtonPolynomial<T extends PseudoRealNumber<T>> implements Polynomia
     @Override
     public T[] coefficient() {
         return this.coeff.clone();
-    }
-
-    @Override
-    @Deprecated(forRemoval = true)
-    public Provider<T> elementProvider() {
-        return this.elementTypeProvider;
     }
 
     /**
