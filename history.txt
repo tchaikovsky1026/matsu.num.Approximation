@@ -1,7 +1,5 @@
-develop:
-PseudoRealNumber.Provider関連APIを@Deprecate(forRemoval = true).
-
 24:
+24.5.0: PseudoRealNumber.Provider関連APIを@Deprecate(forRemoval = true).
 24.4.0: PseudoRealNumber.Provider関連APIを@Deprecate(since = "24.4.0").
 24.3.0: rationalパッケージの削除. 内部の文字列リテラルの日本語を修正. リファクタリング(近似計算の内部構造). ドキュメントの更新.
 24.2.1: Polynomialの削除予定タグを解除.
