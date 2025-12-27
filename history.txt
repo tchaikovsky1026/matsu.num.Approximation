@@ -1,3 +1,6 @@
+develop-for-next-major-up:
+PseudoRealNumber.Provider関連の削除予定APIを削除.
+
 24:
 24.5.0: PseudoRealNumber.Provider関連APIを@Deprecate(forRemoval = true).
 24.4.0: PseudoRealNumber.Provider関連APIを@Deprecate(since = "24.4.0").
