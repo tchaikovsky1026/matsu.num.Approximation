@@ -215,21 +215,6 @@ public final class Decimal128 extends PseudoRealNumber<Decimal128> {
     /**
      * {@link Decimal128} の元のプロバイダを返す.
      * 
-     * <p>
-     * このメソッドは将来非推奨になり, 削除される可能性がある. <br>
-     * {@link #elementTypeProvider()} が代替となる.
-     * </p>
-     * 
-     * @return プロバイダ
-     */
-    @Deprecated(since = "24.4.0", forRemoval = true)
-    public static PseudoRealNumber.Provider<Decimal128> elementProvider() {
-        return TYPE_PROVIDER;
-    }
-
-    /**
-     * {@link Decimal128} の元のプロバイダを返す.
-     * 
      * @return プロバイダ
      */
     public static PseudoRealNumber.TypeProvider<Decimal128> elementTypeProvider() {
