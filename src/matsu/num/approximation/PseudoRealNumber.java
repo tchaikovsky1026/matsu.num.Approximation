@@ -308,7 +308,7 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
     private T fromDoubleValue(double value) {
         TypeProvider<T> typeProvider = this.typeProvider();
 
-        @SuppressWarnings("deprecation")
+        @SuppressWarnings("removal")
         Provider<T> provider = Objects.nonNull(typeProvider)
                 ? typeProvider
                 : this.provider();

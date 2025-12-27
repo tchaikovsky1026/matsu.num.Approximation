@@ -273,14 +273,14 @@ public abstract class ApproxTarget<T extends PseudoRealNumber<T>> {
                 return out;
             }
 
-            @SuppressWarnings("deprecation")
+            @SuppressWarnings({ "removal", "deprecation" })
             Provider<T> wrapped = this.elementProvider();
 
             if (Objects.isNull(wrapped)) {
                 throw new AssertionError(OVERRIDE_ASSERTION_ERROR_MESSAGE);
             }
 
-            @SuppressWarnings("deprecation")
+            @SuppressWarnings("removal")
             TypeProvider<T> adapted = TypeProvider.from(wrapped);
             typeProvider = adapted;
             return adapted;

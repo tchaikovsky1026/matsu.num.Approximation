@@ -48,6 +48,7 @@ final class ApproxTargetTest {
 
         }
 
+        @SuppressWarnings("removal")
         @Test(expected = AssertionError.class)
         public void test_実装しない場合アサーションが投げられる_elementProvider() {
             new ApproxTargetImpl().elementProvider();
@@ -132,6 +133,7 @@ final class ApproxTargetTest {
             }
         }
 
+        @SuppressWarnings("removal")
         @Test(expected = None.class)
         public void test_正常に生成_elementProvider() {
             new ApproxTargetImpl().elementProvider();
