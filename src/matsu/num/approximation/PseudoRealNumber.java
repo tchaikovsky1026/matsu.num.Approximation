@@ -265,7 +265,7 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
      * @return プロバイダ
      * @deprecated 将来の削除に向けて, 非推奨とする.
      */
-    @Deprecated
+    @Deprecated(since = "24.4.0")
     protected Provider<T> provider() {
         return null;
     }
@@ -495,7 +495,7 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
      * @param <T> 体の元を表す型
      * @deprecated 将来の削除に向けて, 非推奨とする.
      */
-    @Deprecated
+    @Deprecated(since = "24.4.0")
     public static interface Provider<T extends PseudoRealNumber<T>> {
 
         /**
@@ -686,7 +686,7 @@ public abstract class PseudoRealNumber<T extends PseudoRealNumber<T>> implements
          * @throws NullPointerException 引数が nullの場合
          * @deprecated 将来の削除に向けて, 非推奨とする.
          */
-        @Deprecated
+        @Deprecated(since = "24.4.0")
         public static <T extends PseudoRealNumber<T>>
                 TypeProvider<T> from(Provider<T> provider) {
 
